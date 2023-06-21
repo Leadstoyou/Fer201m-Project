@@ -5,7 +5,6 @@ import Ao from "./screens/Ao";
 import Quan from "./screens/Quan";
 import PhuKien from "./screens/PhuKien";
 import ProductDetail from "./screens/ProductDetail";
-import db from "./data/database.json";
 import { useEffect } from "react";
 import Login from "./components/Auth/Login";
 import Register from "./components/Auth/Register";

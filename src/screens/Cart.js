@@ -1,12 +1,17 @@
-import { Button, FormControl, InputGroup, Table } from "react-bootstrap";
+import {
+  Button,
+  Form,
+  FormControl,
+  InputGroup,
+  Modal,
+  Table,
+} from "react-bootstrap";
 import DefaultLayout from "../layouts/DefaultLayout";
 import { useEffect, useState } from "react";
 
 const Cart = () => {
   const [carts, setCarts] = useState([]);
-  const [products, setProducts] = useState([]);
   const [mergeProducts, setMergeProducts] = useState([]);
-  const [quantity, setQuantity] = useState(0);
   const [totalPrice, setTotalPrice] = useState(0);
 
   const listCart = JSON.parse(localStorage.getItem("carts")).filter(
@@ -26,14 +31,30 @@ const Cart = () => {
         };
       }
       return null;
-    }).filter((item) => item !== null);
-
+    })
+    .filter((item) => item !== null);
+  const totalPriceTemp = mergedCart.reduce(function (acc, product) {
+    var price = parseFloat(product.price.replace("đ", "").replace(",", ""));
+    return acc + price * product.quantity;
+  }, 0);
   useEffect(() => {
     setCarts(listCart.products);
-    setProducts(foundProduct);
-    setMergeProducts(mergedCart)
-  },[]);
+    setMergeProducts(mergedCart);
+    setTotalPrice(totalPriceTemp);
+  }, []);
 
+  const convertToCurrencyFormat = (number) => {
+    var numberString = number.toString();
+    var parts = numberString.split(".");
+    var integerPart = parts[0];
+    var decimalPart = parts.length > 1 ? parts[1] : "";
+
+    var formattedNumber =
+      integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ".") +
+      (decimalPart ? "." + decimalPart : "");
+
+    return formattedNumber;
+  };
   const handleUpdateCart = (operator, productId, quantity) => {
     if (operator === "+") {
       const updatedCart = mergeProducts.map((product) => {
@@ -42,20 +63,63 @@ const Cart = () => {
         }
         return product;
       });
-      setMergeProducts(updatedCart)
-    } else if(operator === '-'){
+      setMergeProducts(updatedCart);
+      setTotalPrice(
+        updatedCart.reduce(function (acc, product) {
+          var price = parseFloat(
+            product.price.replace("đ", "").replace(",", "")
+          );
+          return acc + price * product.quantity;
+        }, 0)
+      );
+    } else if (operator === "-") {
       const updatedCart = mergeProducts.map((product) => {
         if (product.productId === productId) {
-          if (quantity === 0) {
-            return { ...product, quantity: 0 };
+          if (quantity === 1) {
+            return { ...product, quantity: 1 };
           }
-          return { ...product, quantity: quantity  - 1 };
+          return { ...product, quantity: quantity - 1 };
         }
         return product;
       });
-      setMergeProducts(updatedCart)
+      setMergeProducts(updatedCart);
+      setTotalPrice(
+        updatedCart.reduce(function (acc, product) {
+          var price = parseFloat(
+            product.price.replace("đ", "").replace(",", "")
+          );
+          return acc + price * product.quantity;
+        }, 0)
+      );
     }
   };
+
+  const handleDeleteProductInCart = (id) => {
+    const result = window.confirm("Bạn có chắc chắn muốn tiếp tục?");
+    if (result) {
+      let mergeProductsUpdated = mergeProducts.filter(function (product) {
+        return product.productId !== id;
+      });
+      setMergeProducts(mergeProductsUpdated);
+      let updatedData = JSON.parse(localStorage.getItem("carts")).map(function(item) {
+        if (item.userId === '1') {
+          const updatedProducts = item.products.filter(function(product) {
+            return product.productId !== id;
+          });
+      
+          return {
+            userId: item.userId,
+            products: updatedProducts
+          };
+        }
+      
+        return item;
+      });
+      console.log(updatedData)
+      localStorage.setItem('carts',JSON.stringify(updatedData));
+    }
+  };
+
   return (
     <DefaultLayout className="container">
       <div className="row">
@@ -63,10 +127,10 @@ const Cart = () => {
           <div className="heading_layout_other">
             <h2>GIỎ HÀNG CỦA BẠN ({mergeProducts.length})</h2>
           </div>
-          <Table>
+          <Table className="cart-table">
             <tbody>
               {mergeProducts.map((mergedCart) => (
-                <tr key={mergedCart.productId} >
+                <tr key={mergedCart.productId}>
                   <td width="180px">
                     <a
                       href={`/product/detail/${mergedCart.productId}`}
@@ -131,11 +195,11 @@ const Cart = () => {
                                 ></path>
                               </svg>
                             </Button>
-                            <FormControl
+                            <Form.Control
                               type="text"
                               className="quantity"
                               value={mergedCart.quantity}
-                              onChange={(e) => setQuantity(e.target.value)}
+                              onChange={() => {}}
                             />
                             <Button
                               variant="outline-secondary"
@@ -163,7 +227,20 @@ const Cart = () => {
                             </Button>
                           </InputGroup>
                         </div>
-                        <span className="btn-delete-item">Xóa</span>
+                        <span
+                          className="btn-delete-item"
+                          onClick={() => {
+                            handleDeleteProductInCart(mergedCart.productId);
+                          }}
+                          onMouseEnter={(e) => {
+                            e.target.style.cursor = "pointer";
+                          }}
+                          onMouseLeave={(e) => {
+                            e.target.style.cursor = "auto";
+                          }}
+                        >
+                          Xóa
+                        </span>
                       </div>
                     </div>
                   </td>
@@ -187,11 +264,40 @@ const Cart = () => {
               <ul>
                 <li>
                   <span className="tille">Tạm tính:</span>
-                  <span className="price black">1.300.000đ</span>
+                  <span className="price black">
+                    {convertToCurrencyFormat(totalPrice)}.000 đ
+                  </span>
                 </li>
               </ul>
             </div>
-            {/* ... */}
+            <div className="note_footer">
+              <p>
+                <strong>Miễn phí</strong> vận chuyển cho đơn hàng từ{" "}
+                <strong>500k</strong>
+              </p>
+            </div>
+
+            <Button
+
+              type="button"
+              className="btn btn-default-black btn_buy_now"
+              variant="dark"
+
+            >
+              TIẾN HÀNH ĐẶT HÀNG ({mergeProducts.length})
+            </Button >
+            <p>
+              <strong>Ưu đãi hội viên</strong>
+            </p>
+            <p>
+              Tích điểm đổi quà và rất nhiều ưu đãi đặc biệt khác, chỉ dành cho
+              hội viên của Aristino.
+            </p>
+            <p>
+        <a href="javascript:void(0)" className="btn_login_and_register btn-login" rel="nofollow">Đăng nhập</a> 
+        /
+        <a href="javascript:void(0)" className="btn_login_and_register btn_login_and_register-register btn-register" rel="nofollow">Đăng ký </a>
+      </p>
           </div>
         </div>
       </div>

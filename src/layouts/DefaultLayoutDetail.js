@@ -1,5 +1,5 @@
-import Footer from "../components/Footer";
-import Top from "../components/Top";
+import Footer from "./Footer";
+import Top from "./Top";
 import "../styles/DefaultLayoutStyle.css";
 const DefaultLayoutDetail = ({className, children }) => {
   return (
