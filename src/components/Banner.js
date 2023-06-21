@@ -1,6 +1,6 @@
 import Carousel from "react-bootstrap/Carousel";
 import "../styles/DefaultLayoutStyle.css";
-export default function Banner() {
+ function Banner() {
   return (
     <div className="container">
       <Carousel>
@@ -17,3 +17,4 @@ export default function Banner() {
     </div>
   );
 }
+export default Banner;

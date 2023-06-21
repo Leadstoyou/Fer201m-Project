@@ -1,17 +1,22 @@
 import DefaultLayout from "../layouts/DefaultLayout";
 import Card from "react-bootstrap/Card";
 import { useState, useEffect } from "react";
-import data from "../data/database.json";
 
 const Ao = () => {
   const [originalProduct, setOriginalProduct] = useState([]);
   const [filteredProduct, setFilteredProduct] = useState([]);
+  const [listShirtCategories, setListShirtCategories] = useState([]);
+
+  let listShirt = JSON.parse(localStorage.getItem("products")).filter(
+    (shirt) => shirt.catId === 3
+  );
+  let shirtCategories = JSON.parse(localStorage.getItem("categories"));
 
   useEffect(() => {
-    setOriginalProduct(data.product);
-    setFilteredProduct(data.product);
+    setOriginalProduct(listShirt);
+    setFilteredProduct(listShirt);
+    setListShirtCategories(shirtCategories[2].detail);
   }, []);
-
   const filterByName = (nameString) => {
     const filtered = originalProduct.filter(({ name }) =>
       name.toLowerCase().includes(nameString.toLowerCase())
@@ -35,17 +40,17 @@ const Ao = () => {
     <DefaultLayout className="container">
       <div className="Product-content">
         <h2>PHỤ KIỆN</h2>
-        <button onClick={() => handleClick("giày")}>Giày</button>
-        <button onClick={() => handleClick("dép")}>Dép</button>
-        <button onClick={() => handleClick("Ví")}>Ví</button>
-        <button onClick={() => handleClick("thắt lưng")}>Thắt Lưng</button>
-        <button onClick={() => handleClick("cà vạt")}>Cà Vạt</button>
+        {listShirtCategories.map((category, index) => (
+          <button key={index} onClick={() => handleClick(category)}>
+            {category}
+          </button>
+        ))}
       </div>
       <br />
       <div className="row">
         {filteredProduct
           .filter((product) =>
-            ["Giày", "Dép", "Thắt", "Ví", "Cà Vạt"].some((keyword) =>
+            listShirtCategories.some((keyword) =>
               product.name.toLowerCase().includes(keyword.toLowerCase())
             )
           )
@@ -58,10 +63,20 @@ const Ao = () => {
             >
               <Card className="card-content">
                 <div className="blurry-image">
-                  <Card.Img onClick={() => window.location.href = `product/detail/${product.id}`} src={product.img} />
+                  <Card.Img
+                    onClick={() =>
+                      (window.location.href = `product/detail/${product.id}`)
+                    }
+                    src={product.img}
+                  />
                 </div>
                 <Card.Body>
-                  <Card.Text onClick={() => window.location.href = `product/detail/${product.id}`} style={{ fontWeight: "500" }}>
+                  <Card.Text
+                    onClick={() =>
+                      (window.location.href = `product/detail/${product.id}`)
+                    }
+                    style={{ fontWeight: "500" }}
+                  >
                     {product.name}
                   </Card.Text>
                   <Card.Title>{product.price}</Card.Title>

@@ -9,19 +9,12 @@ import Image from "react-bootstrap/Image";
 
 const ProductDetail = () => {
   const { id } = useParams();
-  const [product, setProduct] = useState({});
+  const [product, setProduct] = useState([]);
 
-  //khởi tạo 1 state cartItems chứa các sản phẩm trong giỏ hàng
   const [cartItems, setCartItems] = useState([]);
-
-  //
   const [showCart, setShowCart] = useState(true);
-
-  //
   const [selectedColor, setSelectedColor] = useState(null);
   const [selectedSize, setSelectedSize] = useState(null);
-
-  //
   const [price, setPrice] = useState(0);
 
   //remove sản phẩm trong cart
@@ -29,21 +22,14 @@ const ProductDetail = () => {
     const arr = cartItems.filter((item) => item.id !== id);
     setCartItems(arr);
     // handlePrice();
-  }
+  };
 
-  //
+  let foundProduct = JSON.parse(localStorage.getItem("products")).find(
+    (product) => product.id === parseInt(id)
+  );
   useEffect(() => {
-    fetch("http://localhost:9999/product")
-      .then((res) => res.json())
-      .then((result) => {
-        const fetChedProduct = result.find((item) => item.id === parseInt(id));
-        if (fetChedProduct) {
-        setProduct(fetChedProduct);
-        setPrice(parseInt(fetChedProduct.price.replace(/[^0-9.-]+/g,"")));
-        }
-      });
-  }, [id]);
-
+    setProduct(foundProduct);
+  }, [foundProduct]);
   //
   useEffect(() => {
     if (product.price) {
@@ -55,44 +41,18 @@ const ProductDetail = () => {
   const handlePrice = () => {
     let ans = 0;
     cartItems.forEach((item) => {
-      const itemPrice = parseInt(item.price.replace(/[^0-9.-]+/g,""));
+      const itemPrice = parseInt(item.price.replace(/[^0-9.-]+/g, ""));
       const itemAmount = Number(item.amount);
       if (!isNaN(itemPrice) && !isNaN(itemAmount)) {
         ans += itemPrice * itemAmount;
       }
     });
     setPrice(ans);
-  };  
+  };
 
   useEffect(() => {
     handlePrice();
   }, [cartItems]);
-
-  const handleColorSelect = (color) => {
-    setSelectedColor(color);
-    fetch("http://localhost:9999/product")
-      .then((res) => res.json())
-      .then((result) => {
-        const selectedItem = result.find((item) => item.id === parseInt(id) && item.color.includes(color) && item.size.includes(selectedSize));
-        if (selectedItem) {
-        setProduct(selectedItem);
-        setPrice(parseInt(selectedItem.price.replace(/[^0-9.-]+/g,"")));
-        }
-      });
-  };
-
-  const handleSizeSelect = (size) => {
-    setSelectedSize(size);
-    fetch("http://localhost:9999/product")
-      .then((res) => res.json())
-      .then((result) => {
-        const selectedItem = result.find((item) => item.id === parseInt(id) && item.color.includes(selectedColor) && item.size.includes(size));
-        if (selectedItem) {
-        setProduct(selectedItem);
-        setPrice(parseInt(selectedItem.price.replace(/[^0-9.-]+/g,"")));
-        }
-      });
-  };
 
   //hàm kiểm tra xem sản phẩm đã có trong giỏ hàng hay chưa
   const isItemInCart = (itemId) => {
@@ -103,14 +63,14 @@ const ProductDetail = () => {
   const handleChange = (item, d) => {
     const arr = [...cartItems];
     const ind = arr.indexOf(item);
-    arr[ind] = {...arr[ind]};
+    arr[ind] = { ...arr[ind] };
     arr[ind].amount += d;
 
     if (arr[ind].amount === 0) {
-        arr[ind].amount = 1;
+      arr[ind].amount = 1;
     }
     setCartItems(arr);
-  }
+  };
 
   //
   const handleAddToCart = () => {
@@ -150,7 +110,10 @@ const ProductDetail = () => {
       <div className="product_cart">
         <div style={{ display: "flex" }}>
           <h5 style={{ paddingRight: "250px" }}>GIỎ HÀNG</h5>
-          <XLg onClick={() => setShowCart(false)} style={{ fontSize: "20px" }} />
+          <XLg
+            onClick={() => setShowCart(false)}
+            style={{ fontSize: "20px" }}
+          />
         </div>
         <p
           style={{
@@ -176,12 +139,36 @@ const ProductDetail = () => {
               </p>
               <div style={{ display: "flex" }}>
                 {/* <QuantityButton onChange={handleQuantityChange} /> */}
-                <div style={{maxWidth: '150px', position: 'relative', width: '100%'}}>
-                <button style={{backgroundColor: 'white', padding: '7px 14px'}} onClick={() => handleChange(item, -1)}>-</button>
-                <span style={{padding: '7px 14px'}}>{item.amount}</span>
-                <button style={{backgroundColor: 'white', padding: '7.1px 12.5px'}} onClick={() => handleChange(item, 1)}>+</button>
+                <div
+                  style={{
+                    maxWidth: "150px",
+                    position: "relative",
+                    width: "100%",
+                  }}
+                >
+                  <button
+                    style={{ backgroundColor: "white", padding: "7px 14px" }}
+                    onClick={() => handleChange(item, -1)}
+                  >
+                    -
+                  </button>
+                  <span style={{ padding: "7px 14px" }}>{item.amount}</span>
+                  <button
+                    style={{
+                      backgroundColor: "white",
+                      padding: "7.1px 12.5px",
+                    }}
+                    onClick={() => handleChange(item, 1)}
+                  >
+                    +
+                  </button>
                 </div>
-                <p onClick={() => handleRemove(item.id)} style={{ marginTop: "8px" }}>Xoá</p>
+                <p
+                  onClick={() => handleRemove(item.id)}
+                  style={{ marginTop: "8px" }}
+                >
+                  Xoá
+                </p>
               </div>
             </div>
 
@@ -195,13 +182,13 @@ const ProductDetail = () => {
               }}
             ></p>
 
-            <div className="row cart_total">
+            <div className="row cart_total" id="price_counted">
               <h6 style={{ paddingBottom: "10px", paddingRight: "250px" }}>
                 Tạm tính
               </h6>
               {/* price */}
               <h6>${price}</h6>
-              
+
               <p
                 style={{
                   width: "90%",
@@ -277,15 +264,6 @@ const ProductDetail = () => {
       setIsHoveredSize(Array(product.size?.length || 0).fill(false));
     }
   }, [product]);
-
-  useEffect(() => {
-    fetch("http://localhost:9999/product")
-      .then((res) => res.json())
-      .then((result) => {
-        const r = result.find((p) => p.id === parseInt(id));
-        setProduct(r);
-      });
-  }, []);
 
   return product ? (
     <DefaultLayoutDetail className="container">
@@ -380,7 +358,7 @@ const ProductDetail = () => {
                           ? "2px solid #000"
                           : "none",
                       }}
-                      onClick={() => handleColorSelect(color)}
+                      onClick={() => setSelectedColor({ color })}
                     >
                       {color}
                     </p>
@@ -416,7 +394,7 @@ const ProductDetail = () => {
                           ? "2px solid #000"
                           : "none",
                       }}
-                      onClick={() => handleSizeSelect(size)}
+                      onClick={() => setSelectedSize({ size })}
                     >
                       {size}
                     </p>
@@ -453,35 +431,6 @@ const ProductDetail = () => {
           >
             Mua ngay
           </button>
-
-          <p style={{ marginTop: "15px" }} className="product_bonus">
-            <CreditCard style={{ marginRight: "5px" }} />
-            <p style={{ marginBottom: "0px" }}>
-              Đa dạng phương thức thanh toán
-            </p>
-          </p>
-          <p
-            style={{
-              width: "90%",
-              height: "0.2px",
-              backgroundColor: "gray",
-              opacity: "0.3",
-            }}
-          ></p>
-          <p className="product_bonus">
-            <Repeat style={{ marginRight: "5px" }} />
-            <p style={{ marginBottom: "0px" }}>
-              Đổi hàng miễn phí lên đến 30 ngày
-            </p>
-          </p>
-          <p
-            style={{
-              width: "90%",
-              height: "0.2px",
-              backgroundColor: "gray",
-              opacity: "0.3",
-            }}
-          ></p>
         </div>
       </div>
 
