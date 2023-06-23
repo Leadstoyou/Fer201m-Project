@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router";
-import LoadData from "../../data/LoadData";
+import { Link } from "react-router-dom";
 
 const Login = () => {
-  LoadData();
+
   const listUsers = JSON.parse(localStorage.getItem("users"));
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -76,9 +76,9 @@ const Login = () => {
             </button>
           </form>
           <div class="register">
-            <a href="/register" className="register-link">
-              Register
-            </a>
+            <Link to="/register">
+              Đăng ký
+            </Link>
           </div>
         </div>
         <div class="screen__background">

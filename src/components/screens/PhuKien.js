@@ -1,6 +1,7 @@
 import DefaultLayout from "../layouts/DefaultLayout";
 import Card from "react-bootstrap/Card";
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 
 const Ao = () => {
   const [originalProduct, setOriginalProduct] = useState([]);
@@ -63,22 +64,16 @@ const Ao = () => {
             >
               <Card className="card-content">
                 <div className="blurry-image">
-                  <Card.Img
-                    onClick={() =>
-                      (window.location.href = `product/detail/${product.id}`)
-                    }
-                    src={product.img}
-                  />
+                  <Link to={`/product/detail/${product.id}`}>
+                    <Card.Img src={product.img} />
+                  </Link>
                 </div>
                 <Card.Body>
-                  <Card.Text
-                    onClick={() =>
-                      (window.location.href = `product/detail/${product.id}`)
-                    }
-                    style={{ fontWeight: "500" }}
-                  >
-                    {product.name}
-                  </Card.Text>
+                  <Link to={`/product/detail/${product.id}`}>
+                    <Card.Text style={{ fontWeight: "500" }}>
+                      {product.name}
+                    </Card.Text>
+                  </Link>
                   <Card.Title>{product.price}</Card.Title>
                 </Card.Body>
               </Card>

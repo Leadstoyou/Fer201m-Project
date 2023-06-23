@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router";
+import { Link } from "react-router-dom";
 const Register = () => {
   const listUsers = JSON.parse(localStorage.getItem("users"));
   const [users, setUsers] = useState(listUsers);
@@ -86,7 +87,7 @@ const Register = () => {
             <div id="mess"></div>
             <div>
               <p>
-                Nếu tài khoản đã tồn tại <a href="/login">Đăng nhập</a>
+                Nếu tài khoản đã tồn tại <Link to="/login">Đăng nhập</Link>
               </p>
             </div>
             <div className="Register_button">

@@ -8,15 +8,18 @@ import {
 } from "react-bootstrap";
 import DefaultLayout from "../layouts/DefaultLayout";
 import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { Dash, Plus } from "react-bootstrap-icons";
 
 const Cart = () => {
-  const [carts, setCarts] = useState([]);
   const [mergeProducts, setMergeProducts] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
+  const navigation = useNavigate();
 
   const listCart = JSON.parse(localStorage.getItem("carts")).filter(
-    (cart) => cart.userId == 1
+    (cart) => cart.userId === "1"
   )[0];
+
   const foundProduct = JSON.parse(localStorage.getItem("products"));
   const mergedCart = listCart.products
     .map((item) => {
@@ -38,7 +41,6 @@ const Cart = () => {
     return acc + price * product.quantity;
   }, 0);
   useEffect(() => {
-    setCarts(listCart.products);
     setMergeProducts(mergedCart);
     setTotalPrice(totalPriceTemp);
   }, []);
@@ -56,24 +58,16 @@ const Cart = () => {
     return formattedNumber;
   };
   const handleUpdateCart = (operator, productId, quantity) => {
+    var updatedCart;
     if (operator === "+") {
-      const updatedCart = mergeProducts.map((product) => {
+      updatedCart = mergeProducts.map((product) => {
         if (product.productId === productId) {
           return { ...product, quantity: quantity + 1 };
         }
         return product;
       });
-      setMergeProducts(updatedCart);
-      setTotalPrice(
-        updatedCart.reduce(function (acc, product) {
-          var price = parseFloat(
-            product.price.replace("đ", "").replace(",", "")
-          );
-          return acc + price * product.quantity;
-        }, 0)
-      );
     } else if (operator === "-") {
-      const updatedCart = mergeProducts.map((product) => {
+      updatedCart = mergeProducts.map((product) => {
         if (product.productId === productId) {
           if (quantity === 1) {
             return { ...product, quantity: 1 };
@@ -82,16 +76,34 @@ const Cart = () => {
         }
         return product;
       });
-      setMergeProducts(updatedCart);
-      setTotalPrice(
-        updatedCart.reduce(function (acc, product) {
-          var price = parseFloat(
-            product.price.replace("đ", "").replace(",", "")
-          );
-          return acc + price * product.quantity;
-        }, 0)
-      );
     }
+    let lmeo = updatedCart.map((cartupdate) => {
+      return {
+        productId: cartupdate.productId,
+        quantity: cartupdate.quantity,
+        size: cartupdate.size,
+        color: cartupdate.color,
+      };
+    });
+    const setUpdatedData = JSON.parse(localStorage.getItem("carts")).map(
+      (data) => {
+        if (data.userId == 1) {
+          return {
+            ...data,
+            products: lmeo,
+          };
+        }
+        return data;
+      }
+    );
+    localStorage.setItem("carts", JSON.stringify(setUpdatedData));
+    setMergeProducts(updatedCart);
+    setTotalPrice(
+      updatedCart.reduce(function (acc, product) {
+        var price = parseFloat(product.price.replace("đ", "").replace(",", ""));
+        return acc + price * product.quantity;
+      }, 0)
+    );
   };
 
   const handleDeleteProductInCart = (id) => {
@@ -101,22 +113,23 @@ const Cart = () => {
         return product.productId !== id;
       });
       setMergeProducts(mergeProductsUpdated);
-      let updatedData = JSON.parse(localStorage.getItem("carts")).map(function(item) {
-        if (item.userId === '1') {
-          const updatedProducts = item.products.filter(function(product) {
+      let updatedData = JSON.parse(localStorage.getItem("carts")).map(function (
+        item
+      ) {
+        if (item.userId === "1") {
+          const updatedProducts = item.products.filter(function (product) {
             return product.productId !== id;
           });
-      
+
           return {
             userId: item.userId,
-            products: updatedProducts
+            products: updatedProducts,
           };
         }
-      
+
         return item;
       });
-      console.log(updatedData)
-      localStorage.setItem('carts',JSON.stringify(updatedData));
+      localStorage.setItem("carts", JSON.stringify(updatedData));
     }
   };
 
@@ -132,11 +145,7 @@ const Cart = () => {
               {mergeProducts.map((mergedCart) => (
                 <tr key={mergedCart.productId}>
                   <td width="180px">
-                    <a
-                      href={`/product/detail/${mergedCart.productId}`}
-                      target="_blank"
-                      rel="noreferrer"
-                    >
+                    <Link to={`/product/detail/${mergedCart.productId}`}>
                       <img
                         src={`${mergedCart.img}`}
                         className="img_prd_cart"
@@ -147,18 +156,21 @@ const Cart = () => {
                           height: "100%",
                         }}
                       />
-                    </a>
+                    </Link>
                   </td>
                   <td>
                     <div className="info-production">
                       <h3 className="name_production">
-                        <a
-                          href={`/product/detail/${mergedCart.productId}`}
-                          target="_blank"
-                          rel="noreferrer"
+                        <p
+                          onClick={() => {
+                            navigation(
+                              `/product/detail/${mergedCart.productId}`
+                            );
+                          }}
+                          style={{ cursor: "pointer" }}
                         >
                           {mergedCart.name}
-                        </a>
+                        </p>
                       </h3>
                       <div>
                         <div className="chooseSize-group">
@@ -181,19 +193,7 @@ const Cart = () => {
                                 )
                               }
                             >
-                              <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="16"
-                                height="16"
-                                fill="currentColor"
-                                className="bi bi-dash-lg"
-                                viewBox="0 0 16 16"
-                              >
-                                <path
-                                  fillRule="evenodd"
-                                  d="M2 8a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11A.5.5 0 0 1 2 8Z"
-                                ></path>
-                              </svg>
+                              <Dash style={{ color: "black" }} />
                             </Button>
                             <Form.Control
                               type="text"
@@ -211,19 +211,7 @@ const Cart = () => {
                                 )
                               }
                             >
-                              <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="16"
-                                height="16"
-                                fill="currentColor"
-                                className="bi bi-plus-lg"
-                                viewBox="0 0 16 16"
-                              >
-                                <path
-                                  fillRule="evenodd"
-                                  d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z"
-                                ></path>
-                              </svg>
+                              <Plus style={{ color: "black" }} />
                             </Button>
                           </InputGroup>
                         </div>
@@ -278,14 +266,16 @@ const Cart = () => {
             </div>
 
             <Button
-
               type="button"
               className="btn btn-default-black btn_buy_now"
               variant="dark"
-
+              onClick={() => {
+                navigation("/order");
+              }}
+              style={{ padding: "11px" }}
             >
               TIẾN HÀNH ĐẶT HÀNG ({mergeProducts.length})
-            </Button >
+            </Button>
             <p>
               <strong>Ưu đãi hội viên</strong>
             </p>
@@ -294,10 +284,9 @@ const Cart = () => {
               hội viên của Aristino.
             </p>
             <p>
-        <a href="javascript:void(0)" className="btn_login_and_register btn-login" rel="nofollow">Đăng nhập</a> 
-        /
-        <a href="javascript:void(0)" className="btn_login_and_register btn_login_and_register-register btn-register" rel="nofollow">Đăng ký </a>
-      </p>
+              <Link to="/login">Đăng nhập</Link>/
+              <Link to="/register">Đăng ký</Link>
+            </p>
           </div>
         </div>
       </div>

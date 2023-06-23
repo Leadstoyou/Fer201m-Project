@@ -180,3 +180,7 @@ ul.select_product_color, ul.select_product_size {
   width: 490px;
   bottom: 0;
 }
+a{
+  text-decoration: none !important;
+  color:#000;
+}

@@ -2,7 +2,7 @@
   "categories": [
     {
       "id": 1,
-      "name": "Á0",
+      "name": "Áo",
       "detail": [
         "Áo Sơ Mi",
         "Áo Polo",
@@ -12,7 +12,7 @@
     },
     {
       "id": 2,
-      "name": "Quan",
+      "name": "Quần",
       "detail": [
         "Quần Short",
         "Quần Âu",
@@ -21,7 +21,7 @@
     },
     {
       "id": 3,
-      "name": "PhuKien",
+      "name": "Phụ Kiện",
       "detail": [
         "Giày",
         "Dép",
@@ -50,7 +50,7 @@
       ],
       "img": "/assets/ao/ALS22502.jpg",
       "blurImg": "/assets/blurImg/ALS22502.jpg",
-      "amount": 1
+      "amount": 1000
     },
     {
       "id": 2,
@@ -70,7 +70,7 @@
       ],
       "img": "/assets/ao/ALS01103.jpg",
       "blurImg": "/assets/blurImg/ALS01103.jpg",
-      "amount": 1
+      "amount": 1000
     },
     {
       "id": 3,
@@ -90,7 +90,7 @@
       ],
       "img": "/assets/ao/ASSR29.jpg",
       "blurImg": "/assets/blurImg/ASSR29.jpg",
-      "amount": 1
+      "amount": 1000
     },
     {
       "id": 4,
@@ -111,7 +111,7 @@
       ],
       "img": "/assets/ao/ASS049S3.jpg",
       "blurImg": "/assets/blurImg/ASS049S3.jpg",
-      "amount": 1
+      "amount": 1000
     },
     {
       "id": 5,
@@ -134,7 +134,7 @@
       ],
       "img": "/assets/ao/APS037S3.jpg",
       "blurImg": "/assets/blurImg/APS037S3.jpg",
-      "amount": 1
+      "amount": 1000
     },
     {
       "id": 6,
@@ -155,7 +155,7 @@
       ],
       "img": "/assets/ao/APS038S3.jpg",
       "blurImg": "/assets/blurImg/APS038S3.jpg",
-      "amount": 1
+      "amount": 1000
     },
     {
       "id": 9,
@@ -177,7 +177,7 @@
       ],
       "img": "/assets/ao/AJK028W2.jpg",
       "blurImg": "/assets/blurImg/AJK028W2.jpg",
-      "amount": 1
+      "amount": 1000
     },
     {
       "id": 10,
@@ -198,7 +198,7 @@
       ],
       "img": "/assets/ao/AJK026W2.jpg",
       "blurImg": "/assets/blurImg/AJK026W2.jpg",
-      "amount": 1
+      "amount": 1000
     },
     {
       "id": 11,
@@ -220,7 +220,7 @@
       ],
       "img": "/assets/ao/AJK035W2.jpg",
       "blurImg": "/assets/blurImg/AJK035W2.jpg",
-      "amount": 1
+      "amount": 1000
     },
     {
       "id": 12,
@@ -242,7 +242,7 @@
       ],
       "img": "/assets/ao/AJK029W2.jpg",
       "blurImg": "/assets/blurImg/AJK029W2.jpg",
-      "amount": 1
+      "amount": 1000
     },
     {
       "id": 13,
@@ -264,7 +264,7 @@
       ],
       "img": "/assets/ao/AWO004W2.jpg",
       "blurImg": "/assets/blurImg/AWO004W2.jpg",
-      "amount": 1
+      "amount": 1000
     },
     {
       "id": 14,
@@ -286,7 +286,7 @@
       ],
       "img": "/assets/ao/AWO001W2.jpg",
       "blurImg": "/assets/blurImg/AWO001W2.jpg",
-      "amount": 1
+      "amount": 1000
     },
     {
       "id": 15,
@@ -308,7 +308,7 @@
       ],
       "img": "/assets/ao/AWOR01.jpg",
       "blurImg": "/assets/blurImg/AWOR01.jpg",
-      "amount": 1
+      "amount": 1000
     },
     {
       "id": 16,
@@ -330,7 +330,7 @@
       ],
       "img": "/assets/ao/AWO005W1.jpg",
       "blurImg": "/assets/blurImg/AWO005W1.jpg",
-      "amount": 1
+      "amount": 1000
     },
     {
       "id": 17,
@@ -352,7 +352,7 @@
       ],
       "img": "/assets/ao/ALT009W2.jpg",
       "blurImg": "/assets/blurImg/ALT009W2.jpg",
-      "amount": 1
+      "amount": 1000
     },
     {
       "id": 18,
@@ -374,7 +374,7 @@
       ],
       "img": "/assets/ao/ALT003W2.jpg",
       "blurImg": "/assets/blurImg/ALT003W2.jpg",
-      "amount": 1
+      "amount": 1000
     },
     {
       "id": 19,
@@ -397,7 +397,7 @@
       ],
       "img": "/assets/ao/ALT008W2.jpg",
       "blurImg": "/assets/ao/ALT008W2.jpg",
-      "amount": 1
+      "amount": 1000
     },
     {
       "id": 20,
@@ -418,7 +418,7 @@
       ],
       "img": "/assets/ao/ALT006W2.jpg",
       "blurImg": "/assets/blurImg/ALT006W2.jpg",
-      "amount": 1
+      "amount": 1000
     },
     {
       "id": 21,
@@ -441,7 +441,7 @@
       ],
       "img": "/assets/quan/ASO010S3.jpg",
       "blurImg": "/assets/blurImg/ASO010S3.jpg",
-      "amount": 1
+      "amount": 1000
     },
     {
       "id": 22,
@@ -464,7 +464,7 @@
       ],
       "img": "/assets/quan/ASO009S3.jpg",
       "blurImg": "/assets/blurImg/ASO009S3.jpg",
-      "amount": 1
+      "amount": 1000
     },
     {
       "id": 23,
@@ -488,7 +488,7 @@
       ],
       "img": "/assets/quan/ASO025S3.jpg",
       "blurImg": "/assets/blurImg/ASO025S3.jpg",
-      "amount": 1
+      "amount": 1000
     },
     {
       "id": 24,
@@ -512,7 +512,7 @@
       ],
       "img": "/assets/quan/ASO017S3.jpg",
       "blurImg": "/assets/blurImg/ASO017S3.jpg",
-      "amount": 1
+      "amount": 1000
     },
     {
       "id": 25,
@@ -535,7 +535,7 @@
       ],
       "img": "/assets/quan/ATR00303.jpg",
       "blurImg": "/assets/blurImg/ATR00303.jpg",
-      "amount": 1
+      "amount": 1000
     },
     {
       "id": 26,
@@ -558,7 +558,7 @@
       ],
       "img": "/assets/quan/ATR00803.jpg",
       "blurImg": "/assets/blurImg/ATR00803.jpg",
-      "amount": 1
+      "amount": 1000
     },
     {
       "id": 27,
@@ -582,7 +582,7 @@
       ],
       "img": "/assets/quan/ATR00503.jpg",
       "blurImg": "/assets/blurImg/ATR00503.jpg",
-      "amount": 1
+      "amount": 1000
     },
     {
       "id": 28,
@@ -605,7 +605,7 @@
       ],
       "img": "/assets/quan/ATR00203.jpg",
       "blurImg": "/assets/blurImg/ATR00203.jpg",
-      "amount": 1
+      "amount": 1000
     },
     {
       "id": 29,
@@ -627,7 +627,7 @@
       ],
       "img": "/assets/quan/AJN00203.jpg",
       "blurImg": "/assets/blurImg/AJN00203.jpg",
-      "amount": 1
+      "amount": 1000
     },
     {
       "id": 30,
@@ -650,7 +650,7 @@
       ],
       "img": "/assets/quan/AJN01103.jpg",
       "blurImg": "/assets/blurImg/AJN01103.jpg",
-      "amount": 1
+      "amount": 1000
     },
     {
       "id": 31,
@@ -672,7 +672,7 @@
       ],
       "img": "/assets/quan/AJNR04.jpg",
       "blurImg": "/assets/blurImg/AJNR04.jpg",
-      "amount": 1
+      "amount": 1000
     },
     {
       "id": 32,
@@ -696,7 +696,7 @@
       ],
       "img": "/assets/quan/AJN04202.jpg",
       "blurImg": "/assets/blurImg/AJN04202.jpg",
-      "amount": 1
+      "amount": 1000
     },
     {
       "id": 33,
@@ -716,7 +716,7 @@
       ],
       "img": "/assets/phu_kien/ASHR41.jpg",
       "blurImg": "/assets/blurImg/ASHR41.jpg",
-      "amount": 1
+      "amount": 1000
     },
     {
       "id": 34,
@@ -736,7 +736,7 @@
       ],
       "img": "/assets/phu_kien/ASHR22.jpg",
       "blurImg": "/assets/blurImg/ASHR22.jpg",
-      "amount": 1
+      "amount": 1000
     },
     {
       "id": 35,
@@ -757,7 +757,7 @@
       ],
       "img": "/assets/phu_kien/ASH06602.jpg",
       "blurImg": "/assets/blurImg/ASH06602.jpg",
-      "amount": 1
+      "amount": 1000
     },
     {
       "id": 36,
@@ -777,7 +777,7 @@
       ],
       "img": "/assets/phu_kien/ASH06201.jpg",
       "blurImg": "/assets/blurImg/ASH06201.jpg",
-      "amount": 1
+      "amount": 1000
     },
     {
       "id": 37,
@@ -790,7 +790,7 @@
       ],
       "img": "/assets/phu_kien/ATWR02.jpg",
       "blurImg": "/assets/blurImg/ATWR02.jpg",
-      "amount": 1
+      "amount": 1000
     },
     {
       "id": 38,
@@ -804,7 +804,7 @@
       ],
       "img": "/assets/phu_kien/AWER02.jpg",
       "blurImg": "/assets/blurImg/AWER02 .jpg",
-      "amount": 1
+      "amount": 1000
     },
     {
       "id": 39,
@@ -817,7 +817,7 @@
       ],
       "img": "/assets/phu_kien/ABL08302.jpg",
       "blurImg": "/assets/blurImg/ABL08302 .jpg",
-      "amount": 1
+      "amount": 1000
     },
     {
       "id": 40,
@@ -831,7 +831,7 @@
       ],
       "img": "/assets/phu_kien/ABL04109.jpg",
       "blurImg": "/assets/blurImg/ABL04109.jpg",
-      "amount": 1
+      "amount": 1000
     },
     {
       "id": 41,
@@ -852,7 +852,7 @@
       ],
       "img": "/assets/phu_kien/COMFORT.jpg",
       "blurImg": "/assets/blurImg/COMFORT.jpg",
-      "amount": 1
+      "amount": 1000
     },
     {
       "id": 42,
@@ -873,7 +873,7 @@
       ],
       "img": "/assets/phu_kien/DÉP QUAI NGANG TÙY CHỈNH ADIDAS COMFORT.jpg",
       "blurImg": "/assets/blurImg/DÉP QUAI NGANG TÙY CHỈNH ADIDAS COMFORT.jpg",
-      "amount": 1
+      "amount": 1000
     },
     {
       "id": 43,
@@ -890,7 +890,7 @@
       ],
       "img": "/assets/phu_kien/ATI08602.jpg",
       "blurImg": "/assets/blurImg/ATI08602 .jpg",
-      "amount": 1
+      "amount": 1000
     },
     {
       "id": 44,
@@ -907,7 +907,7 @@
       ],
       "img": "/assets/phu_kien/ATI08502.jpg",
       "blurImg": "/assets/blurImg/ATI08502.jpg",
-      "amount": 1
+      "amount": 1000
     }
   ],
   "users": [
@@ -963,7 +963,7 @@
           "quantity": 1
         }
       ],
-      "total": 56.97,
+      "total": 870000,
       "status": "completed",
       "timestamp": "2023-06-20 10:30:00"
     }

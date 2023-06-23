@@ -1,6 +1,5 @@
 import db from './database.json'
 
-
 export default function LoadData(){
     localStorage.setItem("users", JSON.stringify(db.users));
     localStorage.setItem("products", JSON.stringify(db.products));
