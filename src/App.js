@@ -16,6 +16,8 @@ import ViewOrder from "./components/Order/ViewOrder";
 import './components/styles/DefaultLayoutStyle.css';
 import LoadData from './components/data/LoadData'
 import ProductManager from "./components/Admin/ProductManager";
+import NotFound from "./components/layouts/NotFound";
+import '../node_modules/swiper/swiper-bundle.min.css'
 function App() {
   LoadData();
   return (
@@ -35,6 +37,7 @@ function App() {
         <Route path="/order" element={<Order />} />
         <Route path="/view-order" element={<ViewOrder />} />
         <Route path="/product-manage" element={<ProductManager />} />
+        <Route path="/not-found" element={<NotFound />} />
       </Routes>
   );
 }

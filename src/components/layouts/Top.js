@@ -8,17 +8,19 @@ import {
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
 import "../styles/DefaultLayoutStyle.css";
-import { Link } from "react-router-dom";
+import { Link, redirect } from "react-router-dom";
 
 export default function Top() {
   const [dropdownList, setDropdownList] = useState("none");
-  const [user, setUser] = useState({});
+  const [user, setUser] = useState();
   useEffect(() => {
     setUser(JSON.parse(localStorage.getItem("UserID")));
   }, []);
 
   const handleLogout = () => {
     localStorage.removeItem("UserID");
+    setUser()
+    redirect('/home');
   };
   const handleMouseOver = () => {
     setDropdownList("block");

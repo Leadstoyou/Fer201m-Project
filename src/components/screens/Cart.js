@@ -15,13 +15,13 @@ const Cart = () => {
   const [mergeProducts, setMergeProducts] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
   const navigation = useNavigate();
-
+  const [user, setUser] = useState({});
   const listCart = JSON.parse(localStorage.getItem("carts")).filter(
-    (cart) => cart.userId === "1"
+    (cart) => cart.userId == (JSON.parse(localStorage.getItem('UserID'))).id
   )[0];
 
   const foundProduct = JSON.parse(localStorage.getItem("products"));
-  const mergedCart = listCart.products
+  const mergedCart =listCart ? listCart.products
     .map((item) => {
       const product = foundProduct.find((p) => p.id === item.productId);
       if (product) {
@@ -35,7 +35,7 @@ const Cart = () => {
       }
       return null;
     })
-    .filter((item) => item !== null);
+    .filter((item) => item !== null) : [];
   const totalPriceTemp = mergedCart.reduce(function (acc, product) {
     var price = parseFloat(product.price.replace("đ", "").replace(",", ""));
     return acc + price * product.quantity;
@@ -43,6 +43,7 @@ const Cart = () => {
   useEffect(() => {
     setMergeProducts(mergedCart);
     setTotalPrice(totalPriceTemp);
+    setUser(JSON.parse(localStorage.getItem('UserID')));
   }, []);
 
   const convertToCurrencyFormat = (number) => {
@@ -85,9 +86,10 @@ const Cart = () => {
         color: cartupdate.color,
       };
     });
+    console.log(lmeo);
     const setUpdatedData = JSON.parse(localStorage.getItem("carts")).map(
       (data) => {
-        if (data.userId == 1) {
+        if (data.userId == user.id) {
           return {
             ...data,
             products: lmeo,
@@ -96,6 +98,7 @@ const Cart = () => {
         return data;
       }
     );
+    console.log(setUpdatedData);
     localStorage.setItem("carts", JSON.stringify(setUpdatedData));
     setMergeProducts(updatedCart);
     setTotalPrice(
@@ -116,7 +119,7 @@ const Cart = () => {
       let updatedData = JSON.parse(localStorage.getItem("carts")).map(function (
         item
       ) {
-        if (item.userId === "1") {
+        if (item.userId == user.id) {
           const updatedProducts = item.products.filter(function (product) {
             return product.productId !== id;
           });
@@ -142,8 +145,8 @@ const Cart = () => {
           </div>
           <Table className="cart-table">
             <tbody>
-              {mergeProducts.map((mergedCart) => (
-                <tr key={mergedCart.productId}>
+              {mergeProducts.map((mergedCart,index) => (
+                <tr key={index}>
                   <td width="180px">
                     <Link to={`/product/detail/${mergedCart.productId}`}>
                       <img

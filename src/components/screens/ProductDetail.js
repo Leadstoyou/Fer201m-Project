@@ -18,13 +18,14 @@ const ProductDetail = () => {
   const [product, setProduct] = useState([]);
   const [quantity, setQuantity] = useState(1);
   const [cartList, setCartList] = useState([]);
+  const [user, setUser] = useState();
   const navigation = useNavigate();
   const listCart = JSON.parse(localStorage.getItem("carts")).filter(
-    (cart) => cart.userId === "1"
+    (cart) => cart.userId == (JSON.parse(localStorage.getItem("UserID"))).id
   )[0];
 
   const listProducts = JSON.parse(localStorage.getItem("products"));
-  const mergedCart = listCart.products
+  const mergedCart = listCart ? listCart.products
     .map((item) => {
       const product = listProducts.find((p) => p.id === item.productId);
       if (product) {
@@ -38,7 +39,7 @@ const ProductDetail = () => {
       }
       return null;
     })
-    .filter((item) => item !== null);
+    .filter((item) => item !== null) : [];
 
   //hover and click size and color properties
   const [hoveredColor, setHoveredColor] = useState("");
@@ -63,8 +64,9 @@ const ProductDetail = () => {
   );
 
   useEffect(() => {
-    setProduct(foundProduct);
-    setCartList(mergedCart);
+    setProduct(foundProduct ? foundProduct : {});
+    setCartList(mergedCart ? mergedCart : []);
+    setUser(JSON.parse(localStorage.getItem("UserID")));
   }, []);
   //HIỂN THỊ CART
   const handleAddToCart = (flag) => {
@@ -104,15 +106,21 @@ const ProductDetail = () => {
         quantity,
       })
     );
-    const updatedUserData = { userId: "1", products: filteredObjects };
+    const updatedUserData = { userId: user.id, products: filteredObjects };
+    let temp=true;
     const updatedData = JSON.parse(localStorage.getItem("carts")).map(function (
       item
     ) {
       if (item.userId == updatedUserData.userId) {
+        temp = false;
         return updatedUserData;
       }
       return item;
     });
+    if(temp){
+      updatedData.push(updatedUserData)
+    }
+    console.log(updatedData);
     localStorage.setItem("carts", JSON.stringify(updatedData));
     if (flag === "addToCart") {
       handleShow();

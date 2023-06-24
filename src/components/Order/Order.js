@@ -19,8 +19,29 @@ const Order = () => {
   const [show, setShow] = useState(false);
   const [user, setUser] = useState({});
   const [orders, setOrders] = useState([]);
+
+  const listCart = JSON.parse(localStorage.getItem("carts")).filter(
+    (cart) => cart.userId == (JSON.parse(localStorage.getItem("UserID"))).id
+  )[0];
+
+  const listProducts = JSON.parse(localStorage.getItem("products"));
+  const mergedCart = listCart ? listCart.products
+    .map((item) => {
+      const product = listProducts.find((p) => p.id === item.productId);
+      if (product) {
+        return {
+          ...item,
+          name: product.name,
+          price: product.price,
+          img: product.img,
+          blurImg: product.blurImg,
+        };
+      }
+      return null;
+    })
+    .filter((item) => item !== null) : [];
   const data = JSON.parse(localStorage.getItem("carts"))
-    .filter((cart) => cart.userId === "1")[0]
+    .filter((cart) => cart.userId == (JSON.parse(localStorage.getItem("UserID"))).id)[0]
     .products.map((item) => {
       const product = JSON.parse(localStorage.getItem("products")).find(
         (p) => p.id === item.productId
@@ -39,7 +60,7 @@ const Order = () => {
     .filter((item) => item !== null);
 
   useEffect(() => {
-    setProducts(data);
+    setProducts(mergedCart);
     setTotalPrice(
       data.reduce((total, current) => {
         const price = parseInt(current.price.split("đ")[0].replace(".", ""));
