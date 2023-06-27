@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 
 const ViewOrder = () => {
   const [orders, setOrders] = useState([]);
-  const [user, setUser] = useState();
+  const [user, setUser] = useState(JSON.parse(localStorage.getItem("UserID")) ? JSON.parse(localStorage.getItem("UserID")) : {id:"PUBLIC_USER"});
   const addNameForProduct = (id,quantity)=> {
     const data = JSON.parse(localStorage.getItem('products'));
     const changedProduct =  data.filter((product)=> product.id == id)[0];
@@ -21,7 +21,7 @@ const ViewOrder = () => {
   }
   const data = JSON.parse(localStorage.getItem("orders"))
     .filter((order) => {
-      return order.userId == (JSON.parse(localStorage.getItem("UserID"))).id;
+      return order.userId == user.id;
     })
     .map((order) => {
       const lmeo = order.products.map((product)=>{
@@ -33,7 +33,6 @@ const ViewOrder = () => {
     });
   useEffect(() => {
     setOrders(data);
-    setUser(JSON.parse(localStorage.getItem("UserID")));
   }, []);
   const convertToCurrencyFormat = (number) => {
     var numberString = number.toString();

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Button,
   Card,
@@ -12,111 +12,172 @@ import {
   Modal,
 } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+import emailjs from "@emailjs/browser";
 
 const Order = () => {
   const [products, setProducts] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
   const [show, setShow] = useState(false);
-  const [user, setUser] = useState({});
+  const [user, setUser] = useState(
+    JSON.parse(localStorage.getItem("UserID"))
+      ? JSON.parse(localStorage.getItem("UserID"))
+      : { id: "PUBLIC_USER" }
+  );
+  const currentTime = new Date();
   const [orders, setOrders] = useState([]);
-
+  const order_address = useRef(0);
+  const order_telephone = useRef(0);
+  const order_email = useRef(0);
+  const form = useRef({});
   const listCart = JSON.parse(localStorage.getItem("carts")).filter(
-    (cart) => cart.userId == (JSON.parse(localStorage.getItem("UserID"))).id
+    (cart) => cart.userId == user.id
   )[0];
 
   const listProducts = JSON.parse(localStorage.getItem("products"));
-  const mergedCart = listCart ? listCart.products
-    .map((item) => {
-      const product = listProducts.find((p) => p.id === item.productId);
-      if (product) {
-        return {
-          ...item,
-          name: product.name,
-          price: product.price,
-          img: product.img,
-          blurImg: product.blurImg,
-        };
-      }
-      return null;
-    })
-    .filter((item) => item !== null) : [];
-  const data = JSON.parse(localStorage.getItem("carts"))
-    .filter((cart) => cart.userId == (JSON.parse(localStorage.getItem("UserID"))).id)[0]
-    .products.map((item) => {
-      const product = JSON.parse(localStorage.getItem("products")).find(
-        (p) => p.id === item.productId
-      );
-      if (product) {
-        return {
-          ...item,
-          name: product.name,
-          price: product.price,
-          img: product.img,
-          blurImg: product.blurImg,
-        };
-      }
-      return null;
-    })
-    .filter((item) => item !== null);
+  const mergedCart = listCart
+    ? listCart.products
+        .map((item) => {
+          const product = listProducts.find((p) => p.id === item.productId);
+          if (product) {
+            return {
+              ...item,
+              name: product.name,
+              price: product.price,
+              img: product.img,
+              blurImg: product.blurImg,
+            };
+          }
+          return null;
+        })
+        .filter((item) => item !== null)
+    : [];
 
   useEffect(() => {
     setProducts(mergedCart);
     setTotalPrice(
-      data.reduce((total, current) => {
-        const price = parseInt(current.price.split("đ")[0].replace(".", ""));
-        return total + price;
+      mergedCart.reduce((total, current) => {
+        const price = parseInt(current.price.replace(/\D/g, ''));
+        return total + price * current.quantity;
       }, 0)
     );
-    setUser(JSON.parse(localStorage.getItem("UserID")));
     setOrders(JSON.parse(localStorage.getItem("orders")));
   }, []);
 
-  const handleClose = () => setShow(false);
+  const handleClose = () => {
+    setShow(false);
+  };
   const handleShow = () => setShow(true);
 
   const navigation = useNavigate();
 
   const convertToCurrencyFormat = (number) => {
-    var numberString = number.toString();
-    var parts = numberString.split(".");
-    var integerPart = parts[0];
-    var decimalPart = parts.length > 1 ? parts[1] : "";
-
-    var formattedNumber =
-      integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ".") +
-      (decimalPart ? "." + decimalPart : "");
-
-    return formattedNumber;
-  };
-  const handleSubmit = () => {
-    const clearCart = JSON.parse(localStorage.getItem("carts")).map((item) => {
-      if (item.userId === "1") {
-        return { ...item, products: [] };
+    const numberString = number.toString();
+    let formattedString = '';
+  
+    for (let i = numberString.length - 1, count = 0; i >= 0; i--, count++) {
+      if (count !== 0 && count % 3 === 0) {
+        formattedString = '.' + formattedString;
       }
-      return item;
-    });
-
-    localStorage.setItem("carts", JSON.stringify(clearCart));
-    setProducts([]);
-    const lastId = parseInt(orders[orders.length - 1].id) + 1;
-    const newProductsOrder = products.map((product) => {
-      return { productId: product.productId, quantity: product.quantity };
-    });
-    const currentTime = new Date();
-    const newOrder = {
-      id: lastId.toString(),
-      userId: user.id,
-      products: newProductsOrder,
-      total: totalPrice,
-      status: "completed",
-      timestamp: `${currentTime.toLocaleDateString()} ${currentTime.toLocaleTimeString()}`,
-    };
-    let addNewOrder = JSON.parse(localStorage.getItem("orders"));
-    addNewOrder.push(newOrder);
-    localStorage.setItem("orders", JSON.stringify(addNewOrder));
-    setTotalPrice(0);
-    navigation("/home");
+      formattedString = numberString[i] + formattedString;
+    }
+  
+    return formattedString;
   };
+  const handleSubmit = (e) => {
+    if (products.length === 0) {
+      console.log(products);
+      alert("Hãy chọn mua 1 sản phẩm");
+      return;
+    } else {
+      if (user.id == "PUBLIC_USER") {
+        handleShow();
+        return;
+      }
+      const confirm = window.confirm("Bạn có muốn đặt hàng không");
+      if (confirm) {
+        const clearCart = JSON.parse(localStorage.getItem("carts")).map(
+          (item) => {
+            if (item.userId == user.id) {
+              return { ...item, products: [] };
+            }
+            return item;
+          }
+        );
+
+        localStorage.setItem("carts", JSON.stringify(clearCart));
+        setProducts([]);
+        const lastId = parseInt(orders[orders.length - 1].id) + 1;
+        const newProductsOrder = products.map((product) => {
+          return { productId: product.productId, quantity: product.quantity };
+        });
+        const currentTime = new Date();
+        const newOrder = {
+          id: lastId.toString(),
+          userId: user.id,
+          products: newProductsOrder,
+          total: totalPrice,
+          status: "completed",
+          timestamp: `${currentTime.toLocaleDateString()} ${currentTime.toLocaleTimeString()}`,
+        };
+        let addNewOrder = JSON.parse(localStorage.getItem("orders"));
+        addNewOrder.push(newOrder);
+        localStorage.setItem("orders", JSON.stringify(addNewOrder));
+        setTotalPrice(0);
+        navigation("/home");
+      }
+    }
+  };
+  const handleSubmitPublicUser = (e) => {
+    e.preventDefault();
+
+    emailjs
+      .sendForm(
+        "service_3kxpvwn",
+        "template_k6q9att",
+        e.target,
+        "oBQVy9OW2Wok5Hzji"
+      )
+      .then(
+        (result) => {
+          alert("Order sucessfully");
+          setShow(false);
+          const clearCart = JSON.parse(localStorage.getItem("carts")).map(
+            (item) => {
+              if (item.userId == user.id) {
+                return { ...item, products: [] };
+              }
+              return item;
+            }
+          );
+
+          localStorage.setItem("carts", JSON.stringify(clearCart));
+          setProducts([]);
+          const lastId = parseInt(orders[orders.length - 1].id) + 1;
+          const newProductsOrder = products.map((product) => {
+            return { productId: product.productId, quantity: product.quantity };
+          });
+          const currentTime = new Date();
+          const newOrder = {
+            id: lastId.toString(),
+            userId: user.id,
+            products: newProductsOrder,
+            total: totalPrice,
+            status: "completed",
+            timestamp: `${currentTime.toLocaleDateString()} ${currentTime.toLocaleTimeString()}`,
+          };
+          let addNewOrder = JSON.parse(localStorage.getItem("orders"));
+          addNewOrder.push(newOrder);
+          localStorage.setItem("orders", JSON.stringify(addNewOrder));
+          setTotalPrice(0);
+          navigation("/home");
+          console.log(result.text);
+        },
+        (error) => {
+          console.log(error.text);
+        }
+      );
+  };
+
   return (
     <Container style={{ border: "" }}>
       <Card>
@@ -266,66 +327,149 @@ const Order = () => {
         </Card.Body>
       </Card>
       <Modal show={show} onHide={handleClose}>
-        <Modal.Header closeButton>
-          <Modal.Title>Modal heading</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Card style={{ border: "none" }}>
-            <Card.Header
-              as="h5"
-              style={{ display: "flex", justifyContent: "space-around" }}
-            >
-              <Card.Text>Thank You</Card.Text>
-              <p>{user.username}</p>
-            </Card.Header>
+        <Form
+          onSubmit={handleSubmitPublicUser}
+          onKeyDown={(event) => {
+            if (event.key === "Enter") {
+              event.preventDefault();
+            }
+          }}
+          ref={form}
+        >
+          <Modal.Header
+            closeButton={() => {
+              setShow(false);
+            }}
+          >
+            <Modal.Title> Order </Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <Card style={{ border: "none" }}>
+              <Card.Header
+                as="h5"
+                style={{ display: "flex", justifyContent: "space-around" }}
+              >
+                <Card.Text>Thank You</Card.Text>
+                <p>{user.username}</p>
+              </Card.Header>
 
-            <Card.Body>
-              <Card.Title>
-                <Card.Text class="mb-0" style={{ color: "#35558a" }}>
-                  Tóm tắt thanh toán
-                </Card.Text>
-              </Card.Title>
+              <Card.Body>
+                <Card.Title>
+                  <Card.Text class="mb-0" style={{ color: "#35558a" }}>
+                    Tóm tắt thanh toán
+                  </Card.Text>
+                </Card.Title>
 
-              <hr
-                className="mt-2 mb-4"
-                style={{
-                  height: 0,
-                  backgroundColor: "transparent",
-                  opacity: 0.75,
-                }}
-              />
-              {products.map((product, index) => (
+                <hr
+                  className="mt-2 mb-4"
+                  style={{
+                    height: 0,
+                    backgroundColor: "transparent",
+                    opacity: 0.75,
+                  }}
+                />
+                {products.map((product, index) => (
+                  <Row
+                    className="justify-content-between"
+                    key={index}
+                    style={{ borderBottom: "2px #9e9e9e" }}
+                  >
+                    <Col className="fw-bold mb-0">
+                      {product.name}(Qty:{product.productId})
+                    </Col>
+
+                    <Col className="text-muted mb-0">
+                      {convertToCurrencyFormat(product.price)}
+                    </Col>
+                  </Row>
+                ))}
+
                 <Row
                   className="justify-content-between"
-                  key={index}
-                  style={{ borderBottom: "2px #9e9e9e" }}
+                  style={{ paddingTop: "15px" }}
                 >
-                  <Col className="fw-bold mb-0">
-                    {product.name}(Qty:{product.productId})
-                  </Col>
-                  <Col className="text-muted mb-0">
-                    {convertToCurrencyFormat(product.price)}
+                  <Col className="fw-bold">Total</Col>
+                  <Col className="fw-bold" style={{ color: "#35558a" }}>
+                    {`${convertToCurrencyFormat(totalPrice)}đ`}
                   </Col>
                 </Row>
-              ))}
-
-              <Row
-                className="justify-content-between"
-                style={{ paddingTop: "15px" }}
-              >
-                <Col className="fw-bold">Total</Col>
-                <Col className="fw-bold" style={{ color: "#35558a" }}>
-                  {`${convertToCurrencyFormat(totalPrice)}đ`}
-                </Col>
-              </Row>
-            </Card.Body>
-          </Card>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="primary" onClick={handleClose}>
-            Xác nhận
-          </Button>
-        </Modal.Footer>
+                <br />
+                <div className="form_value">
+                  <Row
+                    className="justify-content-between"
+                    style={{ paddingTop: "15px" }}
+                  >
+                    <Form.Group controlId="email">
+                      <Form.Label className="fw-bold">Email</Form.Label>
+                      <Form.Control
+                        ref={order_email}
+                        name="order_email"
+                        type="email"
+                        className="fw-bold"
+                        placeholder="Email"
+                        aria-label="Email"
+                        aria-describedby="basic-addon1"
+                        required
+                      />
+                    </Form.Group>
+                  </Row>
+                  <Row
+                    className="justify-content-between"
+                    style={{ paddingTop: "15px" }}
+                  >
+                    <Form.Group controlId="telephone">
+                      <Col className="fw-bold">Số điện thoại</Col>
+                      <Form.Control
+                        ref={order_telephone}
+                        name="order_telephone"
+                        className="fw-bold"
+                        placeholder="Số điện thoại"
+                        aria-label="Số điện thoại"
+                        aria-describedby="basic-addon1"
+                        required
+                      />
+                    </Form.Group>
+                  </Row>
+                  <Row
+                    className="justify-content-between"
+                    style={{ paddingTop: "15px" }}
+                  >
+                    <Form.Group controlId="address">
+                      <Col className="fw-bold">Địa chỉ</Col>
+                      <Form.Control
+                        ref={order_address}
+                        name="order_address"
+                        className="fw-bold"
+                        placeholder="Địa chỉ"
+                        aria-label="Địa chỉ"
+                        aria-describedby="basic-addon1"
+                        required
+                      />
+                    </Form.Group>
+                  </Row>
+                </div>
+                <input
+                  style={{ display: "none" }}
+                  name="order_date"
+                  value={`${currentTime.toLocaleDateString()} ${currentTime.toLocaleTimeString()}`}
+                />
+              </Card.Body>
+            </Card>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button
+              variant="primary"
+              onClick={() => {
+                if (!(user.id == "PUBLIC_USER")) {
+                  setShow(false);
+                }
+              }}
+              type="submit"
+            >
+              Xác nhận
+            </Button>
+          </Modal.Footer>
+        </Form>
       </Modal>
     </Container>
   );

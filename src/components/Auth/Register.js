@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
+const CryptoJS = require("crypto-js");
+
 const Register = () => {
   const listUsers = JSON.parse(localStorage.getItem("users"));
   const [users, setUsers] = useState(listUsers);
@@ -19,7 +21,7 @@ const Register = () => {
     const newUser = {
       id: users.length + 1,
       username: username,
-      password: password,
+      password:  CryptoJS.MD5(password).toString(),
       email: email,
       address: address,
       phone: phone,

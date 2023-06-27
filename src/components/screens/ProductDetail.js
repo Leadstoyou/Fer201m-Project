@@ -18,12 +18,12 @@ const ProductDetail = () => {
   const [product, setProduct] = useState([]);
   const [quantity, setQuantity] = useState(1);
   const [cartList, setCartList] = useState([]);
-  const [user, setUser] = useState();
+  const [user, setUser] = useState(JSON.parse(localStorage.getItem("UserID")) ? JSON.parse(localStorage.getItem("UserID")) : {id:"PUBLIC_USER"});
   const navigation = useNavigate();
   const listCart = JSON.parse(localStorage.getItem("carts")).filter(
-    (cart) => cart.userId == (JSON.parse(localStorage.getItem("UserID"))).id
+    (cart) => cart.userId == user.id
   )[0];
-
+    console.log(1)
   const listProducts = JSON.parse(localStorage.getItem("products"));
   const mergedCart = listCart ? listCart.products
     .map((item) => {
@@ -66,7 +66,6 @@ const ProductDetail = () => {
   useEffect(() => {
     setProduct(foundProduct ? foundProduct : {});
     setCartList(mergedCart ? mergedCart : []);
-    setUser(JSON.parse(localStorage.getItem("UserID")));
   }, []);
   //HIỂN THỊ CART
   const handleAddToCart = (flag) => {

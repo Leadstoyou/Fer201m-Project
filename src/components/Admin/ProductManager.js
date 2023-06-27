@@ -68,6 +68,7 @@ const ProductManager = () => {
     setCategories(JSON.parse(localStorage.getItem("categories")));
   }, []);
   const handleSubmit = (event) => {
+    
     event.preventDefault();
     if (!isEditing) {
       newProductAdded.id = products[products.length - 1].id + 1;

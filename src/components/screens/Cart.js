@@ -15,9 +15,9 @@ const Cart = () => {
   const [mergeProducts, setMergeProducts] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
   const navigation = useNavigate();
-  const [user, setUser] = useState({});
+  const [user, setUser] = useState((JSON.parse(localStorage.getItem('UserID'))) ? (JSON.parse(localStorage.getItem('UserID')))  : {id:"PUBLIC_USER"});
   const listCart = JSON.parse(localStorage.getItem("carts")).filter(
-    (cart) => cart.userId == (JSON.parse(localStorage.getItem('UserID'))).id
+    (cart) => cart.userId == user.id
   )[0];
 
   const foundProduct = JSON.parse(localStorage.getItem("products"));
@@ -36,27 +36,26 @@ const Cart = () => {
       return null;
     })
     .filter((item) => item !== null) : [];
-  const totalPriceTemp = mergedCart.reduce(function (acc, product) {
-    var price = parseFloat(product.price.replace("đ", "").replace(",", ""));
-    return acc + price * product.quantity;
-  }, 0);
   useEffect(() => {
     setMergeProducts(mergedCart);
-    setTotalPrice(totalPriceTemp);
-    setUser(JSON.parse(localStorage.getItem('UserID')));
+    setTotalPrice(mergedCart.reduce(function (acc, product) {
+      var price = parseFloat(product.price.replace(/\D/g, ''));
+      return acc + price * product.quantity;
+    }, 0));
   }, []);
 
   const convertToCurrencyFormat = (number) => {
-    var numberString = number.toString();
-    var parts = numberString.split(".");
-    var integerPart = parts[0];
-    var decimalPart = parts.length > 1 ? parts[1] : "";
-
-    var formattedNumber =
-      integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ".") +
-      (decimalPart ? "." + decimalPart : "");
-
-    return formattedNumber;
+    const numberString = number.toString();
+    let formattedString = '';
+  
+    for (let i = numberString.length - 1, count = 0; i >= 0; i--, count++) {
+      if (count !== 0 && count % 3 === 0) {
+        formattedString = '.' + formattedString;
+      }
+      formattedString = numberString[i] + formattedString;
+    }
+  
+    return formattedString;
   };
   const handleUpdateCart = (operator, productId, quantity) => {
     var updatedCart;
@@ -242,7 +241,6 @@ const Cart = () => {
                     <span className="btn-favorite " data-id="4063">
                       <i></i>
                     </span>
-                    {/* ... */}
                   </td>
                 </tr>
               ))}

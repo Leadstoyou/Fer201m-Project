@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
+const CryptoJS = require("crypto-js");
 
 const Login = () => {
 
@@ -27,7 +28,7 @@ const Login = () => {
       messpassword.style.color = "red";
     } else {
       const user = userData.find(
-        (u) => u.email === email && u.password === password
+        (u) => u.email == email && u.password ==  CryptoJS.MD5(password).toString()
       );
       if (user) {
         localStorage.setItem("UserID", JSON.stringify(user));
