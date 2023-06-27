@@ -15,7 +15,7 @@ const Home = () => {
     setProducts(JSON.parse(localStorage.getItem('products')));
   }, []);
   return (
-    <DefaultLayout className="container">
+    <DefaultLayout >
       <h2>DANH MỤC NỔI BẬT</h2>
       <>
         <Swiper

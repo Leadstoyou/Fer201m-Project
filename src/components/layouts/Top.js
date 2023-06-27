@@ -30,14 +30,15 @@ export default function Top() {
     setDropdownList("none");
   };
   return (
-    <div className="container top">
+    <div >
       <Row>
-        <Nav
+        <Nav fixed="top"
           className="bg-body-tertiary"
           data-bs-theme="light"
           justify="true"
           fill="true"
           style={{ justifyContent: "space-around" }}
+          bg="light" expand="lg"
         >
           <Container style={{ display: "contents" }}>
             <Link to="/home">

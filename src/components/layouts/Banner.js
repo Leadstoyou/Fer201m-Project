@@ -6,7 +6,7 @@ import { SwiperSlide,Swiper } from "swiper/react";
 
 function Banner() {
   return (
-    <Container>
+    <div>
       <>
         <Swiper
           spaceBetween={30}
@@ -34,7 +34,7 @@ function Banner() {
           </SwiperSlide>
         </Swiper>
       </>
-    </Container>
+    </div>
   );
 }
 export default Banner;
