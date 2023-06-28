@@ -8,63 +8,90 @@ import "swiper/css";
 import "swiper/css/effect-coverflow";
 import "swiper/css/pagination";
 import { EffectCoverflow, Pagination, Scrollbar } from "swiper";
-import { Image } from "react-bootstrap";
+import { Container, Image } from "react-bootstrap";
+import "./ScreensStyle.css";
+import { Link } from "react-router-dom";
+
 const Home = () => {
   const [products, setProducts] = useState([]);
   useEffect(() => {
-    setProducts(JSON.parse(localStorage.getItem('products')));
+    setProducts(JSON.parse(localStorage.getItem("products")));
   }, []);
+
   return (
-    <DefaultLayout >
-      <h2>DANH MỤC NỔI BẬT</h2>
-      <>
-        <Swiper
-          slidesPerView={5}
-          centeredSlides={true}
-          spaceBetween={30}
-          grabCursor={true}
-          scrollbar={{
-            hide: true,
-          }}
-          modules={[Pagination, Scrollbar]}
-          className="mySwiper"
-          loop={true}
-        >
-          {
-            products.map((product,index) => (
-              <SwiperSlide key={index}>
-                <Image src={product.img} alt={product.name} style={{width:'100%'}}/>
-              </SwiperSlide>
-            ))
-          }
-        </Swiper>
-      </>
-      <br/>
-        <Image src='/assets/Banner/Banner-web.png' fluid />
-        <br/>
-        <h2>Sản Phẩm Mới</h2>
-        <>
-        <Swiper
-          slidesPerView={5}
-          centeredSlides={true}
-          spaceBetween={30}
-          grabCursor={true}
-          scrollbar={{
-            hide: true,
-          }}
-          modules={[Pagination, Scrollbar]}
-          className="mySwiper"
-          loop={true}
-        >
-          {
-            products.map((product,index) => (
-              <SwiperSlide key={index}>
-                <Image src={product.img} alt={product.name} style={{width:'100%'}}/>
-              </SwiperSlide>
-            ))
-          }
-        </Swiper>
-      </>
+    <DefaultLayout>
+      <div className="product-famous">
+        <Container fluid style={{ padding: "0 0 0 78px" }}>
+          <h3>DANH MỤC NỔI BẬT</h3>
+          <>
+            <Swiper
+              slidesPerView={5}
+              centeredSlides={true}
+              spaceBetween={30}
+              grabCursor={true}
+              preventClicks="false"
+              scrollbar={{
+                hide: true,
+              }}
+              modules={[Pagination, Scrollbar]}
+              className="mySwiper"
+              loop={true}
+              style={{ height: "360px", width: "auto" }}
+            >
+              {products.map((product, index) => (
+                <SwiperSlide key={index}>
+                  <Link to={`/product/detail/${product.id}`}>
+                    <Image
+                      src={product.img}
+                      alt={product.name}
+                      style={{ width: "100%" }}
+                    />
+                    <h5 style={{ paddingTop: "10px" }}>{product.name}</h5>
+                  </Link>
+                </SwiperSlide>
+              ))}
+            </Swiper>
+          </>
+        </Container>
+      </div>
+
+      <br />
+      <Image src="/assets/Banner/Banner-web.png" fluid />
+      <br />
+      <div className="product-famous">
+        <Container fluid style={{ padding: "0 0 0 78px" }}>
+          <h3>Sản Phẩm Mới</h3>
+          <>
+            <Swiper
+              slidesPerView={5}
+              centeredSlides={true}
+              spaceBetween={30}
+              grabCursor={true}
+              preventClicks="false"
+              scrollbar={{
+                hide: true,
+              }}
+              modules={[Pagination, Scrollbar]}
+              className="mySwiper"
+              loop={true}
+              style={{ height: "360px", width: "auto" }}
+            >
+              {products.map((product, index) => (
+                <SwiperSlide key={index}>
+                  <Link to={`/product/detail/${product.id}`}>
+                    <Image
+                      src={product.img}
+                      alt={product.name}
+                      style={{ width: "100%" }}
+                    />
+                    <h5 style={{ paddingTop: "10px" }}>{product.name}</h5>
+                  </Link>
+                </SwiperSlide>
+              ))}
+            </Swiper>
+          </>
+        </Container>
+      </div>
     </DefaultLayout>
   );
 };

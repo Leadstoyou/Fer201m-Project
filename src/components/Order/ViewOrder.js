@@ -48,9 +48,8 @@ const ViewOrder = () => {
   };
   return (
     <DefaultLayout>
-      <Container style={{ border: "none" }}>
+      <Container style={{ border: "none" ,paddingBottom:'250px'}}>
         <BreadcrumbComponent />
-        <NavMenuDashboard />
         <Table striped border="true" hover>
           <thead>
             <tr>

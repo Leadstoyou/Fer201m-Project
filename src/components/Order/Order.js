@@ -179,7 +179,7 @@ const Order = () => {
   };
 
   return (
-    <Container style={{ border: "" }}>
+    <div className="container border-0">
       <Card>
         <Card.Header
           style={{
@@ -471,7 +471,7 @@ const Order = () => {
           </Modal.Footer>
         </Form>
       </Modal>
-    </Container>
+    </div>
   );
 };
 

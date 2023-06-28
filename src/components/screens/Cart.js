@@ -15,46 +15,54 @@ const Cart = () => {
   const [mergeProducts, setMergeProducts] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
   const navigation = useNavigate();
-  const [user, setUser] = useState((JSON.parse(localStorage.getItem('UserID'))) ? (JSON.parse(localStorage.getItem('UserID')))  : {id:"PUBLIC_USER"});
+  const [user, setUser] = useState(
+    JSON.parse(localStorage.getItem("UserID"))
+      ? JSON.parse(localStorage.getItem("UserID"))
+      : { id: "PUBLIC_USER" }
+  );
   const listCart = JSON.parse(localStorage.getItem("carts")).filter(
     (cart) => cart.userId == user.id
   )[0];
 
   const foundProduct = JSON.parse(localStorage.getItem("products"));
-  const mergedCart =listCart ? listCart.products
-    .map((item) => {
-      const product = foundProduct.find((p) => p.id === item.productId);
-      if (product) {
-        return {
-          ...item,
-          name: product.name,
-          price: product.price,
-          img: product.img,
-          blurImg: product.blurImg,
-        };
-      }
-      return null;
-    })
-    .filter((item) => item !== null) : [];
+  const mergedCart = listCart
+    ? listCart.products
+        .map((item) => {
+          const product = foundProduct.find((p) => p.id === item.productId);
+          if (product) {
+            return {
+              ...item,
+              name: product.name,
+              price: product.price,
+              img: product.img,
+              blurImg: product.blurImg,
+            };
+          }
+          return null;
+        })
+        .filter((item) => item !== null)
+    : [];
   useEffect(() => {
     setMergeProducts(mergedCart);
-    setTotalPrice(mergedCart.reduce(function (acc, product) {
-      var price = parseFloat(product.price.replace(/\D/g, ''));
-      return acc + price * product.quantity;
-    }, 0));
+    setTotalPrice(
+      mergedCart.reduce(function (acc, product) {
+        var price = parseFloat(product.price.replace(/\D/g, ""));
+        return acc + price * product.quantity;
+      }, 0)
+    );
   }, []);
 
   const convertToCurrencyFormat = (number) => {
     const numberString = number.toString();
-    let formattedString = '';
-  
+    let formattedString = "";
+
     for (let i = numberString.length - 1, count = 0; i >= 0; i--, count++) {
       if (count !== 0 && count % 3 === 0) {
-        formattedString = '.' + formattedString;
+        formattedString = "." + formattedString;
       }
       formattedString = numberString[i] + formattedString;
     }
-  
+
     return formattedString;
   };
   const handleUpdateCart = (operator, productId, quantity) => {
@@ -85,7 +93,6 @@ const Cart = () => {
         color: cartupdate.color,
       };
     });
-    console.log(lmeo);
     const setUpdatedData = JSON.parse(localStorage.getItem("carts")).map(
       (data) => {
         if (data.userId == user.id) {
@@ -97,12 +104,11 @@ const Cart = () => {
         return data;
       }
     );
-    console.log(setUpdatedData);
     localStorage.setItem("carts", JSON.stringify(setUpdatedData));
     setMergeProducts(updatedCart);
     setTotalPrice(
       updatedCart.reduce(function (acc, product) {
-        var price = parseFloat(product.price.replace("đ", "").replace(",", ""));
+        var price = parseFloat(product.price.replace(/\D/g, ""));
         return acc + price * product.quantity;
       }, 0)
     );
@@ -136,7 +142,7 @@ const Cart = () => {
   };
 
   return (
-    <DefaultLayout className="container">
+    <DefaultLayout className="container border-0">
       <div className="row">
         <div className="col-8">
           <div className="heading_layout_other">
@@ -144,7 +150,7 @@ const Cart = () => {
           </div>
           <Table className="cart-table">
             <tbody>
-              {mergeProducts.map((mergedCart,index) => (
+              {mergeProducts.map((mergedCart, index) => (
                 <tr key={index}>
                   <td width="180px">
                     <Link to={`/product/detail/${mergedCart.productId}`}>
@@ -254,7 +260,7 @@ const Cart = () => {
                 <li>
                   <span className="tille">Tạm tính:</span>
                   <span className="price black">
-                    {convertToCurrencyFormat(totalPrice)}.000 đ
+                    {convertToCurrencyFormat(totalPrice)} đ
                   </span>
                 </li>
               </ul>
@@ -283,10 +289,6 @@ const Cart = () => {
             <p>
               Tích điểm đổi quà và rất nhiều ưu đãi đặc biệt khác, chỉ dành cho
               hội viên của Aristino.
-            </p>
-            <p>
-              <Link to="/login">Đăng nhập</Link>/
-              <Link to="/register">Đăng ký</Link>
             </p>
           </div>
         </div>

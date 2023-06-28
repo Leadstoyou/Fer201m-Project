@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { redirect, useLocation } from "react-router-dom";
+import { redirect, useLocation, useNavigate } from "react-router-dom";
 import NotFound from "../layouts/NotFound";
+import "./AuthStyle.css";
 
 const ResetPassword = () => {
   const [users, setUsers] = useState(JSON.parse(localStorage.getItem("users")));
@@ -8,6 +9,7 @@ const ResetPassword = () => {
   const [password2, setPassword2] = useState("");
   const CryptoJS = require("crypto-js");
   const [user, setUser] = useState();
+  const navigation = useNavigate();
   useEffect(() => {
     JSON.parse(localStorage.getItem("forgot_password")).map((item) => {
       if (item.forgotPasswordLink == window.location.href) {
@@ -18,7 +20,9 @@ const ResetPassword = () => {
 
   const submitHandler = (e) => {
     e.preventDefault();
+    console.log(password1)
     if (password1 == password2 && password1 != "") {
+      console.log(password1)
       setUsers(
         users.map((item) => {
           if (item.email == user.email) {
@@ -29,37 +33,50 @@ const ResetPassword = () => {
         })
       );
       localStorage.setItem("users", JSON.stringify(users));
-      redirect("/login");
+      navigation("/login");
     }
   };
-  
+
   return user ? (
-    <div className="container">
-      <form onSubmit={submitHandler}>
-        <h1>Tạo Mật Khẩu mới</h1>
-        <p>nhập mật khẩu mới</p>
-        <p style={{ color: "red" }} id="messageError"></p>
-        <input
-          type="password"
-          value={password1}
-          onChange={(e) => setPassword1(e.target.value)}
-        />
-        <p>nhập lại mật khẩu</p>
-        <input
-          type="password"
-          value={password2}
-          onChange={(e) => {
-            if (password1 != e.target.value) {
-              document.getElementById("messageError").innerText =
-                "passwords do not match";
-            } else {
-              document.getElementById("messageError").innerText = "";
-            }
-            setPassword2(e.target.value);
-          }}
-        />
-        <br></br>
-        <button type="submit">Submit</button>
+    <div className="Auth-form-container">
+      <form className="Auth-form" onSubmit={submitHandler}>
+        <div className="Auth-form-content">
+          <h3 className="Auth-form-title">Reset password</h3>
+          <p style={{ color: "red" }} id="messageError"></p>
+          <div className="form-group mt-3">
+            <label>Nhập mật khẩu mới</label>
+            <input
+              className="form-control mt-1"
+              type="password"
+              value={password1}
+              onChange={(e) => setPassword1(e.target.value)}
+              required
+            />
+          </div>
+          <div className="form-group mt-3">
+            <label>Nhập lại mật khẩu</label>
+            <input
+              className="form-control mt-1"
+              type="password"
+              value={password2}
+              onChange={(e) => {
+                if (password1 != e.target.value) {
+                  document.getElementById("messageError").innerText =
+                    "passwords do not match";
+                } else {
+                  document.getElementById("messageError").innerText = "";
+                }
+                setPassword2(e.target.value);
+              }}
+              required
+            />
+          </div>
+          <div className="d-grid gap-2 mt-5">
+            <button type="submit" className="btn btn-primary">
+              Submit
+            </button>
+          </div>
+        </div>
       </form>
     </div>
   ) : (

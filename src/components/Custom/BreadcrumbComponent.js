@@ -9,7 +9,7 @@ const BreadcrumbComponent = () => {
           itemScope
           className="breadcrumb-item"
         >
-          <NavLink to="/home" className="link-in-react-router-dom">Home</NavLink>
+          <Link to="/home" className="link-in-react-router-dom">Home</Link>
           <meta itemProp="position" content="1" />
         </Breadcrumb.Item>
         <Breadcrumb.Item
@@ -17,7 +17,7 @@ const BreadcrumbComponent = () => {
           itemScope
           className="breadcrumb-item"
         >
-          <NavLink to="/" className="link-in-react-router-dom" >Đơn hàng</NavLink>
+          <Link to="/cart" className="link-in-react-router-dom" >Đơn hàng</Link>
           <meta itemProp="position" content="2" />
         </Breadcrumb.Item>
       </Breadcrumb>

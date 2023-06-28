@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
+import "./AuthStyle.css";
+import Top from "../layouts/Top";
+
 const CryptoJS = require("crypto-js");
-
 const Login = () => {
-
   const listUsers = JSON.parse(localStorage.getItem("users"));
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -28,7 +29,8 @@ const Login = () => {
       messpassword.style.color = "red";
     } else {
       const user = userData.find(
-        (u) => u.email == email && u.password ==  CryptoJS.MD5(password).toString()
+        (u) =>
+          u.email == email && u.password == CryptoJS.MD5(password).toString()
       );
       if (user) {
         localStorage.setItem("UserID", JSON.stringify(user));
@@ -43,51 +45,52 @@ const Login = () => {
   };
 
   return (
-    <div class="container">
-      <div class="screen">
-        <div class="screen__content">
-          <form class="login" onSubmit={handleSubmit}>
-            <p id="mess-username"></p>
-            <div class="login__field">
-              <i class="login__icon fas fa-user"></i>
+    <div>
+      <Top />
+      <div className="Auth-form-container">
+        <form className="Auth-form" onSubmit={handleSubmit}>
+          <div className="Auth-form-content">
+            <h3 className="Auth-form-title">Sign In</h3>
+            <div className="text-center">
+              Not registered yet?
+              <Link to="/register" style={{ fontWeight: "600" }}>
+                <span> Sign Up</span>
+              </Link>
+            </div>
+            <div className="form-group mt-3">
+              <label>Email address</label>
               <input
-                type="text"
-                class="login__input"
-                placeholder="User name / Email"
+                type="email"
+                className="form-control mt-1"
+                placeholder="Enter email"
                 id="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
             </div>
-            <p id="mess-password"></p>
-            <div class="login__field">
-              <i class="login__icon fas fa-lock"></i>
+            <div className="form-group mt-3">
+              <label>Password</label>
               <input
                 type="password"
-                class="login__input"
-                placeholder="Password"
+                className="form-control mt-1"
+                placeholder="Enter password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
             </div>
             <p id="mess"></p>
-            <button class="button login__submit">
-              <span class="button__text">Log In Now</span>
-              <i class="button__icon fas fa-chevron-right"></i>
-            </button>
-          </form>
-          <div class="register">
-            <Link to="/register">
-              Đăng ký
-            </Link>
+            <div className="d-grid gap-2 mt-3">
+              <button type="submit" className="btn btn-primary">
+                Submit
+              </button>
+            </div>
+            <p className="forgot-password text-right mt-2">
+              <Link to="/forgot-password">
+                <span style={{ fontWeight: "600" }}>Forgot password?</span>
+              </Link>
+            </p>
           </div>
-        </div>
-        <div class="screen__background">
-          <span class="screen__background__shape screen__background__shape4"></span>
-          <span class="screen__background__shape screen__background__shape3"></span>
-          <span class="screen__background__shape screen__background__shape2"></span>
-          <span class="screen__background__shape screen__background__shape1"></span>
-        </div>
+        </form>
       </div>
     </div>
   );

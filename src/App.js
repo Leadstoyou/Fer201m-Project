@@ -13,7 +13,6 @@ import ShowProfile from "./components/Auth/ShowProfile";
 import "bootstrap/dist/css/bootstrap.css";
 import Order from "./components/Order/Order";
 import ViewOrder from "./components/Order/ViewOrder";
-import "./components/styles/DefaultLayoutStyle.css";
 import LoadData from "./components/data/LoadData";
 import ProductManager from "./components/Admin/ProductManager";
 import NotFound from "./components/layouts/NotFound";
@@ -39,8 +38,8 @@ function App() {
       <Route path="/order" element={<Order />} />
       <Route path="/view-order" element={<ViewOrder />} />
       <Route path="/product-manage" element={<ProductManager />} />
-      <Route path="/not-found" element={<NotFound />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 }

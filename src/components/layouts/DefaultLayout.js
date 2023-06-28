@@ -5,10 +5,12 @@ import "../styles/DefaultLayoutStyle.css";
 const DefaultLayout = ({className, children }) => {
   return (
     <>
-      <Top />
+    <div>
+    <Top />
       <Banner />
       <div className={className}>{children}</div>
       <Footer />
+    </div>
     </>
   );
 };

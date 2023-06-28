@@ -1,46 +1,59 @@
 import DefaultLayoutDetail from "../layouts/DefaultLayoutDetail";
 import "../styles/DefaultLayoutStyle.css";
 import { React, useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import QuantityButton from "../Custom/QuantityButton";
-import {
-  Cart,
-  Dash,
-  Plus,
-} from "react-bootstrap-icons";
+import { Cart, Dash, Plus } from "react-bootstrap-icons";
 import Carousel from "react-bootstrap/Carousel";
 import Image from "react-bootstrap/Image";
-import { Button, Card, FormControl, InputGroup, ListGroup } from "react-bootstrap";
+import {
+  Button,
+  Card,
+  FormControl,
+  InputGroup,
+  ListGroup,
+} from "react-bootstrap";
 import OffCanvas from "react-bootstrap/Offcanvas";
+import NotFound from "../layouts/NotFound";
 
 const ProductDetail = () => {
   const { id } = useParams();
   const [product, setProduct] = useState([]);
   const [quantity, setQuantity] = useState(1);
   const [cartList, setCartList] = useState([]);
-  const [user, setUser] = useState(JSON.parse(localStorage.getItem("UserID")) ? JSON.parse(localStorage.getItem("UserID")) : {id:"PUBLIC_USER"});
+  const [user, setUser] = useState(
+    JSON.parse(localStorage.getItem("UserID"))
+      ? JSON.parse(localStorage.getItem("UserID"))
+      : { id: "PUBLIC_USER" }
+  );
   const navigation = useNavigate();
   const listCart = JSON.parse(localStorage.getItem("carts")).filter(
     (cart) => cart.userId == user.id
   )[0];
-    console.log(1)
   const listProducts = JSON.parse(localStorage.getItem("products"));
-  const mergedCart = listCart ? listCart.products
-    .map((item) => {
-      const product = listProducts.find((p) => p.id === item.productId);
-      if (product) {
-        return {
-          ...item,
-          name: product.name,
-          price: product.price,
-          img: product.img,
-          blurImg: product.blurImg,
-        };
-      }
-      return null;
-    })
-    .filter((item) => item !== null) : [];
-
+  const mergedCart = listCart
+    ? listCart.products
+        .map((item) => {
+          const product = listProducts.find((p) => p.id === item.productId);
+          if (product) {
+            return {
+              ...item,
+              name: product.name,
+              price: product.price,
+              img: product.img,
+              blurImg: product.blurImg,
+            };
+          }
+          return null;
+        })
+        .filter((item) => item !== null)
+    : [];
+    function scrollToTop() {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth' // Optional: Adds smooth scrolling animation
+      });
+    }
   //hover and click size and color properties
   const [hoveredColor, setHoveredColor] = useState("");
   const [selectedColor, setSelectedColor] = useState("");
@@ -64,6 +77,7 @@ const ProductDetail = () => {
   );
 
   useEffect(() => {
+    scrollToTop();
     setProduct(foundProduct ? foundProduct : {});
     setCartList(mergedCart ? mergedCart : []);
   }, []);
@@ -106,7 +120,7 @@ const ProductDetail = () => {
       })
     );
     const updatedUserData = { userId: user.id, products: filteredObjects };
-    let temp=true;
+    let temp = true;
     const updatedData = JSON.parse(localStorage.getItem("carts")).map(function (
       item
     ) {
@@ -116,15 +130,14 @@ const ProductDetail = () => {
       }
       return item;
     });
-    if(temp){
-      updatedData.push(updatedUserData)
+    if (temp) {
+      updatedData.push(updatedUserData);
     }
-    console.log(updatedData);
     localStorage.setItem("carts", JSON.stringify(updatedData));
     if (flag === "addToCart") {
       handleShow();
     } else if (flag === "buyNow") {
-      navigation('/cart')
+      navigation("/cart");
     }
   };
   // PRODUCT DETAIL
@@ -176,8 +189,7 @@ const ProductDetail = () => {
     });
     localStorage.setItem("carts", JSON.stringify(updatedData));
   };
-
-  return product ? (
+  return foundProduct != undefined ? (
     <>
       <div>
         <OffCanvas
@@ -197,88 +209,88 @@ const ProductDetail = () => {
           </OffCanvas.Header>
           <OffCanvas.Body>
             <Card>
-            <Card.Body>
-            <div className="list_product_cart__scroll">
-              <ListGroup className="list_product_cart">
-                {cartList.map((cart, index) => (
-                  <ListGroup.Item style={{ display: "flex" }} key={index}>
-                    <Image
-                      src={cart.img}
-                      alt={cart.name}
-                      style={{ width: "40%", height: "40%" }}
-                    />
-                    <div
-                      className="list_product_cart__info"
-                      style={{ paddingLeft: "20px" }}
-                    >
-                      <h3
-                        style={{
-                          fontWeight: "500",
-                          fontSize: "16px",
-                          lineHeight: "20px",
-                        }}
-                      >
-                        {cart.name}
-                      </h3>
-                      <p>
-                        {cart.color} / {cart.size}
-                      </p>
-                      <div
-                        className="option_production"
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "space-around",
-                        }}
-                      >
-                        <div className="option_production-number">
-                          <InputGroup>
-                            <Button variant="outline-secondary">
-                              <Dash size={20} color="black" />
-                            </Button>
-                            <FormControl
-                              type="text"
-                              className="form-control quantity"
-                              value={cart.quantity}
-                              style={{ width: "44px" }}
-                              onChange={() => {}}
-                            />
-                            <Button variant="outline-secondary">
-                              <Plus size={20} color="black" />
-                            </Button>
-                          </InputGroup>
-                        </div>
-                        <span
-                          className="btn-delete-item"
-                          style={{ cursor: "pointer" }}
-                          onClick={() =>
-                            handleDelteCartProduct(
-                              cart.productId,
-                              cart.color,
-                              cart.size
-                            )
-                          }
+              <Card.Body>
+                <div className="list_product_cart__scroll">
+                  <ListGroup className="list_product_cart">
+                    {cartList.map((cart, index) => (
+                      <ListGroup.Item style={{ display: "flex" }} key={index}>
+                        <Image
+                          src={cart.img}
+                          alt={cart.name}
+                          style={{ width: "40%", height: "40%" }}
+                        />
+                        <div
+                          className="list_product_cart__info"
+                          style={{ paddingLeft: "20px" }}
                         >
-                          Xóa
-                        </span>
-                      </div>
-                    </div>
-                  </ListGroup.Item>
-                ))}
-              </ListGroup>
-            </div>
-            </Card.Body>
-            <Card.Footer fixed="bottom">
-              {/* <Navbar fixed="bottom"> */}
-                  <Button>dassdas</Button>
-              {/* </Navbar> */}
-            </Card.Footer>
-           </Card>
+                          <h3
+                            style={{
+                              fontWeight: "500",
+                              fontSize: "16px",
+                              lineHeight: "20px",
+                            }}
+                          >
+                            {cart.name}
+                          </h3>
+                          <p>
+                            {cart.color} / {cart.size}
+                          </p>
+                          <div
+                            className="option_production"
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "space-around",
+                            }}
+                          >
+                            <div className="option_production-number">
+                              <InputGroup>
+                                <Button variant="outline-secondary">
+                                  <Dash size={20} color="black" />
+                                </Button>
+                                <FormControl
+                                  type="text"
+                                  className="form-control quantity"
+                                  value={cart.quantity}
+                                  style={{ width: "44px" }}
+                                  onChange={() => {}}
+                                />
+                                <Button variant="outline-secondary">
+                                  <Plus size={20} color="black" />
+                                </Button>
+                              </InputGroup>
+                            </div>
+                            <span
+                              className="btn-delete-item"
+                              style={{ cursor: "pointer" }}
+                              onClick={() =>
+                                handleDelteCartProduct(
+                                  cart.productId,
+                                  cart.color,
+                                  cart.size
+                                )
+                              }
+                            >
+                              Xóa
+                            </span>
+                          </div>
+                        </div>
+                      </ListGroup.Item>
+                    ))}
+                  </ListGroup>
+                </div>
+              </Card.Body>
+              <Card.Footer fixed="bottom">
+                <Link to="/cart">
+                  <Button>Mua Ngay</Button>
+                </Link>
+              </Card.Footer>
+            </Card>
           </OffCanvas.Body>
         </OffCanvas>
       </div>
 
-      <DefaultLayoutDetail className="container">
+      <DefaultLayoutDetail className="container border-0">
         <div className="row" style={{ marginTop: "60px" }}>
           {/* Image Product */}
           <div className="col-2">
@@ -440,8 +452,9 @@ const ProductDetail = () => {
           </div>
         </div>
 
-        {/* PRODUCT DESCRIPTION */}
-        <div style={{ marginBottom: "60px", marginTop: "30px" }}>
+        <div
+          style={{ marginBottom: "60px", marginTop: "30px", padding: "25px" }}
+        >
           <p style={{ fontWeight: "600", fontSize: "18px" }}>
             Thông tin sản phẩm
           </p>
@@ -470,7 +483,7 @@ const ProductDetail = () => {
       </DefaultLayoutDetail>
     </>
   ) : (
-    "No product matched/found!"
+    <NotFound />
   );
 };
 

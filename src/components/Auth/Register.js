@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
+import "./AuthStyle.css";
+import Top from "../layouts/Top";
 const CryptoJS = require("crypto-js");
 
 const Register = () => {
@@ -21,7 +23,7 @@ const Register = () => {
     const newUser = {
       id: users.length + 1,
       username: username,
-      password:  CryptoJS.MD5(password).toString(),
+      password: CryptoJS.MD5(password).toString(),
       email: email,
       address: address,
       phone: phone,
@@ -44,57 +46,76 @@ const Register = () => {
 
   return (
     <div>
-      <div className="register">
-        <form className="login-form" onSubmit={handleSubmitRegister}>
-          <div className="register_form">
-            <div className="register_title">Đăng kí</div>
-            <div className="register_input">
+      <Top />
+      <div className="Auth-form-container">
+        <form className="Auth-form" onSubmit={handleSubmitRegister}>
+          <div className="Auth-form-content">
+            <h3 className="Auth-form-title">Sign In</h3>
+            <div className="text-center">
+              Already registered?
+              <Link to="/login">
+                <span className="link-primary">Sign In</span>
+              </Link>
+            </div>
+            <div className="form-group mt-3">
+              <label>Email address </label>
               <input
                 type="email"
-                placeholder="Email address *"
+                className="form-control mt-1"
+                placeholder="Email address "
                 onChange={(e) => setEmail(e.target.value)}
               />
             </div>
-            <div className="register_input">
+            <div className="form-group mt-3">
+              <label>Password</label>
               <input
                 type="password"
-                placeholder="Password *"
+                className="form-control mt-1"
+                placeholder="Password"
                 onChange={(e) => setPassword(e.target.value)}
               />
             </div>
-            <div className="register_input">
+            <div className="form-group mt-3">
+              <label>Full Name</label>
               <input
                 type="text"
                 placeholder="Fullname"
+                className="form-control mt-1"
                 name="fullName"
                 onChange={(e) => setUsername(e.target.value)}
               />
             </div>
-            <div className="register_input">
+            <div className="form-group mt-3">
+              <label>Address</label>
               <input
                 type="text"
                 placeholder="Address"
+                className="form-control mt-1"
                 name="address"
                 onChange={(e) => setAddress(e.target.value)}
               />
             </div>
-            <div className="register_input">
+            <div className="form-group mt-3">
+              <label>Phone Number</label>
               <input
                 type="text"
                 placeholder="Phone"
+                className="form-control mt-1"
                 name="phone"
                 onChange={(e) => setPhone(e.target.value)}
               />
             </div>
             <div id="mess"></div>
-            <div>
-              <p>
-                Nếu tài khoản đã tồn tại <Link to="/login">Đăng nhập</Link>
-              </p>
+            <div className="d-grid gap-2 mt-3">
+              <button type="submit" className="btn btn-primary">
+                Submit
+              </button>
             </div>
-            <div className="Register_button">
-              <button type="submit">Register</button>
-            </div>
+            <p className="text-center mt-2">
+              <Link to="/forgot-password">
+                <span>Forgot password?</span>
+              </Link>
+            </p>
           </div>
         </form>
       </div>

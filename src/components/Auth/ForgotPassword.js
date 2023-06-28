@@ -1,17 +1,18 @@
 import React, { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import emailjs from "@emailjs/browser";
-import { redirect } from "react-router-dom";
-
+import "./AuthStyle.css";
+import { Link } from "react-router-dom";
+import Top from "../layouts/Top";
 const ForgotPassword = () => {
   const listUsers = JSON.parse(localStorage.getItem("users"));
   const [users, setUsers] = useState(listUsers);
   const [email, setEmail] = useState("");
-  //   const CryptoJS = require("crypto-js");
   const [forgotPasswordLink, setForgotPasswordLink] = useState("");
-  const submitHandler = (e) => {
+  const submitHandler = async (e) => {
     e.preventDefault();
-    JSON.parse(localStorage.getItem("users")).map((user) => {
+    let flag = true;
+    await JSON.parse(localStorage.getItem("users")).map((user) => {
       if (user.email == email) {
         //create forgotpassword link
         const currentPort = window.location.origin;
@@ -49,7 +50,8 @@ const ForgotPassword = () => {
           }
           localStorage.setItem("forgot_password", JSON.stringify(forgotpassDb));
         }
-
+        flag = false;
+        document.getElementById("messageError").innerText = `PROCESSING`;
         emailjs
           .sendForm(
             "service_3kxpvwn",
@@ -60,37 +62,61 @@ const ForgotPassword = () => {
           .then(
             (result) => {
               alert("successfully,please check your email address");
-              console.log(result.text);
+              return;
             },
             (error) => {
-              document.getElementById('messageError').innerText = 'Email Error'
+              document.getElementById("messageError").innerText = "Email Error";
               console.log(error.text);
             }
           );
       }
     });
-    document.getElementById('messageError').innerText = `Email doesn't exists`
+    if (flag) {
+      document.getElementById(
+        "messageError"
+      ).innerText = `Email doesn't exists`;
+    }
   };
 
   return (
-    <div className="container">
-      <form onSubmit={submitHandler}>
-        <h1>Điền Email</h1>
-        <p style={{ color: "red" }} id="messageError"></p>
-        <input
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          name="user_email"
-          required  
-        />
-        <input
-          style={{ display: "none" }}
-          name="forgot_pass_link"
-          value={forgotPasswordLink}
-        />
-        <button type="submit">Submit</button>
-      </form>
+    <div>
+      <Top />
+      <div className="Auth-form-container">
+        <form className="Auth-form" onSubmit={submitHandler}>
+          <div className="Auth-form-content">
+            <h3 className="Auth-form-title">Forgot password</h3>
+            <div className="text-center">
+              Already registered?
+              <Link to="/login">
+                <span className="link-primary">Sign In</span>
+              </Link>
+            </div>
+            <p style={{ color: "red" }} id="messageError"></p>
+            <div className="form-group mt-3">
+              <label>Email address </label>
+              <input
+                type="email"
+                value={email}
+                className="form-control mt-1"
+                onChange={(e) => setEmail(e.target.value)}
+                name="user_email"
+                required
+              />
+            </div>
+
+            <input
+              style={{ display: "none" }}
+              name="forgot_pass_link"
+              value={forgotPasswordLink}
+            />
+            <div className="d-grid gap-2 mt-3">
+              <button type="submit" className="btn btn-primary">
+                Submit
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
     </div>
   );
 };

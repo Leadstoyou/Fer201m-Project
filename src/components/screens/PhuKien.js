@@ -38,7 +38,7 @@ const Ao = () => {
   };
 
   return (
-    <DefaultLayout className="container">
+    <DefaultLayout className="container  border-0">
       <div className="Product-content">
         <h2>PHỤ KIỆN</h2>
         {listShirtCategories.map((category, index) => (
@@ -62,7 +62,7 @@ const Ao = () => {
               onMouseEnter={(event) => handleMouseEnter(event, product)}
               onMouseLeave={(event) => handleMouseLeave(event, product)}
             >
-              <Card className="card-content">
+              <Card className="card-content" style={{height:'400px'}}>
                 <div className="blurry-image">
                   <Link to={`/product/detail/${product.id}`}>
                     <Card.Img src={product.img} />

@@ -14,20 +14,26 @@ import {
 // import "./ProductManager.css";
 import { useEffect, useState } from "react";
 import { ArchiveFill, PencilSquare } from "react-bootstrap-icons";
+import NotFound from "../layouts/NotFound";
 
 const ProductManager = () => {
-  const [products, setProducts] = useState([]);
-  const [categories, setCategories] = useState([]);
+  const [products, setProducts] = useState(JSON.parse(localStorage.getItem("products")));
+  const [categories, setCategories] = useState(JSON.parse(localStorage.getItem("categories")));
   const [showModal, setShowModal] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(
+    JSON.parse(localStorage.getItem("UserID"))
+      ? JSON.parse(localStorage.getItem("UserID")).isAdmin
+      : false
+  );
 
   //add new
   const [newProductAdded, setNewProductAdd] = useState({});
   const [updateProduct, setUpdateProduct] = useState({});
   const SIZE_KEY = {
-    shirts: "S,ML,XL,XXL",
-    pants: "27,28,29,30,31,32,33",
-    shoes: "39,40,41,42,43",
+    shirts: ["S","ML","XL","XXL"],
+    pants: [27,28,29,30,31,32,33],
+    shoes: [39,40,41,42,43],
   };
 
   const handleCloseModal = () => {
@@ -51,7 +57,7 @@ const ProductManager = () => {
   const handleDeleteProduct = (id) => {
     const updatedProducts = products.filter((p) => p.id !== parseInt(id));
     setProducts(updatedProducts);
-    localStorage.setItem('products', JSON.stringify(products));
+    localStorage.setItem("products", JSON.stringify(products));
   };
   const handleClickSaveEdit = (id) => {
     const updatedProducts = products.map((product) =>
@@ -63,30 +69,23 @@ const ProductManager = () => {
     setIsEditing(false);
     setShowModal(false);
   };
-  useEffect(() => {
-    setProducts(JSON.parse(localStorage.getItem("products")));
-    setCategories(JSON.parse(localStorage.getItem("categories")));
-  }, []);
+  useEffect(()=>{
+    setNewProductAdd((prevProduct) => ({
+      ...prevProduct,
+      id: products[products.length -1].id + 1,
+    }));
+  },[])
+
+  console.log(newProductAdded)
   const handleSubmit = (event) => {
-    
+
     event.preventDefault();
     if (!isEditing) {
-      newProductAdded.id = products[products.length - 1].id + 1;
-      newProductAdded.size = newProductAdded.size.split(",");
-      newProductAdded.color = newProductAdded.color.split(",");
-      newProductAdded.price = `${newProductAdded.price}đ`;
-      newProductAdded.amount = parseInt(newProductAdded.amount);
-      const categoryMap = {
-        Áo: 1,
-        Quần: 2,
-        "Phụ kiện": 3,
-      };
-      newProductAdded.catId =
-        categoryMap[newProductAdded.catId] || newProductAdded.catId;
-      setProducts([...products, newProductAdded]);
-      setNewProductAdd({});
-      localStorage.setItem("products", JSON.stringify(products));
+      const updatedProducts = [...products, newProductAdded];
+      setProducts(updatedProducts);
+      localStorage.setItem("products", JSON.stringify(updatedProducts));
       setShowModal(false);
+      setNewProductAdd({});
     }
   };
   const handleKeyDown = (event) => {
@@ -94,9 +93,9 @@ const ProductManager = () => {
       event.preventDefault();
     }
   };
-  return (
-    <Container>
-      <div className="table-wrapper">
+  return isAdmin ? (
+    <div className="container border-0" style={{marginTop:'5px'}}>
+      <div className="table-wrapper" style={{paddingTop:'12px',borderTop:'2px solid black'}}>
         <div className="table-title">
           <Row>
             <Col sm={6}>
@@ -104,7 +103,7 @@ const ProductManager = () => {
             </Col>
             <Col sm={6}>
               <Button
-                variant="primary"
+                variant="info"
                 onClick={() => {
                   setShowModal(true);
                 }}
@@ -112,10 +111,11 @@ const ProductManager = () => {
                 Mới
               </Button>
               <Button
-                variant="primary"
+                variant="outline-dark"
                 onClick={() => {
-                 window.history.back(-1);
+                  window.history.back(-1);
                 }}
+                style={{marginLeft: '70%'}}
               >
                 Quay lại
               </Button>
@@ -148,9 +148,10 @@ const ProductManager = () => {
                       rounded
                     />
                   </td>
+
                   <td>{product.name}</td>
-                  <td>{product.color}</td>
-                  <td>{product.size}</td>
+                  <td>{product.color.join(', ')}</td>
+                  <td>{product.size.join(', ')}</td>
                   <td>{product.price}</td>
                   <td>{product.amount}</td>
                   <td>
@@ -364,11 +365,11 @@ const ProductManager = () => {
                   isEditing
                     ? setUpdateProduct((prevProduct) => ({
                         ...prevProduct,
-                        color: e.target.value,
+                        color: (e.target.value) ? (e.target.value).split(",") : (e.target.value),
                       }))
                     : setNewProductAdd((prevProduct) => ({
                         ...prevProduct,
-                        color: e.target.value,
+                        color: (e.target.value) ? (e.target.value).split(",") : (e.target.value),
                       }));
                 }}
               />
@@ -454,7 +455,9 @@ const ProductManager = () => {
           </Modal.Footer>
         </Form>
       </Modal>
-    </Container>
+    </div>
+  ) : (
+    <NotFound />
   );
 };
 
