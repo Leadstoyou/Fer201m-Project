@@ -8,6 +8,7 @@ import {
   faListSquares,
   faShoppingBag,
   faShoppingCart,
+  faSignOut,
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
 import "../styles/DefaultLayoutStyle.css";
@@ -33,9 +34,13 @@ export default function Top() {
       className="bg-body-tertiary sticky-nav"
       justify="true"
       fill="true"
-      style={{ justifyContent: "space-around", padding: "10px 0 10px",backgroundColor:'white !important',borderBottom: '1px solid black'}}
+      style={{
+        justifyContent: "space-around",
+        padding: "10px 0 10px",
+        backgroundColor: "white !important",
+        borderBottom: "1px solid black",
+      }}
       expand="lg"
-      
     >
       <Container style={{ display: "contents" }}>
         <Link to="/home" style={{ color: "black" }}>
@@ -88,7 +93,7 @@ export default function Top() {
                       }}
                       style={{ color: "black" }}
                     >
-                      <FontAwesomeIcon icon={faUser} />
+                      <FontAwesomeIcon icon={faSignOut} />
                       <span className="nav-link-text">Đăng xuất</span>
                     </Link>
                   </li>
@@ -135,7 +140,12 @@ export default function Top() {
                       <span className="nav-link-text"> View Order</span>
                     </Link>
                   </li>
-
+                  <li style={{ color: "black" }}>
+                    <Link to="/profile"   style={{ color: "black" }}>
+                      <FontAwesomeIcon icon={faUser} />
+                      <span className="nav-link-text"> Người dùng</span>
+                    </Link>
+                  </li>
                   <li style={{ color: "black" }}>
                     <Link
                       to="/"
@@ -144,7 +154,7 @@ export default function Top() {
                       }}
                       style={{ color: "black" }}
                     >
-                      <FontAwesomeIcon icon={faUser} />
+                      <FontAwesomeIcon icon={faSignOut} />
                       <span className="nav-link-text"> Đăng xuất</span>
                     </Link>
                   </li>
