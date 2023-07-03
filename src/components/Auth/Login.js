@@ -9,9 +9,7 @@ const Login = () => {
   const listUsers = JSON.parse(localStorage.getItem("users"));
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
   let flag = false;
-
   const navigation = useNavigate();
   const [userData, setuserData] = useState(listUsers);
 

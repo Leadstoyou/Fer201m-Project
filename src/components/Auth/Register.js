@@ -14,7 +14,6 @@ const Register = () => {
   const [email, setEmail] = useState("");
   const [address, setAddress] = useState("");
   const [phone, setPhone] = useState("");
-
   const navigation = useNavigate();
 
   const handleSubmitRegister = (e) => {

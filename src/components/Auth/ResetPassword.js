@@ -20,9 +20,7 @@ const ResetPassword = () => {
 
   const submitHandler = (e) => {
     e.preventDefault();
-    console.log(password1)
     if (password1 == password2 && password1 != "") {
-      console.log(password1)
       setUsers(
         users.map((item) => {
           if (item.email == user.email) {

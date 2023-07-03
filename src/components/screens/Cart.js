@@ -1,9 +1,7 @@
 import {
   Button,
   Form,
-  FormControl,
   InputGroup,
-  Modal,
   Table,
 } from "react-bootstrap";
 import DefaultLayout from "../layouts/DefaultLayout";
@@ -142,8 +140,8 @@ const Cart = () => {
   };
 
   return (
-    <DefaultLayout className="container border-0">
-      <div className="row">
+    <DefaultLayout className="container border-0" >
+      <div className="row" style={{paddingTop:'23px',borderTop:'solid 1px black',paddingBottom:'150px'}}>
         <div className="col-8">
           <div className="heading_layout_other">
             <h2>GIỎ HÀNG CỦA BẠN ({mergeProducts.length})</h2>
@@ -257,7 +255,7 @@ const Cart = () => {
           <div className="box_order_cart">
             <div className="box_order_cart__price">
               <ul>
-                <li>
+                <li style={{listStyleType:'none',fontSize:'larger',fontWeight:'57-'}}>
                   <span className="tille">Tạm tính:</span>
                   <span className="price black">
                     {convertToCurrencyFormat(totalPrice)} đ

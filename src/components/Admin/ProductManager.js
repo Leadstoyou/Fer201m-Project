@@ -17,8 +17,12 @@ import { ArchiveFill, PencilSquare } from "react-bootstrap-icons";
 import NotFound from "../layouts/NotFound";
 
 const ProductManager = () => {
-  const [products, setProducts] = useState(JSON.parse(localStorage.getItem("products")));
-  const [categories, setCategories] = useState(JSON.parse(localStorage.getItem("categories")));
+  const [products, setProducts] = useState(
+    JSON.parse(localStorage.getItem("products"))
+  );
+  const [categories, setCategories] = useState(
+    JSON.parse(localStorage.getItem("categories"))
+  );
   const [showModal, setShowModal] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [isAdmin, setIsAdmin] = useState(
@@ -26,15 +30,20 @@ const ProductManager = () => {
       ? JSON.parse(localStorage.getItem("UserID")).isAdmin
       : false
   );
-
-  //add new
   const [newProductAdded, setNewProductAdd] = useState({});
   const [updateProduct, setUpdateProduct] = useState({});
   const SIZE_KEY = {
-    shirts: ["S","ML","XL","XXL"],
-    pants: [27,28,29,30,31,32,33],
-    shoes: [39,40,41,42,43],
+    shirts: ["S", "ML", "XL", "XXL"],
+    pants: [27, 28, 29, 30, 31, 32, 33],
+    shoes: [39, 40, 41, 42, 43],
   };
+
+  useEffect(() => {
+    setNewProductAdd((prevProduct) => ({
+      ...prevProduct,
+      id: products[products.length - 1].id + 1,
+    }));
+  }, []);
 
   const handleCloseModal = () => {
     if (isEditing) {
@@ -69,16 +78,8 @@ const ProductManager = () => {
     setIsEditing(false);
     setShowModal(false);
   };
-  useEffect(()=>{
-    setNewProductAdd((prevProduct) => ({
-      ...prevProduct,
-      id: products[products.length -1].id + 1,
-    }));
-  },[])
 
-  console.log(newProductAdded)
   const handleSubmit = (event) => {
-
     event.preventDefault();
     if (!isEditing) {
       const updatedProducts = [...products, newProductAdded];
@@ -94,8 +95,11 @@ const ProductManager = () => {
     }
   };
   return isAdmin ? (
-    <div className="container border-0" style={{marginTop:'5px'}}>
-      <div className="table-wrapper" style={{paddingTop:'12px',borderTop:'2px solid black'}}>
+    <div className="container border-0" style={{ marginTop: "5px" }}>
+      <div
+        className="table-wrapper"
+        style={{ paddingTop: "12px", borderTop: "2px solid black" }}
+      >
         <div className="table-title">
           <Row>
             <Col sm={6}>
@@ -115,7 +119,7 @@ const ProductManager = () => {
                 onClick={() => {
                   window.history.back(-1);
                 }}
-                style={{marginLeft: '70%'}}
+                style={{ marginLeft: "70%" }}
               >
                 Quay lại
               </Button>
@@ -150,8 +154,8 @@ const ProductManager = () => {
                   </td>
 
                   <td>{product.name}</td>
-                  <td>{product.color.join(', ')}</td>
-                  <td>{product.size.join(', ')}</td>
+                  <td>{product.color.join(", ")}</td>
+                  <td>{product.size.join(", ")}</td>
                   <td>{product.price}</td>
                   <td>{product.amount}</td>
                   <td>
@@ -365,11 +369,15 @@ const ProductManager = () => {
                   isEditing
                     ? setUpdateProduct((prevProduct) => ({
                         ...prevProduct,
-                        color: (e.target.value) ? (e.target.value).split(",") : (e.target.value),
+                        color: e.target.value
+                          ? e.target.value.split(",")
+                          : e.target.value,
                       }))
                     : setNewProductAdd((prevProduct) => ({
                         ...prevProduct,
-                        color: (e.target.value) ? (e.target.value).split(",") : (e.target.value),
+                        color: e.target.value
+                          ? e.target.value.split(",")
+                          : e.target.value,
                       }));
                 }}
               />

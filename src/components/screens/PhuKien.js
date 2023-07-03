@@ -18,6 +18,7 @@ const Ao = () => {
     setFilteredProduct(listShirt);
     setListShirtCategories(shirtCategories[2].detail);
   }, []);
+  
   const filterByName = (nameString) => {
     const filtered = originalProduct.filter(({ name }) =>
       name.toLowerCase().includes(nameString.toLowerCase())

@@ -13,6 +13,7 @@ import {
 } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import emailjs from "@emailjs/browser";
+import ToastComponent from "../Custom/Toast";
 
 const Order = () => {
   const [products, setProducts] = useState([]);
@@ -29,10 +30,13 @@ const Order = () => {
   const order_telephone = useRef(0);
   const order_email = useRef(0);
   const form = useRef({});
+  const [showToast, setShowToast] = useState(false);
+  const handleToggleToast = () => { setShowToast(!showToast); };
+  const [message, setMessage] = useState("");
   const listCart = JSON.parse(localStorage.getItem("carts")).filter(
     (cart) => cart.userId == user.id
   )[0];
-
+  const navigation = useNavigate();
   const listProducts = JSON.parse(localStorage.getItem("products"));
   const mergedCart = listCart
     ? listCart.products
@@ -56,7 +60,7 @@ const Order = () => {
     setProducts(mergedCart);
     setTotalPrice(
       mergedCart.reduce((total, current) => {
-        const price = parseInt(current.price.replace(/\D/g, ''));
+        const price = parseInt(current.price.replace(/\D/g, ""));
         return total + price * current.quantity;
       }, 0)
     );
@@ -68,25 +72,27 @@ const Order = () => {
   };
   const handleShow = () => setShow(true);
 
-  const navigation = useNavigate();
+
 
   const convertToCurrencyFormat = (number) => {
     const numberString = number.toString();
-    let formattedString = '';
-  
+    let formattedString = "";
+
     for (let i = numberString.length - 1, count = 0; i >= 0; i--, count++) {
       if (count !== 0 && count % 3 === 0) {
-        formattedString = '.' + formattedString;
+        formattedString = "." + formattedString;
       }
       formattedString = numberString[i] + formattedString;
     }
-  
+
     return formattedString;
   };
   const handleSubmit = (e) => {
     if (products.length === 0) {
       console.log(products);
-      alert("Hãy chọn mua 1 sản phẩm");
+      setMessage("Hãy chọn mua 1 sản phẩm");
+      handleToggleToast();
+  
       return;
     } else {
       if (user.id == "PUBLIC_USER") {
@@ -139,7 +145,8 @@ const Order = () => {
       )
       .then(
         (result) => {
-          alert("Order sucessfully");
+          setMessage("Order sucessfully");
+          handleToggleToast();
           setShow(false);
           const clearCart = JSON.parse(localStorage.getItem("carts")).map(
             (item) => {
@@ -168,8 +175,10 @@ const Order = () => {
           let addNewOrder = JSON.parse(localStorage.getItem("orders"));
           addNewOrder.push(newOrder);
           localStorage.setItem("orders", JSON.stringify(addNewOrder));
+          const delay = setTimeout(() => {
+            navigation("/home");
+          }, 4500);
           setTotalPrice(0);
-          navigation("/home");
           console.log(result.text);
         },
         (error) => {
@@ -180,6 +189,11 @@ const Order = () => {
 
   return (
     <div className="container border-0">
+      <ToastComponent
+        message={message}
+        showToast={showToast}
+        handleCloseToast={handleToggleToast}
+      />
       <Card>
         <Card.Header
           style={{

@@ -12,9 +12,12 @@ import {
   FormControl,
   InputGroup,
   ListGroup,
+  Toast,
+  ToastContainer,
 } from "react-bootstrap";
 import OffCanvas from "react-bootstrap/Offcanvas";
 import NotFound from "../layouts/NotFound";
+import ToastComponent from "../Custom/Toast";
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -27,6 +30,11 @@ const ProductDetail = () => {
       : { id: "PUBLIC_USER" }
   );
   const navigation = useNavigate();
+  const [showToast, setShowToast] = useState(false);
+  const handleToggleToast = () => {
+    setShowToast(!showToast);
+  };
+
   const listCart = JSON.parse(localStorage.getItem("carts")).filter(
     (cart) => cart.userId == user.id
   )[0];
@@ -48,12 +56,7 @@ const ProductDetail = () => {
         })
         .filter((item) => item !== null)
     : [];
-    function scrollToTop() {
-      window.scrollTo({
-        top: 0,
-        behavior: 'smooth' // Optional: Adds smooth scrolling animation
-      });
-    }
+
   //hover and click size and color properties
   const [hoveredColor, setHoveredColor] = useState("");
   const [selectedColor, setSelectedColor] = useState("");
@@ -68,7 +71,6 @@ const ProductDetail = () => {
 
   //Canvas
   const [show, setShow] = useState(false);
-
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
@@ -76,6 +78,12 @@ const ProductDetail = () => {
     (product) => product.id === parseInt(id)
   );
 
+  function scrollToTop() {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth' 
+    });
+  }
   useEffect(() => {
     scrollToTop();
     setProduct(foundProduct ? foundProduct : {});
@@ -84,7 +92,8 @@ const ProductDetail = () => {
   //HIỂN THỊ CART
   const handleAddToCart = (flag) => {
     if (!selectedColor || !selectedSize) {
-      alert("Vui lòng chọn color và size!");
+      handleToggleToast();
+
       return;
     }
     const index = cartList.findIndex(
@@ -142,7 +151,6 @@ const ProductDetail = () => {
   };
   // PRODUCT DETAIL
 
-  //set số lượng của quantityButton
 
   //Click ảnh thumbnail -> hiện ảnh carousel tương ứng
   const [activeIndex, setActiveIndex] = useState(0);
@@ -190,8 +198,10 @@ const ProductDetail = () => {
     localStorage.setItem("carts", JSON.stringify(updatedData));
   };
   return foundProduct != undefined ? (
+    
     <>
       <div>
+        <ToastComponent message="Vui lòng chọn size và color" showToast={showToast} handleCloseToast={handleToggleToast} />
         <OffCanvas
           show={show}
           onHide={handleClose}

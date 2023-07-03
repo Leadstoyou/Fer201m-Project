@@ -4,11 +4,17 @@ import emailjs from "@emailjs/browser";
 import "./AuthStyle.css";
 import { Link } from "react-router-dom";
 import Top from "../layouts/Top";
+import ToastComponent from "../Custom/Toast";
 const ForgotPassword = () => {
   const listUsers = JSON.parse(localStorage.getItem("users"));
   const [users, setUsers] = useState(listUsers);
   const [email, setEmail] = useState("");
   const [forgotPasswordLink, setForgotPasswordLink] = useState("");
+  const [showToast, setShowToast] = useState(false);
+
+  const handleToggleToast = () => {
+    setShowToast(!showToast);
+  };
   const submitHandler = async (e) => {
     e.preventDefault();
     let flag = true;
@@ -52,17 +58,20 @@ const ForgotPassword = () => {
         }
         flag = false;
         document.getElementById("messageError").innerText = `PROCESSING`;
+        console.log(e.target);
         emailjs
           .sendForm(
             "service_3kxpvwn",
-            "template_j5gm6et",
+            "template_ckac4rm",
             e.target,
             "oBQVy9OW2Wok5Hzji"
           )
           .then(
             (result) => {
-              alert("successfully,please check your email address");
-              return;
+              handleToggleToast();
+              setTimeout(() => {
+                return;
+              }, 3000);
             },
             (error) => {
               document.getElementById("messageError").innerText = "Email Error";
@@ -80,7 +89,8 @@ const ForgotPassword = () => {
 
   return (
     <div>
-      <Top />
+      <Top />       <ToastComponent message="Successfully,please check your email address" showToast={showToast} handleCloseToast={handleToggleToast} />
+
       <div className="Auth-form-container">
         <form className="Auth-form" onSubmit={submitHandler}>
           <div className="Auth-form-content">

@@ -1,11 +1,17 @@
 import React, { useState } from "react";
 import { Container, Row, Col, Card, Form, Button } from "react-bootstrap";
+import ToastComponent from "../Custom/Toast";
 const CryptoJS = require("crypto-js");
 
 function ChangePassword({ userParams, changePassMode }) {
   const [user, setUser] = useState(userParams);
   const [matching, setMatching] = useState(false);
   const [password, setPassword] = useState();
+  const [showToast, setShowToast] = useState(false);
+
+  const handleToggleToast = () => {
+    setShowToast(!showToast);
+  };
   const handleButtonClick = () => {
     const result = window.confirm(
       "Are you sure you want to change your password"
@@ -24,8 +30,7 @@ function ChangePassword({ userParams, changePassMode }) {
       changePassMode();
       return;
     } 
-      alert('Please try again');
-    
+    handleToggleToast();    
   };
 
   const handleConfirmPasswordChange = () => {
@@ -47,6 +52,8 @@ function ChangePassword({ userParams, changePassMode }) {
       className="bootstrap snippets bootdey"
       style={{ marginTop: "10px" }}
     >
+            <ToastComponent message="Please try again" showToast={showToast} handleCloseToast={handleToggleToast} />
+
       <h1 className="text-primary">Change Password</h1>
       <hr />
       <Row>

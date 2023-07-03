@@ -1,10 +1,8 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 
 function EditProfile({ userParams,changeAuthMode }) {
 
   const [user, setUser] = useState(userParams);
-  const navigate = useNavigate();
   const handleSubmit = () => {
     let result = window.confirm("Are you sure you want to edit this profile?");
     if (result) {

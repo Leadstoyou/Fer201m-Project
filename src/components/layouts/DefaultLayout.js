@@ -5,7 +5,7 @@ import "../styles/DefaultLayoutStyle.css";
 const DefaultLayout = ({className, children }) => {
   return (
     <>
-    <div>
+    <div className="container border-0">
     <Top />
       <Banner />
       <div className={className}>{children}</div>

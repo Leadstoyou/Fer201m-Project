@@ -11,12 +11,11 @@ const Ao = () => {
   let listShirt = JSON.parse(localStorage.getItem("products")).filter(
     (shirt) => shirt.catId === 2
   );
-  let shirtCategories = JSON.parse(localStorage.getItem("categories"));
 
   useEffect(() => {
     setOriginalProduct(listShirt);
     setFilteredProduct(listShirt);
-    setListShirtCategories(shirtCategories[1].detail);
+    setListShirtCategories(JSON.parse(localStorage.getItem("categories"))[1].detail);
   }, []);
 
   const filterByName = (nameString) => {

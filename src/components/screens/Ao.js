@@ -11,6 +11,7 @@ const Ao = () => {
     (shirt) => shirt.catId === 1
   );
   let shirtCategories = JSON.parse(localStorage.getItem("categories"));
+  
   useEffect(() => {
     setOriginalProduct(listShirt);
     setFilteredProduct(listShirt);

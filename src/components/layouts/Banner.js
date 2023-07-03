@@ -24,13 +24,13 @@ function Banner() {
           className="mySwiper"
         >
           <SwiperSlide>
-            <img className="d-block w-100" src="/assets/banner/3.png" alt="" />
+            <img className="d-block w-100" src="/assets/banner/7.png" alt="" />
           </SwiperSlide>
           <SwiperSlide>
-            <img className="d-block w-100" src="/assets/banner/2.png" alt="" />
+            <img className="d-block w-100" src="/assets/banner/10.png" alt="" />
           </SwiperSlide>
           <SwiperSlide>
-            <img className="d-block w-100" src="/assets/banner/1.png" alt="" />
+            <img className="d-block w-100" src="/assets/banner/11.png" alt="" />
           </SwiperSlide>
         </Swiper>
       </>

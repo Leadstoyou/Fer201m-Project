@@ -1,4 +1,4 @@
-import { Form, Image } from "react-bootstrap";
+import { Image } from "react-bootstrap";
 import Top from "../layouts/Top";
 import { useState } from "react";
 import NotFound from "../layouts/NotFound";
@@ -13,7 +13,7 @@ const ShowProfile = () => {
   );
   const [authMode, setAuthMode] = useState("profile");
   const [passMode, setPassMode] = useState("profile");
-
+  
   const changeAuthMode = () => {
     setAuthMode(authMode === "profile" ? "edit" : "profile");
     setUser(JSON.parse(localStorage.getItem("UserID")));
@@ -22,7 +22,6 @@ const ShowProfile = () => {
     setPassMode(passMode === "profile" ? "changePass" : "profile");
     setUser(JSON.parse(localStorage.getItem("UserID")));
   }
-  console.log(authMode);
   if (authMode === "edit") {
     return user.length !== 0 ? (
       <div>
