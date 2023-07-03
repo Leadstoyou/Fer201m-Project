@@ -3,73 +3,105 @@ import { Container, Row, Col, Card, Form, Button } from "react-bootstrap";
 import ToastComponent from "../Custom/Toast";
 const CryptoJS = require("crypto-js");
 
-function ChangePassword({ userParams, changePassMode }) {
+function ChangePassword({ userParams, changePassMode, handleToggleToast1 }) {
   const [user, setUser] = useState(userParams);
   const [matching, setMatching] = useState(false);
   const [password, setPassword] = useState();
+  const [password2, setPassword2] = useState();
   const [showToast, setShowToast] = useState(false);
-
+  const [message, setMessage] = useState("");
   const handleToggleToast = () => {
     setShowToast(!showToast);
   };
   const handleButtonClick = () => {
-    const result = window.confirm(
-      "Are you sure you want to change your password"
-    );
-    const current_password = document.getElementById('current_password');
-    if (result && matching && CryptoJS.MD5(current_password).toString() == user.password) {
-      user.password = CryptoJS.MD5(password).toString();
-      const users = JSON.parse(localStorage.getItem("users"));
-      const updatedUsers = users.map((item) => {
-        if (item.id == user.id) {
-          return user;
-        }
-        return item;
-      });
-      localStorage.setItem("users", JSON.stringify(updatedUsers));
-      changePassMode();
-      return;
-    } 
-    handleToggleToast();    
+    if (matching) {
+      const result = window.confirm(
+        "Are you sure you want to change your password"
+      );
+      const current_password =
+        document.getElementById("current_password").value;
+      if (
+        result &&
+        matching &&
+        CryptoJS.MD5(current_password).toString() === user.password
+      ) {
+        user.password = CryptoJS.MD5(password).toString();
+        const users = JSON.parse(localStorage.getItem("users"));
+        const updatedUsers = users.map((item) => {
+          if (item.id == user.id) {
+            return user;
+          }
+          return item;
+        });
+        localStorage.setItem("users", JSON.stringify(updatedUsers));
+        localStorage.setItem("UserID", JSON.stringify(user));
+        changePassMode();
+        handleToggleToast1();
+      } else {
+        setMessage("Please try again");
+        handleToggleToast();
+      }
+    } else {
+      setMessage("Not matching can't change password");
+      handleToggleToast();
+    }
   };
 
   const handleConfirmPasswordChange = () => {
-    if (
-      document.getElementById("newpass").value ===
-      document.getElementById("newpass2").value
-    ) {
+    if (password2 === password) {
       document.getElementById("message").style.color = "green";
       document.getElementById("message").innerHTML = "Matching";
       setMatching(true);
     } else {
       document.getElementById("message").style.color = "red";
       document.getElementById("message").innerHTML = "Not matching";
+      setMatching(false);
     }
   };
 
   return (
     <Container
-      className="bootstrap snippets bootdey"
-      style={{ marginTop: "10px" }}
+      className="bootstrap snippets bootdey border-0"
+      style={{ marginTop: "20px" }}
     >
-            <ToastComponent message="Please try again" showToast={showToast} handleCloseToast={handleToggleToast} />
+      <ToastComponent
+        message= {message}
+        showToast={showToast}
+        handleCloseToast={handleToggleToast}
+      />
 
-      <h1 className="text-primary">Change Password</h1>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+        }}
+      >
+        <h1 className="text-primary">Change Password</h1>
+        <Button
+          variant="primary"
+          onClick={() => {
+            changePassMode();
+          }}
+        >
+          Return
+        </Button>
+      </div>
       <hr />
       <Row>
         <Col md={3}>
           <Card.Body>
             <img
-              src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava1-bg.webp"
+              src="https://enka.network/ui/UI_AvatarIcon_Ganyu.png"
               className="avatar img-circle img-thumbnail"
               alt="avatar"
             />
           </Card.Body>
         </Col>
-        <Col md={9} className="personal-info">
+        <Col md={9} className="personal-info ">
           <h3>Change Password</h3>
           <Form>
-            <Form.Group as={Row}>
+            <Form.Group as={Row} className="change-pass-input">
               <Form.Label column lg={3} className="control-label">
                 Password:
               </Form.Label>
@@ -83,7 +115,7 @@ function ChangePassword({ userParams, changePassMode }) {
                 />
               </Col>
             </Form.Group>
-            <Form.Group as={Row}>
+            <Form.Group as={Row} className="change-pass-input">
               <Form.Label column lg={3} className="control-label">
                 New Password:
               </Form.Label>
@@ -94,10 +126,14 @@ function ChangePassword({ userParams, changePassMode }) {
                   placeholder="Enter New Password(*)"
                   type="password"
                   name="newpass"
+                  onKeyUp={handleConfirmPasswordChange}
+                  onChange={(e) => {
+                    setPassword2(e.target.value);
+                  }}
                 />
               </Col>
             </Form.Group>
-            <Form.Group as={Row}>
+            <Form.Group as={Row} className="change-pass-input">
               <Form.Label column lg={3} className="control-label">
                 Confirm Password:
               </Form.Label>
@@ -109,7 +145,7 @@ function ChangePassword({ userParams, changePassMode }) {
                   placeholder="Confirm New Password(*)"
                   type="password"
                   name="newpass2"
-                  onCanPlay={(e) => {
+                  onChange={(e) => {
                     setPassword(e.target.value);
                   }}
                 />

@@ -8,9 +8,9 @@ const ToastComponent = ({ showToast, handleCloseToast ,message}) => {
   return (
     <div>
     <ToastContainer position="middle-end">
-      <Toast show={showToast} onClose={handleCloseToast}  delay={3000} autohide bg="dark">
+      <Toast show={showToast} onClose={handleCloseToast}  delay={2000} autohide bg="dark">
         <Toast.Header>
-          <strong className="me-auto">My Toast</strong>
+          <strong className="me-auto">Notification</strong>
         </Toast.Header>
         <Toast.Body className='text-white'>
           {message}

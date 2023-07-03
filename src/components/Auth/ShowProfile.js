@@ -4,6 +4,7 @@ import { useState } from "react";
 import NotFound from "../layouts/NotFound";
 import EditProfile from "./EditProfile";
 import ChangePassword from "./ChangePassword";
+import ToastComponent from "../Custom/Toast";
 
 const ShowProfile = () => {
   const [user, setUser] = useState(
@@ -13,15 +14,20 @@ const ShowProfile = () => {
   );
   const [authMode, setAuthMode] = useState("profile");
   const [passMode, setPassMode] = useState("profile");
-  
+  const [showToast, setShowToast] = useState(false);
+
+  const handleToggleToast = () => {
+    setShowToast(!showToast);
+  };
+
   const changeAuthMode = () => {
     setAuthMode(authMode === "profile" ? "edit" : "profile");
     setUser(JSON.parse(localStorage.getItem("UserID")));
   };
-  const changePassMode = () =>{
+  const changePassMode = () => {
     setPassMode(passMode === "profile" ? "changePass" : "profile");
     setUser(JSON.parse(localStorage.getItem("UserID")));
-  }
+  };
   if (authMode === "edit") {
     return user.length !== 0 ? (
       <div>
@@ -31,13 +37,16 @@ const ShowProfile = () => {
           changeAuthMode={() => {
             changeAuthMode();
           }}
+          handleToggleToast={() => {
+            handleToggleToast();
+          }}
         />
       </div>
     ) : (
       <NotFound />
     );
   }
-  if (passMode === "changePass"){
+  if (passMode === "changePass") {
     return user.length !== 0 ? (
       <div>
         <Top />
@@ -45,6 +54,9 @@ const ShowProfile = () => {
           userParams={user}
           changePassMode={() => {
             changePassMode();
+          }}
+          handleToggleToast1={() => {
+            handleToggleToast();
           }}
         />
       </div>
@@ -55,6 +67,12 @@ const ShowProfile = () => {
   return user.length !== 0 ? (
     <div>
       <Top />
+      <ToastComponent
+        message="Successfully"
+        showToast={showToast}
+        handleCloseToast={handleToggleToast}
+      />
+
       <section className="vh-50 " style={{ backgroundColor: "#f4f5f7" }}>
         <div className="container py-5 h-100 border-0">
           <div className="row d-flex justify-content-center align-items-center h-100">
@@ -69,7 +87,7 @@ const ShowProfile = () => {
                     }}
                   >
                     <Image
-                      src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava1-bg.webp"
+                      src="https://th.bing.com/th/id/R.ec949a67d0db9d12ddb7c09542d029d0?rik=0jM%2ftLOAxQTqoQ&pid=ImgRaw&r=0"
                       alt="Avatar"
                       className="img-fluid my-5"
                       style={{ width: "80px" }}

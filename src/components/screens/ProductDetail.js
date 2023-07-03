@@ -9,6 +9,7 @@ import Image from "react-bootstrap/Image";
 import {
   Button,
   Card,
+  Container,
   FormControl,
   InputGroup,
   ListGroup,
@@ -199,7 +200,7 @@ const ProductDetail = () => {
   };
   return foundProduct != undefined ? (
     
-    <>
+    <div className="container border-0">
       <div>
         <ToastComponent message="Vui lòng chọn size và color" showToast={showToast} handleCloseToast={handleToggleToast} />
         <OffCanvas
@@ -491,7 +492,7 @@ const ProductDetail = () => {
           </p>
         </div>
       </DefaultLayoutDetail>
-    </>
+    </div>
   ) : (
     <NotFound />
   );

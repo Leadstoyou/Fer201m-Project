@@ -1,9 +1,45 @@
 import React, { useState } from "react";
+import { Button } from "react-bootstrap";
 
-function EditProfile({ userParams,changeAuthMode }) {
-
+function EditProfile({ userParams, changeAuthMode, handleToggleToast }) {
   const [user, setUser] = useState(userParams);
+  const [errorMessage, setErrorMessage] = useState("");
+  const Validate = () => {
+    const phonePattern = /^\d{10}$/;
+    const namePattern = /^[a-zA-Z\s]{2,}$/;
+    const addressRegex = /^[a-zA-Z0-9\s\.,#-]{5,}$/;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(user.email)) {
+      setErrorMessage("Invalid email format.");
+      return false;
+    }
+
+    if (!phonePattern.test(user.phone)) {
+      setErrorMessage(
+        "Invalid phone number. Please enter a 10-digit phone number."
+      );
+      return false;
+    }
+    if (!namePattern.test(user.username)) {
+      setErrorMessage(
+        "Name must be at least 2 characters long and contain only letters and spaces."
+      );
+      return false;
+    }
+    if (!addressRegex.test(user.address)) {
+      setErrorMessage(
+        "Address must be at least 5 characters long and can contain letters, numbers, spaces, commas, dots, hashes, and hyphens."
+      );
+      return false;
+    }
+    setErrorMessage("");
+    return true;
+  };
   const handleSubmit = () => {
+    const validator = Validate();
+    if (!validator) {
+      return;
+    }
     let result = window.confirm("Are you sure you want to edit this profile?");
     if (result) {
       localStorage.setItem("UserID", JSON.stringify(user));
@@ -16,6 +52,7 @@ function EditProfile({ userParams,changeAuthMode }) {
       });
       localStorage.setItem("users", JSON.stringify(updatedUsers));
       changeAuthMode();
+      handleToggleToast();
     }
   };
   return (
@@ -23,13 +60,30 @@ function EditProfile({ userParams,changeAuthMode }) {
       className="container bootstrap snippets bootdey border-0"
       style={{ marginTop: "10px" }}
     >
-      <h1 className="text-primary">Edit Profile</h1>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+        }}
+      >
+        <h1 className="text-primary">Edit Profile</h1>
+        <Button
+          variant="primary"
+          onClick={() => {
+            changeAuthMode();
+          }}
+        >
+          Return
+        </Button>
+      </div>
+
       <hr />
       <div className="row">
         <div className="col-md-3">
           <div className="card-body">
             <img
-              src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava1-bg.webp"
+              src="https://th.bing.com/th/id/R.ec949a67d0db9d12ddb7c09542d029d0?rik=0jM%2ftLOAxQTqoQ&pid=ImgRaw&r=0"
               className="avatar img-circle img-thumbnail"
               alt="avatar"
             />
@@ -59,7 +113,6 @@ function EditProfile({ userParams,changeAuthMode }) {
             <div className="col-lg-8">
               <input
                 className="form-control"
-                readOnly
                 type="text"
                 defaultValue={user.email}
                 name="accountemail"
@@ -108,7 +161,11 @@ function EditProfile({ userParams,changeAuthMode }) {
           </div>
         </div>
       </div>
-      <div style={{ color: "red", marginLeft: "300px" }}></div>
+      {errorMessage && (
+        <div className="error-message" style={{ color: "red" }}>
+          {errorMessage}
+        </div>
+      )}
       <div className="form-group" style={{ textAlign: "center" }}>
         <input
           onClick={() => {

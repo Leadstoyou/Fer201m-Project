@@ -8,17 +8,50 @@ const CryptoJS = require("crypto-js");
 const Register = () => {
   const listUsers = JSON.parse(localStorage.getItem("users"));
   const [users, setUsers] = useState(listUsers);
-
+  const [errorMessage, setErrorMessage] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
   const [address, setAddress] = useState("");
   const [phone, setPhone] = useState("");
   const navigation = useNavigate();
+  const Validate = () => {
+    const phonePattern = /^\d{10}$/;
+    const passwordPattern = /^.{8,}$/;
+    const namePattern = /^[a-zA-Z\s]{2,}$/;
+    const addressRegex = /^[a-zA-Z0-9\s\.,#-]{5,}$/;
 
+    if (!passwordPattern.test(password)) {
+      setErrorMessage("Password must be at least 8 characters long");
+      return false;
+    }
+    if (!phonePattern.test(phone)) {
+      setErrorMessage(
+        "Invalid phone number. Please enter a 10-digit phone number."
+      );
+      return false;
+    }
+    if(!namePattern.test(username)) {
+      setErrorMessage(
+        "Name must be at least 2 characters long and contain only letters and spaces."
+      );
+      return false;
+    }
+    if(!addressRegex.test(address)) {
+      setErrorMessage(
+        "Address must be at least 5 characters long and can contain letters, numbers, spaces, commas, dots, hashes, and hyphens."
+      );
+      return false;
+    }
+    setErrorMessage("");
+    return true;
+  };
   const handleSubmitRegister = (e) => {
     e.preventDefault();
-
+    const validator = Validate();
+    if (!validator) {
+      return;
+    }
     const newUser = {
       id: users.length + 1,
       username: username,
@@ -29,14 +62,14 @@ const Register = () => {
       isAdmin: false,
     };
     const userExists = users.find((user) => user.email === newUser.email);
-    if (userExists) {
-      document.getElementById("mess").innerHTML = "Email exists";
-    } else if (newUser.username == null || newUser.password === null) {
-      document.getElementById("mess").innerHTML =
-        "Email field or password is required";
+    console.log(email)
+    if (email === "" || password === "") {
+      setErrorMessage("Email field or password is required");
+      return navigation("/register");
+    } else if (userExists) {
+      setErrorMessage("Email exists");
       return navigation("/register");
     } else {
-      console.log(newUser);
       users.push(newUser);
       localStorage.setItem("users", JSON.stringify(users));
       return navigation("/login");
@@ -104,7 +137,11 @@ const Register = () => {
                 onChange={(e) => setPhone(e.target.value)}
               />
             </div>
-            <div id="mess"></div>
+            {errorMessage && (
+              <div className="error-message" style={{ color: "red" }}>
+                {errorMessage}
+              </div>
+            )}
             <div className="d-grid gap-2 mt-3">
               <button type="submit" className="btn btn-primary">
                 Submit

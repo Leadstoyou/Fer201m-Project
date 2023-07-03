@@ -33,3 +33,6 @@
     font-weight: 600;
     color: rgb(34, 34, 34);
   }
+  .change-pass-input{
+    padding-bottom: 8px;
+  }

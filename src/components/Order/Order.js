@@ -31,7 +31,9 @@ const Order = () => {
   const order_email = useRef(0);
   const form = useRef({});
   const [showToast, setShowToast] = useState(false);
-  const handleToggleToast = () => { setShowToast(!showToast); };
+  const handleToggleToast = () => {
+    setShowToast(!showToast);
+  };
   const [message, setMessage] = useState("");
   const listCart = JSON.parse(localStorage.getItem("carts")).filter(
     (cart) => cart.userId == user.id
@@ -67,12 +69,8 @@ const Order = () => {
     setOrders(JSON.parse(localStorage.getItem("orders")));
   }, []);
 
-  const handleClose = () => {
-    setShow(false);
-  };
+  const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
-
-
 
   const convertToCurrencyFormat = (number) => {
     const numberString = number.toString();
@@ -92,7 +90,7 @@ const Order = () => {
       console.log(products);
       setMessage("Hãy chọn mua 1 sản phẩm");
       handleToggleToast();
-  
+
       return;
     } else {
       if (user.id == "PUBLIC_USER") {
@@ -129,7 +127,32 @@ const Order = () => {
         addNewOrder.push(newOrder);
         localStorage.setItem("orders", JSON.stringify(addNewOrder));
         setTotalPrice(0);
-        navigation("/home");
+        emailjs
+          .send(
+            "service_3kxpvwn",
+            "template_k6q9att",
+            {
+              order_date: `${currentTime.toLocaleDateString()} ${currentTime.toLocaleTimeString()}`,
+              order_address: user.address,
+              order_telephone: user.phone,
+              order_email: user.email,
+            },
+            "oBQVy9OW2Wok5Hzji"
+          )
+          .then(
+            (result) => {
+              setMessage("Order sucessfully");
+              handleToggleToast();
+              setTimeout(() => {
+                navigation("/home");
+              }, 3000);
+              console.log(result);
+            },
+            (error) => {
+              console.log(error);
+            }
+          );
+
       }
     }
   };
@@ -175,7 +198,7 @@ const Order = () => {
           let addNewOrder = JSON.parse(localStorage.getItem("orders"));
           addNewOrder.push(newOrder);
           localStorage.setItem("orders", JSON.stringify(addNewOrder));
-          const delay = setTimeout(() => {
+          setTimeout(() => {
             navigation("/home");
           }, 4500);
           setTotalPrice(0);
