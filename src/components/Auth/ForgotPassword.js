@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import emailjs from "@emailjs/browser";
 import "./AuthStyle.css";
@@ -15,16 +15,19 @@ const ForgotPassword = () => {
   const handleToggleToast = () => {
     setShowToast(!showToast);
   };
+  
+  useEffect(() => {
+    const currentPort = window.location.origin;
+    const apiToken = uuidv4();
+    let AT = `${currentPort}/reset-password?AT=${apiToken}`;
+    setForgotPasswordLink(AT);
+  }, []);
+
   const submitForgotPasswordHandler = async (e) => {
     e.preventDefault();
     let flag = true;
     await JSON.parse(localStorage.getItem("users")).map((user) => {
       if (user.email == email) {
-        //create forgotpassword link
-        const currentPort = window.location.origin;
-        const apiToken = uuidv4();
-        let AT = `${currentPort}/reset-password?AT=${apiToken}`;
-        setForgotPasswordLink(AT);
 
         //take time
         const currentTime = new Date();
@@ -60,10 +63,13 @@ const ForgotPassword = () => {
         document.getElementById("messageError").innerText = `PROCESSING`;
         console.log(e.target);
         emailjs
-          .sendForm(
+          .send(
             "service_3kxpvwn",
             "template_ckac4rm",
-            e.target,
+            {
+              user_email: email,
+              forgot_pass_link: forgotPasswordLink,
+            },
             "oBQVy9OW2Wok5Hzji"
           )
           .then(
@@ -89,8 +95,12 @@ const ForgotPassword = () => {
 
   return (
     <div>
-      <Top />       <ToastComponent message="Successfully,please check your email address" showToast={showToast} handleCloseToast={handleToggleToast} />
-
+      <Top />{" "}
+      <ToastComponent
+        message="Successfully,please check your email address"
+        showToast={showToast}
+        handleCloseToast={handleToggleToast}
+      />
       <div className="Auth-form-container">
         <form className="Auth-form" onSubmit={submitForgotPasswordHandler}>
           <div className="Auth-form-content">
@@ -113,12 +123,6 @@ const ForgotPassword = () => {
                 required
               />
             </div>
-
-            <input
-              style={{ display: "none" }}
-              name="forgot_pass_link"
-              value={forgotPasswordLink}
-            />
             <div className="d-grid gap-2 mt-3">
               <button type="submit" className="btn btn-primary">
                 Submit
