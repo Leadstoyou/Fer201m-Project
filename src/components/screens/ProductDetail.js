@@ -201,6 +201,7 @@ const ProductDetail = () => {
   return foundProduct != undefined ? (
     
     <div className="container border-0">
+      <DefaultLayoutDetail>
       <div>
         <ToastComponent message="Vui lòng chọn size và color" showToast={showToast} handleCloseToast={handleToggleToast} />
         <OffCanvas
@@ -300,10 +301,7 @@ const ProductDetail = () => {
           </OffCanvas.Body>
         </OffCanvas>
       </div>
-
-      <DefaultLayoutDetail className="container border-0">
         <div className="row" style={{ marginTop: "60px" }}>
-          {/* Image Product */}
           <div className="col-2">
             <div style={{ marginLeft: "30px" }}>
               <div style={{ flexDirection: "column" }}>
@@ -311,7 +309,6 @@ const ProductDetail = () => {
                   <div>
                     <Image
                       src={product.img}
-                      // ảnh nhỏ
                       thumbnail
                       onClick={() => handleThumbnailClick(0)}
                       index={0}

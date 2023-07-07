@@ -13,7 +13,7 @@ const Login = () => {
   const navigation = useNavigate();
   const [userData, setuserData] = useState(listUsers);
 
-  const handleSubmit = async (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
     if (email === "" || password === "") {
       flag = true;
@@ -46,7 +46,7 @@ const Login = () => {
     <div>
       <Top />
       <div className="Auth-form-container">
-        <form className="Auth-form" onSubmit={handleSubmit}>
+        <form className="Auth-form" onSubmit={handleLogin}>
           <div className="Auth-form-content">
             <h3 className="Auth-form-title">Sign In</h3>
             <div className="text-center">

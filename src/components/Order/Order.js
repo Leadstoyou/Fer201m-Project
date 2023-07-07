@@ -31,9 +31,7 @@ const Order = () => {
   const order_email = useRef(0);
   const form = useRef({});
   const [showToast, setShowToast] = useState(false);
-  const handleToggleToast = () => {
-    setShowToast(!showToast);
-  };
+  const handleToggleToast = () => setShowToast(!showToast);
   const [message, setMessage] = useState("");
   const listCart = JSON.parse(localStorage.getItem("carts")).filter(
     (cart) => cart.userId == user.id
@@ -152,7 +150,6 @@ const Order = () => {
               console.log(error);
             }
           );
-
       }
     }
   };
@@ -412,11 +409,11 @@ const Order = () => {
                     style={{ borderBottom: "2px #9e9e9e" }}
                   >
                     <Col className="fw-bold mb-0">
-                      {product.name}(Qty:{product.productId})
+                      {product.name}(Qty:{product.quantity})
                     </Col>
 
                     <Col className="text-muted mb-0">
-                      {convertToCurrencyFormat(product.price)}
+                      {convertToCurrencyFormat(parseInt(product.price.replace(/\D/g, "")) * product.quantity)}
                     </Col>
                   </Row>
                 ))}

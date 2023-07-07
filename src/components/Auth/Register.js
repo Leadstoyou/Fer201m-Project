@@ -39,7 +39,7 @@ const Register = () => {
     }
     if(!addressRegex.test(address)) {
       setErrorMessage(
-        "Address must be at least 5 characters long and can contain letters, numbers, spaces, commas, dots, hashes, and hyphens."
+        " "
       );
       return false;
     }
@@ -62,7 +62,6 @@ const Register = () => {
       isAdmin: false,
     };
     const userExists = users.find((user) => user.email === newUser.email);
-    console.log(email)
     if (email === "" || password === "") {
       setErrorMessage("Email field or password is required");
       return navigation("/register");

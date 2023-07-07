@@ -15,7 +15,7 @@ const ForgotPassword = () => {
   const handleToggleToast = () => {
     setShowToast(!showToast);
   };
-  const submitHandler = async (e) => {
+  const submitForgotPasswordHandler = async (e) => {
     e.preventDefault();
     let flag = true;
     await JSON.parse(localStorage.getItem("users")).map((user) => {
@@ -92,7 +92,7 @@ const ForgotPassword = () => {
       <Top />       <ToastComponent message="Successfully,please check your email address" showToast={showToast} handleCloseToast={handleToggleToast} />
 
       <div className="Auth-form-container">
-        <form className="Auth-form" onSubmit={submitHandler}>
+        <form className="Auth-form" onSubmit={submitForgotPasswordHandler}>
           <div className="Auth-form-content">
             <h3 className="Auth-form-title">Forgot password</h3>
             <div className="text-center">
