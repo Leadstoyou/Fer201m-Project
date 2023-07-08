@@ -3,6 +3,7 @@ import Footer from "./Footer";
 import Top from "./Top";
 import "../styles/DefaultLayoutStyle.css";
 const DefaultLayout = ({className, children }) => { 
+
   return (
     <>
     <div className="container border-0">

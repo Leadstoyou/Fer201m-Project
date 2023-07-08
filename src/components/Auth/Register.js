@@ -26,6 +26,12 @@ const Register = () => {
       return false;
     }
 
+    if (!phonePattern.test(phone)) {
+      setErrorMessage(
+        "Invalid phone number. Please enter a 10-digit phone number."
+      );
+      return false;
+    }
     if(!namePattern.test(username)) {
       setErrorMessage(
         "Name must be at least 2 characters long and contain only letters and spaces."
@@ -50,6 +56,7 @@ const Register = () => {
   const handleSubmitRegister = (e) => {
     e.preventDefault();
     const validator = Validate();
+
     const newUser = {
       id: users.length + 1,
       username: username,
