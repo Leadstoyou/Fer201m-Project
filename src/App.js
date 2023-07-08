@@ -18,6 +18,8 @@ import ProductManager from "./components/Admin/ProductManager";
 import NotFound from "./components/layouts/NotFound";
 import "../node_modules/swiper/swiper-bundle.min.css";
 import ForgotPassword from "./components/Auth/ForgotPassword";
+import UserManager from "./components/Admin/UserManager";
+import './components/styles/DefaultLayoutStyle.css'
 function App() {
   useEffect(() => {
     LoadData();
@@ -38,6 +40,7 @@ function App() {
       <Route path="/order" element={<Order />} />
       <Route path="/view-order" element={<ViewOrder />} />
       <Route path="/product-manage" element={<ProductManager />} />
+      <Route path="/user-manage" element={<UserManager />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="*" element={<NotFound />} />
     </Routes>

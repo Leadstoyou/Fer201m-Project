@@ -6,6 +6,7 @@ import {
   faFilePen,
   faHome,
   faListSquares,
+  faPeopleRoof,
   faShoppingBag,
   faShoppingCart,
   faSignOut,
@@ -77,12 +78,19 @@ export default function Top() {
                     boxShadow: "rgba(100, 100, 111, 0.2) 0px 7px 29px 0px",
                     textAlign: "center",
                     borderColor: "white",
+                    width: "181px",
                   }}
                 >
                   <li>
                     <FontAwesomeIcon icon={faFilePen} />
                     <Link to="/product-manage" style={{ color: "black" }}>
                       Quản lí sản phẩm
+                    </Link>
+                  </li>
+                  <li>
+                    <FontAwesomeIcon icon={faPeopleRoof} />
+                    <Link to="/user-manage" style={{ color: "black" }}>
+                      Quản lí người dùng
                     </Link>
                   </li>
                   <li>

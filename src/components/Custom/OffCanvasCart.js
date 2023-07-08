@@ -1,5 +1,6 @@
 import { Button, Offcanvas } from "bootstrap";
 import { useState } from "react";
+import '../styles/DefaultLayoutStyle.css'
 
 const OffCanvasCart = () => {
   const [show, setShow] = useState(true);

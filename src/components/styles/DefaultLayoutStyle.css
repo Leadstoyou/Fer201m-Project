@@ -185,6 +185,13 @@ a{
   color:#000000;
 }
 
-.offcanvas.show ~ .nav {
+.offcanvas.show~ .nav {
   z-index: 0; 
+}
+.active-row {
+  color: #b3e6b3; 
+}
+
+.deactive-row {
+  color: #ff9999; 
 }

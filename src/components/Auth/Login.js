@@ -13,7 +13,7 @@ const Login = () => {
   const navigation = useNavigate();
   const [userData, setuserData] = useState(listUsers);
 
-  const handleLogin = async (e) => {
+  const handleLogin = (e) => {
     e.preventDefault();
     if (email === "" || password === "") {
       flag = true;
@@ -31,8 +31,15 @@ const Login = () => {
           u.email == email && u.password == CryptoJS.MD5(password).toString()
       );
       if (user) {
-        localStorage.setItem("UserID", JSON.stringify(user));
-        navigation("/home");
+        console.log(user);
+        if(user.isActive == true){
+          localStorage.setItem("UserID", JSON.stringify(user));
+          navigation("/home");
+          return;
+        }
+        const mess = document.getElementById("mess");
+        mess.innerText =  "Tài khoản không có hiệu lực";
+        mess.style.color = "red";
       } else {
         const a = !user && !flag;
         const mess = document.getElementById("mess");

@@ -16,34 +16,28 @@ const Register = () => {
   const [phone, setPhone] = useState("");
   const navigation = useNavigate();
   const Validate = () => {
-    const phonePattern = /^\d{10}$/;
-    const passwordPattern = /^.{8,}$/;
-    const namePattern = /^[a-zA-Z\s]{2,}$/;
-    const addressRegex = /^[a-zA-Z0-9\s\.,#-]{5,}$/;
+    const REGEX_PHONE = /^\d{10}$/;
+    const REGEX_PASSWORD = /^.{8,}$/;
+    const REGEX_NAME = /^[\p{L} ]+$/u;
+    const REGEX_ADDRESS = /^[\p{L}a-z0-9 ]{5,}$/u;
 
-    if (!passwordPattern.test(password)) {
+    if (!REGEX_PASSWORD.test(password)) {
       setErrorMessage("Password must be at least 8 characters long");
       return false;
     }
-    if(!namePattern.test(username)) {
+    if(!REGEX_NAME.test(username)) {
       setErrorMessage(
         "Name must be at least 2 characters long and contain only letters and spaces."
       );
       return false;
     }
-    if (!phonePattern.test(phone)) {
+    if(!REGEX_ADDRESS.test(address)) {
       setErrorMessage(
-        "Invalid phone number. Please enter a 10-digit phone number."
+        "Invalid address. The address can only contain characters from a-z 0-9.The address must have at least 5 characters."
       );
       return false;
     }
-    if(!addressRegex.test(address)) {
-      setErrorMessage(
-        "Invalid address. The address can only contain characters from a-z.The address must have at least 5 characters."
-      );
-      return false;
-    }
-    if (!phonePattern.test(phone)) {
+    if (!REGEX_PHONE.test(phone)) {
       setErrorMessage(
         "Invalid phone number. Please enter a 10-digit phone number."
       );
@@ -64,6 +58,7 @@ const Register = () => {
       address: address,
       phone: phone,
       isAdmin: false,
+      isActive: true
     };
     const userExists = users.find((user) => user.email === newUser.email);
     if (email === "" || password === "") {
@@ -87,7 +82,7 @@ const Register = () => {
       <div className="Auth-form-container">
         <form className="Auth-form" onSubmit={handleSubmitRegister}>
           <div className="Auth-form-content">
-            <h3 className="Auth-form-title">Sign In</h3>
+            <h3 className="Auth-form-title">Register</h3>
             <div className="text-center">
               Already registered?
               <Link to="/login">

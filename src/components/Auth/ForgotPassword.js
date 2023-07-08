@@ -11,6 +11,7 @@ const ForgotPassword =  () => {
   const [users, setUsers] = useState(listUsers);
   const [email, setEmail] = useState("");
   const [forgotPasswordLink, setForgotPasswordLink] = useState("");
+
   const [showToast, setShowToast] = useState(false);
 
   const handleToggleToast = () => {
@@ -22,13 +23,9 @@ const ForgotPassword =  () => {
     const apiToken = uuidv4();
     let AT = `${currentPort}/reset-password?AT=${apiToken}`;
     setForgotPasswordLink(AT);
-    console.log(window.location.hostname);
   }, []);
 
 
-  //=> 'fe80::1'
-  
-  //=> '10.0.0.79'
   const submitForgotPasswordHandler = async (e) => {
     e.preventDefault();
     let flag = true;
@@ -81,6 +78,7 @@ const ForgotPassword =  () => {
           .then(
             (result) => {
               handleToggleToast();
+              document.getElementById("messageError").innerText = `Successfully`;
               setTimeout(() => {
                 return;
               }, 3000);
@@ -113,7 +111,7 @@ const ForgotPassword =  () => {
             <h3 className="Auth-form-title">Forgot password</h3>
             <div className="text-center">
               Already registered?
-              <Link to="/login">
+              <Link to="/login" style={{paddingLeft:'6px'}}>
                 <span className="link-primary">Sign In</span>
               </Link>
             </div>

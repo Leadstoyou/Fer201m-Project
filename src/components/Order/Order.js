@@ -14,6 +14,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import emailjs from "@emailjs/browser";
 import ToastComponent from "../Custom/Toast";
+import { validate } from "json-schema";
 
 const Order = () => {
   const [products, setProducts] = useState([]);
@@ -29,10 +30,10 @@ const Order = () => {
   const order_address = useRef(0);
   const order_telephone = useRef(0);
   const order_email = useRef(0);
-  const form = useRef({});
   const [showToast, setShowToast] = useState(false);
   const handleToggleToast = () => setShowToast(!showToast);
   const [message, setMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   const listCart = JSON.parse(localStorage.getItem("carts")).filter(
     (cart) => cart.userId == user.id
   )[0];
@@ -55,7 +56,26 @@ const Order = () => {
         })
         .filter((item) => item !== null)
     : [];
+  const Validate = () => {
+    const REGEX_PHONE = /^\d{10}$/;
+    const REGEX_ADDRESS = /^[\p{L}a-z0-9 ]{5,}$/u;
 
+    if (!REGEX_PHONE.test(order_telephone.current.value)) {
+      setErrorMessage(
+        "Invalid phone number. Please enter a 10-digit phone number."
+      );
+      return false;
+    }
+    if (!REGEX_ADDRESS.test(order_address.current.value)) {
+      setErrorMessage(
+        "Invalid address. The address can only contain characters from a-z 0-9.The address must have at least 5 characters."
+      );
+      return false;
+    }
+
+    setErrorMessage("");
+    return true;
+  };
   useEffect(() => {
     setProducts(mergedCart);
     setTotalPrice(
@@ -121,12 +141,15 @@ const Order = () => {
                   return item;
                 }
               );
-      
+
               localStorage.setItem("carts", JSON.stringify(clearCart));
               setProducts([]);
               const lastId = parseInt(orders[orders.length - 1].id) + 1;
               const newProductsOrder = products.map((product) => {
-                return { productId: product.productId, quantity: product.quantity };
+                return {
+                  productId: product.productId,
+                  quantity: product.quantity,
+                };
               });
               const currentTime = new Date();
               const newOrder = {
@@ -154,18 +177,29 @@ const Order = () => {
       }
     }
   };
+
   const handleSubmitPublicUser = (e) => {
     e.preventDefault();
+    const validator = Validate();
+    console.log(validator);
+    if(!validator){
+      return;
+    }
     emailjs
-      .sendForm(
+      .send(
         "service_6hf9oen",
         "template_gdacwcs",
-        e.target,
+        {
+          order_date: `${currentTime.toLocaleDateString()} ${currentTime.toLocaleTimeString()}`,
+          order_address: order_address.current.value,
+          order_telephone: order_telephone.current.value,
+          order_email: order_email.current.value,
+        },
         "dlvwrhueyphVOHUf6"
       )
       .then(
         (result) => {
-          setMessage("Order sucessfully");
+          setMessage("Order sucessfully,please check your email address");
           handleToggleToast();
           setShow(false);
           const clearCart = JSON.parse(localStorage.getItem("carts")).map(
@@ -176,7 +210,7 @@ const Order = () => {
               return item;
             }
           );
-            console.log(e);
+          console.log(e);
           localStorage.setItem("carts", JSON.stringify(clearCart));
           setProducts([]);
           const lastId = parseInt(orders[orders.length - 1].id) + 1;
@@ -368,7 +402,6 @@ const Order = () => {
               event.preventDefault();
             }
           }}
-          ref={form}
         >
           <Modal.Header
             closeButton={() => {
@@ -413,7 +446,10 @@ const Order = () => {
                     </Col>
 
                     <Col className="text-muted mb-0">
-                      {convertToCurrencyFormat(parseInt(product.price.replace(/\D/g, "")) * product.quantity)}
+                      {convertToCurrencyFormat(
+                        parseInt(product.price.replace(/\D/g, "")) *
+                          product.quantity
+                      )}
                     </Col>
                   </Row>
                 ))}
@@ -428,6 +464,11 @@ const Order = () => {
                   </Col>
                 </Row>
                 <br />
+                {errorMessage && (
+                  <div className="error-message" style={{ color: "red" }}>
+                    {errorMessage}
+                  </div>
+                )}
                 <div className="form_value">
                   <Row
                     className="justify-content-between"
@@ -482,11 +523,6 @@ const Order = () => {
                     </Form.Group>
                   </Row>
                 </div>
-                <input
-                  style={{ display: "none" }}
-                  name="order_date"
-                  value={`${currentTime.toLocaleDateString()} ${currentTime.toLocaleTimeString()}`}
-                />
               </Card.Body>
             </Card>
           </Modal.Body>

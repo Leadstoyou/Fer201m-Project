@@ -98,7 +98,7 @@ const ProductManager = () => {
     <div className="container border-0" style={{ marginTop: "5px" }}>
       <div
         className="table-wrapper"
-        style={{ paddingTop: "12px", borderTop: "2px solid black" }}
+        style={{ paddingTop: "12px" }}
       >
         <div className="table-title">
           <Row>

@@ -930,7 +930,8 @@
       "email": "dattthe161372@fpt.edu.vn",
       "address": "Hung Yen",
       "phone": "0947257842",
-      "isAdmin": false
+      "isAdmin": false,
+      "isActive": true
     },
     {
       "id": "2",
@@ -939,7 +940,18 @@
       "email": "trinhtiendat2510@gmail.com",
       "address": "Hung Yen",
       "phone": "0333394099",
-      "isAdmin": true
+      "isAdmin": true,
+      "isActive": true
+    },
+    {
+      "id": "3",
+      "username": "Hong Anh",
+      "password": "ec9934a361449a36e86268a65a9ab1cf",
+      "email": "lytieulong2j2@gmail.com",
+      "address": "Hung Yen",
+      "phone": "0333394099",
+      "isAdmin": false,
+      "isActive": false
     }
   ],
   "carts": [

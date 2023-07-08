@@ -73,7 +73,17 @@ const ProductDetail = () => {
   //Canvas
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  const handleShow = () => {
+    setShow(true);
+    setTimeout(() => {
+      const navElement = document.querySelector('.nav');
+      const offcanvasElement = document.querySelector('.offcanvas');
+      if (offcanvasElement) {
+        navElement.style.zIndex = '1';
+      }
+    }, 50);
+   
+  };
 
   let foundProduct = JSON.parse(localStorage.getItem("products")).find(
     (product) => product.id === parseInt(id)
@@ -82,7 +92,7 @@ const ProductDetail = () => {
   function scrollToTop() {
     window.scrollTo({
       top: 0,
-      behavior: 'smooth' 
+      behavior: "smooth",
     });
   }
   useEffect(() => {
@@ -90,6 +100,7 @@ const ProductDetail = () => {
     setProduct(foundProduct ? foundProduct : {});
     setCartList(mergedCart ? mergedCart : []);
   }, []);
+
   //HIỂN THỊ CART
   const handleAddToCart = (flag) => {
     if (!selectedColor || !selectedSize) {
@@ -152,7 +163,6 @@ const ProductDetail = () => {
   };
   // PRODUCT DETAIL
 
-
   //Click ảnh thumbnail -> hiện ảnh carousel tương ứng
   const [activeIndex, setActiveIndex] = useState(0);
   const [isHoverThumbnail, setIsHoveredThumbnail] = useState([]);
@@ -199,11 +209,8 @@ const ProductDetail = () => {
     localStorage.setItem("carts", JSON.stringify(updatedData));
   };
   return foundProduct != undefined ? (
-    
     <div className="container border-0">
       <DefaultLayoutDetail>
-      <div>
-        <ToastComponent message="Vui lòng chọn size và color" showToast={showToast} handleCloseToast={handleToggleToast} />
         <OffCanvas
           show={show}
           onHide={handleClose}
@@ -300,7 +307,13 @@ const ProductDetail = () => {
             </Card>
           </OffCanvas.Body>
         </OffCanvas>
-      </div>
+        <div>
+          <ToastComponent
+            message="Vui lòng chọn size và color"
+            showToast={showToast}
+            handleCloseToast={handleToggleToast}
+          />
+        </div>
         <div className="row" style={{ marginTop: "60px" }}>
           <div className="col-2">
             <div style={{ marginLeft: "30px" }}>

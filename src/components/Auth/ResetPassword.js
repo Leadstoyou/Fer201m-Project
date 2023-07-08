@@ -7,6 +7,7 @@ const ResetPassword = () => {
   const [users, setUsers] = useState(JSON.parse(localStorage.getItem("users")));
   const [password1, setPassword1] = useState("");
   const [password2, setPassword2] = useState("");
+  const [errorMessage,setErrorMessage] = useState("");
   const CryptoJS = require("crypto-js");
   const [user, setUser] = useState();
   const navigation = useNavigate();
@@ -17,9 +18,22 @@ const ResetPassword = () => {
       }
     });
   }, []);
+  const Validate = () => {
+    const REGEX_PASSWORD = /^.{8,}$/;
 
+    if (!REGEX_PASSWORD.test(password1)) {
+      setErrorMessage("Password must be at least 8 characters long");
+      return false;
+    }
+    setErrorMessage("");
+    return true;
+  };
   const submitHandler = (e) => {
     e.preventDefault();
+    const validator = Validate();
+    if(!validator){
+      return;
+    }
     if (password1 == password2 && password1 != "") {
       setUsers(
         users.map((item) => {
@@ -69,6 +83,11 @@ const ResetPassword = () => {
               required
             />
           </div>
+          {errorMessage && (
+              <div className="error-message" style={{ color: "red" }}>
+                {errorMessage}
+              </div>
+            )}
           <div className="d-grid gap-2 mt-5">
             <button type="submit" className="btn btn-primary">
               Submit
