@@ -143,7 +143,7 @@ const Order = () => {
               handleToggleToast();
               setTimeout(() => {
                 navigation("/home");
-              }, 3000);
+              }, 2000);
               console.log(result);
             },
             (error) => {

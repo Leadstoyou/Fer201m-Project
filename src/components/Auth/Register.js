@@ -25,12 +25,7 @@ const Register = () => {
       setErrorMessage("Password must be at least 8 characters long");
       return false;
     }
-    if (!phonePattern.test(phone)) {
-      setErrorMessage(
-        "Invalid phone number. Please enter a 10-digit phone number."
-      );
-      return false;
-    }
+
     if(!namePattern.test(username)) {
       setErrorMessage(
         "Name must be at least 2 characters long and contain only letters and spaces."
@@ -39,7 +34,13 @@ const Register = () => {
     }
     if(!addressRegex.test(address)) {
       setErrorMessage(
-        " "
+        "Invalid address. The address can only contain characters from a-z.The address must have at least 5 characters."
+      );
+      return false;
+    }
+    if (!phonePattern.test(phone)) {
+      setErrorMessage(
+        "Invalid phone number. Please enter a 10-digit phone number."
       );
       return false;
     }
@@ -49,9 +50,6 @@ const Register = () => {
   const handleSubmitRegister = (e) => {
     e.preventDefault();
     const validator = Validate();
-    if (!validator) {
-      return;
-    }
     const newUser = {
       id: users.length + 1,
       username: username,
@@ -64,10 +62,12 @@ const Register = () => {
     const userExists = users.find((user) => user.email === newUser.email);
     if (email === "" || password === "") {
       setErrorMessage("Email field or password is required");
-      return navigation("/register");
+      return;
     } else if (userExists) {
       setErrorMessage("Email exists");
       return navigation("/register");
+    } else if(!validator){
+      return;
     } else {
       users.push(newUser);
       localStorage.setItem("users", JSON.stringify(users));

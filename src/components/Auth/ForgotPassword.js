@@ -5,7 +5,8 @@ import "./AuthStyle.css";
 import { Link } from "react-router-dom";
 import Top from "../layouts/Top";
 import ToastComponent from "../Custom/Toast";
-const ForgotPassword = () => {
+import ipaddr from 'ipaddr.js';
+const ForgotPassword =  () => {
   const listUsers = JSON.parse(localStorage.getItem("users"));
   const [users, setUsers] = useState(listUsers);
   const [email, setEmail] = useState("");
@@ -21,8 +22,13 @@ const ForgotPassword = () => {
     const apiToken = uuidv4();
     let AT = `${currentPort}/reset-password?AT=${apiToken}`;
     setForgotPasswordLink(AT);
+    console.log(window.location.hostname);
   }, []);
 
+
+  //=> 'fe80::1'
+  
+  //=> '10.0.0.79'
   const submitForgotPasswordHandler = async (e) => {
     e.preventDefault();
     let flag = true;

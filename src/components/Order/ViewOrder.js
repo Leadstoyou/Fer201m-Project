@@ -37,16 +37,17 @@ const ViewOrder = () => {
     setOrders(data);
   }, []);
   const convertToCurrencyFormat = (number) => {
-    var numberString = number.toString();
-    var parts = numberString.split(".");
-    var integerPart = parts[0];
-    var decimalPart = parts.length > 1 ? parts[1] : "";
+    const numberString = number.toString();
+    let formattedString = "";
 
-    var formattedNumber =
-      integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ".") +
-      (decimalPart ? "." + decimalPart : "");
+    for (let i = numberString.length - 1, count = 0; i >= 0; i--, count++) {
+      if (count !== 0 && count % 3 === 0) {
+        formattedString = "." + formattedString;
+      }
+      formattedString = numberString[i] + formattedString;
+    }
 
-    return formattedNumber;
+    return formattedString;
   };
   return (
     <DefaultLayout>

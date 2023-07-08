@@ -60,9 +60,9 @@ export default function Top() {
         {user ? (
           user.isAdmin ? (
             <div style={{ display: "flex" }}>
-              <div class="dropdown">
+              <div className="dropdown">
                 <div
-                  class="dropdown-toggle"
+                  className="dropdown-toggle"
                   id="dropdownMenuButton"
                   data-mdb-toggle="dropdown"
                   aria-expanded="false"
@@ -71,7 +71,7 @@ export default function Top() {
                   {user.username}
                 </div>
                 <ul
-                  class="dropdown-menu"
+                  className="dropdown-menu"
                   aria-labelledby="dropdownMenuButton"
                   style={{
                     boxShadow: "rgba(100, 100, 111, 0.2) 0px 7px 29px 0px",
@@ -102,9 +102,9 @@ export default function Top() {
             </div>
           ) : (
             <div style={{ display: "flex" }}>
-              <div class="dropdown">
+              <div className="dropdown">
                 <div
-                  class="dropdown-toggle"
+                  className="dropdown-toggle"
                   id="dropdownMenuButton"
                   data-mdb-toggle="dropdown"
                   aria-expanded="false"
@@ -113,7 +113,7 @@ export default function Top() {
                   {user.username}
                 </div>
                 <ul
-                  class="dropdown-menu"
+                  className="dropdown-menu"
                   aria-labelledby="dropdownMenuButton"
                   style={{
                     boxShadow: "rgba(100, 100, 111, 0.2) 0px 7px 29px 0px",
