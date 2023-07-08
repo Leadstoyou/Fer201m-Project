@@ -97,34 +97,6 @@ const Order = () => {
       }
       const confirm = window.confirm("Bạn có muốn đặt hàng không");
       if (confirm) {
-        const clearCart = JSON.parse(localStorage.getItem("carts")).map(
-          (item) => {
-            if (item.userId == user.id) {
-              return { ...item, products: [] };
-            }
-            return item;
-          }
-        );
-
-        localStorage.setItem("carts", JSON.stringify(clearCart));
-        setProducts([]);
-        const lastId = parseInt(orders[orders.length - 1].id) + 1;
-        const newProductsOrder = products.map((product) => {
-          return { productId: product.productId, quantity: product.quantity };
-        });
-        const currentTime = new Date();
-        const newOrder = {
-          id: lastId.toString(),
-          userId: user.id,
-          products: newProductsOrder,
-          total: totalPrice,
-          status: "completed",
-          timestamp: `${currentTime.toLocaleDateString()} ${currentTime.toLocaleTimeString()}`,
-        };
-        let addNewOrder = JSON.parse(localStorage.getItem("orders"));
-        addNewOrder.push(newOrder);
-        localStorage.setItem("orders", JSON.stringify(addNewOrder));
-        setTotalPrice(0);
         emailjs
           .send(
             "service_6hf9oen",
@@ -141,6 +113,35 @@ const Order = () => {
             (result) => {
               setMessage("Order sucessfully");
               handleToggleToast();
+              const clearCart = JSON.parse(localStorage.getItem("carts")).map(
+                (item) => {
+                  if (item.userId == user.id) {
+                    return { ...item, products: [] };
+                  }
+                  return item;
+                }
+              );
+      
+              localStorage.setItem("carts", JSON.stringify(clearCart));
+              setProducts([]);
+              const lastId = parseInt(orders[orders.length - 1].id) + 1;
+              const newProductsOrder = products.map((product) => {
+                return { productId: product.productId, quantity: product.quantity };
+              });
+              const currentTime = new Date();
+              const newOrder = {
+                id: lastId.toString(),
+                userId: user.id,
+                products: newProductsOrder,
+                total: totalPrice,
+                status: "completed",
+                timestamp: `${currentTime.toLocaleDateString()} ${currentTime.toLocaleTimeString()}`,
+              };
+              let addNewOrder = JSON.parse(localStorage.getItem("orders"));
+              addNewOrder.push(newOrder);
+              localStorage.setItem("orders", JSON.stringify(addNewOrder));
+              setTotalPrice(0);
+
               setTimeout(() => {
                 navigation("/home");
               }, 2000);
@@ -155,7 +156,6 @@ const Order = () => {
   };
   const handleSubmitPublicUser = (e) => {
     e.preventDefault();
-
     emailjs
       .sendForm(
         "service_6hf9oen",

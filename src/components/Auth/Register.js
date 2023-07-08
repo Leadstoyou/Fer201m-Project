@@ -25,16 +25,15 @@ const Register = () => {
       setErrorMessage("Password must be at least 8 characters long");
       return false;
     }
-
-    if (!phonePattern.test(phone)) {
-      setErrorMessage(
-        "Invalid phone number. Please enter a 10-digit phone number."
-      );
-      return false;
-    }
     if(!namePattern.test(username)) {
       setErrorMessage(
         "Name must be at least 2 characters long and contain only letters and spaces."
+      );
+      return false;
+    }
+    if (!phonePattern.test(phone)) {
+      setErrorMessage(
+        "Invalid phone number. Please enter a 10-digit phone number."
       );
       return false;
     }
