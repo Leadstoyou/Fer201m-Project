@@ -13,6 +13,16 @@ function ChangePassword({ userParams, changePassMode, handleToggleToast1 }) {
   const handleToggleToast = () => {
     setShowToast(!showToast);
   };
+  const Validate = () => {
+    const REGEX_PASSWORD = /^.{8,}$/;
+    
+    if (!REGEX_PASSWORD.test(password2)) {
+      setMessage("Password must be at least 8 characters long");
+      return false;
+    }
+
+    return true;
+  };
   const handleButtonClick = () => {
     if (matching) {
       const result = window.confirm(
@@ -25,6 +35,10 @@ function ChangePassword({ userParams, changePassMode, handleToggleToast1 }) {
         matching &&
         CryptoJS.MD5(current_password).toString() === user.password
       ) {
+        if(!Validate()){
+          handleToggleToast();
+          return;
+        }
         user.password = CryptoJS.MD5(password).toString();
         const users = JSON.parse(localStorage.getItem("users"));
         const updatedUsers = users.map((item) => {

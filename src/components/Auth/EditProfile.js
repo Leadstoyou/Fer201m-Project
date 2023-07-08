@@ -5,28 +5,29 @@ function EditProfile({ userParams, changeAuthMode, handleToggleToast }) {
   const [user, setUser] = useState(userParams);
   const [errorMessage, setErrorMessage] = useState("");
   const Validate = () => {
-    const phonePattern = /^\d{10}$/;
-    const namePattern = /^[a-zA-Z\s]{2,}$/;
-    const addressRegex = /^[a-zA-Z0-9\s\.,#-]{5,}$/;
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(user.email)) {
+    const REGEX_PHONE = /^\d{10}$/;
+    const REGEX_NAME = /^[\p{L} ]+$/u;
+    const REGEX_ADDRESS = /^[\p{L}a-z0-9 ]{5,}$/u;
+    const REGEX_EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    
+    if (!REGEX_EMAIL.test(user.email)) {
       setErrorMessage("Invalid email format.");
       return false;
     }
 
-    if (!phonePattern.test(user.phone)) {
+    if (!REGEX_PHONE.test(user.phone)) {
       setErrorMessage(
         "Invalid phone number. Please enter a 10-digit phone number."
       );
       return false;
     }
-    if (!namePattern.test(user.username)) {
+    if (!REGEX_NAME.test(user.username)) {
       setErrorMessage(
         "Name must be at least 2 characters long and contain only letters and spaces."
       );
       return false;
     }
-    if (!addressRegex.test(user.address)) {
+    if (!REGEX_ADDRESS.test(user.address)) {
       setErrorMessage(
         "Address must be at least 5 characters long and can contain letters, numbers, spaces, commas, dots, hashes, and hyphens."
       );

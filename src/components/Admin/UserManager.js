@@ -1,7 +1,6 @@
 import { useState } from "react";
 import NotFound from "../layouts/NotFound";
 import { Button, Col, Row, Table } from "react-bootstrap";
-import { async } from "q";
 
 const UserManager = () => {
   const [users, setUsers] = useState(JSON.parse(localStorage.getItem("users")));
