@@ -19,7 +19,7 @@ const Register = () => {
     const REGEX_PHONE = /^\d{10}$/;
     const REGEX_PASSWORD = /^.{8,}$/;
     const REGEX_NAME = /^[\p{L} ]+$/u;
-    const REGEX_ADDRESS = /^[\p{L}a-z0-9 ]{5,}$/u;
+    const REGEX_ADDRESS = /^[\p{L}\d\s,.#-]{5,}$/u;
 
     if (!REGEX_PASSWORD.test(password)) {
       setErrorMessage("Password must be at least 8 characters long");
@@ -33,7 +33,7 @@ const Register = () => {
     }
     if(!REGEX_ADDRESS.test(address)) {
       setErrorMessage(
-        "Invalid address. The address can only contain characters from a-z 0-9.The address must have at least 5 characters."
+        "Address must be at least 5 characters long and can contain letters, numbers, spaces, commas, dots, hashes, and hyphens."
       );
       return false;
     }

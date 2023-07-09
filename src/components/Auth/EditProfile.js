@@ -7,7 +7,7 @@ function EditProfile({ userParams, changeAuthMode, handleToggleToast }) {
   const Validate = () => {
     const REGEX_PHONE = /^\d{10}$/;
     const REGEX_NAME = /^[\p{L} ]+$/u;
-    const REGEX_ADDRESS = /^[\p{L}a-z0-9 ]{5,}$/u;
+    const REGEX_ADDRESS = /^[\p{L}\d\s,.#-]{5,}$/u;
     const REGEX_EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     
     if (!REGEX_EMAIL.test(user.email)) {
