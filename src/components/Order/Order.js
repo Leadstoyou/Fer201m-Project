@@ -58,7 +58,7 @@ const Order = () => {
     : [];
   const Validate = () => {
     const REGEX_PHONE = /^\d{10}$/;
-    const REGEX_ADDRESS = /^[\p{L}a-z0-9 ]{5,}$/u;
+    const REGEX_ADDRESS = /^[\p{L}\d\s,.#-]{5,}$/u;
 
     if (!REGEX_PHONE.test(order_telephone.current.value)) {
       setErrorMessage(
@@ -68,7 +68,7 @@ const Order = () => {
     }
     if (!REGEX_ADDRESS.test(order_address.current.value)) {
       setErrorMessage(
-        "Invalid address. The address can only contain characters from a-z 0-9.The address must have at least 5 characters."
+        "Address must be at least 5 characters long and can contain letters, numbers, spaces, commas, dots, hashes, and hyphens."
       );
       return false;
     }
@@ -210,7 +210,6 @@ const Order = () => {
               return item;
             }
           );
-          console.log(e);
           localStorage.setItem("carts", JSON.stringify(clearCart));
           setProducts([]);
           const lastId = parseInt(orders[orders.length - 1].id) + 1;
