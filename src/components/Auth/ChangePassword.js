@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Container, Row, Col, Card, Form, Button } from "react-bootstrap";
 import ToastComponent from "../Custom/Toast";
 const CryptoJS = require("crypto-js");
@@ -10,12 +10,24 @@ function ChangePassword({ userParams, changePassMode, handleToggleToast1 }) {
   const [password2, setPassword2] = useState();
   const [showToast, setShowToast] = useState(false);
   const [message, setMessage] = useState("");
+  const [users, setUsers] = useState();
+
+  useEffect(() => {
+    fetch("http://localhost:9999/api/users")
+      .then((res) => res.json())
+      .then((data) => {
+        setUsers(data);
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
+  }, []);
   const handleToggleToast = () => {
     setShowToast(!showToast);
   };
   const Validate = () => {
     const REGEX_PASSWORD = /^.{8,}$/;
-    
+
     if (!REGEX_PASSWORD.test(password2)) {
       setMessage("Password must be at least 8 characters long");
       return false;
@@ -35,19 +47,31 @@ function ChangePassword({ userParams, changePassMode, handleToggleToast1 }) {
         matching &&
         CryptoJS.MD5(current_password).toString() === user.password
       ) {
-        if(!Validate()){
+        if (!Validate()) {
           handleToggleToast();
           return;
         }
         user.password = CryptoJS.MD5(password).toString();
-        const users = JSON.parse(localStorage.getItem("users"));
         const updatedUsers = users.map((item) => {
           if (item.id == user.id) {
             return user;
           }
           return item;
         });
-        localStorage.setItem("users", JSON.stringify(updatedUsers));
+        fetch("http://localhost:9999/api/users", {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(updatedUsers),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            console.log(data);
+          })
+          .catch((error) => {
+            console.error(error);
+          });
         localStorage.setItem("UserID", JSON.stringify(user));
         changePassMode();
         handleToggleToast1();
@@ -79,7 +103,7 @@ function ChangePassword({ userParams, changePassMode, handleToggleToast1 }) {
       style={{ marginTop: "20px" }}
     >
       <ToastComponent
-        message= {message}
+        message={message}
         showToast={showToast}
         handleCloseToast={handleToggleToast}
       />

@@ -1,18 +1,32 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import NotFound from "../layouts/NotFound";
 import { Button, Col, Row, Table } from "react-bootstrap";
+import Loader from "../layouts/Loader";
 
 const UserManager = () => {
-  const [users, setUsers] = useState(JSON.parse(localStorage.getItem("users")));
+  const [users, setUsers] = useState([]);
   const [isAdmin, setIsAdmin] = useState(
     JSON.parse(localStorage.getItem("UserID"))
       ? JSON.parse(localStorage.getItem("UserID")).isAdmin
       : false
   );
-
+  const [loading, setLoading] = useState(true);
+  useEffect(()=>{
+    fetch("http://localhost:9999/api/users")
+    .then((res) => res.json())
+    .then((data) => {
+      setUsers(data);
+      setLoading(false);
+    })
+    .catch((err) => {
+      console.log(err.message);
+      setLoading(false);
+    });
+  },[]);
   const UserInfoRow = ({ user, index }) => {
     const { id, username, email, phone, address, isActive } = user;
     const rowClass = isActive ? "active-row" : "deactive-row";
+    console.log(user);
     return (
       <tr id={`activeStatus${id}`} key={index} className={rowClass}>
         <td>{id}</td>
@@ -37,10 +51,25 @@ const UserManager = () => {
       user.id == accountID ? { ...user, isActive: !user.isActive } : user
     );
     setUsers(updateUsers);
-    localStorage.setItem("users", JSON.stringify(updateUsers));
+    fetch('http://localhost:9999/api/users', {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(updateUsers)
+    })
+      .then(response => response.json())
+      .then(data => {
+        console.log(data);
+      })
+      .catch(error => {
+        console.error(error);
+      });
   };
 
-  return isAdmin ? (
+  return <>  {loading ? (
+    <Loader/>
+  ) : isAdmin ? (
     <div className="container border-0" style={{ marginTop: "15px" }}>
       <div className="table-wrapper" style={{ paddingTop: "12px" }}>
         <div className="table-title">
@@ -87,7 +116,8 @@ const UserManager = () => {
     </div>
   ) : (
     <NotFound />
-  );
+  )}
+  </>
 };
 
 export default UserManager;

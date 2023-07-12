@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
 import "./AuthStyle.css";
@@ -6,13 +6,20 @@ import Top from "../layouts/Top";
 
 const CryptoJS = require("crypto-js");
 const Login = () => {
-  const listUsers = JSON.parse(localStorage.getItem("users"));
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   let flag = false;
   const navigation = useNavigate();
-  const [userData, setuserData] = useState(listUsers);
+  const [userData, setUserData] = useState();
 
+  useEffect(() => {
+    fetch('http://localhost:9999/api/users')
+      .then((res) => res.json())
+      .then((data) => setUserData(data))
+      .catch((error) => console.error(error));
+  }, []);
+  
   const handleLogin = (e) => {
     e.preventDefault();
     if (email === "" || password === "") {

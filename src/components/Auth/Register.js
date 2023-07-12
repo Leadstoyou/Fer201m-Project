@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
 import "./AuthStyle.css";
@@ -6,8 +6,14 @@ import Top from "../layouts/Top";
 const CryptoJS = require("crypto-js");
 
 const Register = () => {
-  const listUsers = JSON.parse(localStorage.getItem("users"));
-  const [users, setUsers] = useState(listUsers);
+  const [users, setUsers] = useState();
+
+  useEffect(() => {
+    fetch('http://localhost:9999/api/users')
+      .then((res) => res.json())
+      .then((data) => setUsers(data))
+      .catch((error) => console.error(error));
+  }, []);
   const [errorMessage, setErrorMessage] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -15,6 +21,7 @@ const Register = () => {
   const [address, setAddress] = useState("");
   const [phone, setPhone] = useState("");
   const navigation = useNavigate();
+
   const Validate = () => {
     const REGEX_PHONE = /^\d{10}$/;
     const REGEX_PASSWORD = /^.{8,}$/;
@@ -71,7 +78,20 @@ const Register = () => {
       return;
     } else {
       users.push(newUser);
-      localStorage.setItem("users", JSON.stringify(users));
+      fetch('http://localhost:9999/api/users', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(users)
+      })
+        .then(response => response.json())
+        .then(data => {
+          console.log(data);
+        })
+        .catch(error => {
+          console.error(error);
+        });
       return navigation("/login");
     }
   };

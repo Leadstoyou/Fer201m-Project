@@ -3,6 +3,7 @@ import DefaultLayout from "../layouts/DefaultLayout";
 import BreadcrumbComponent from "../Custom/BreadcrumbComponent";
 import NavMenuDashboard from "../Custom/NavMenuDashboard";
 import { useEffect, useState } from "react";
+import Loader from "../layouts/Loader";
 
 const ViewOrder = () => {
   const [orders, setOrders] = useState([]);
@@ -11,30 +12,44 @@ const ViewOrder = () => {
       ? JSON.parse(localStorage.getItem("UserID"))
       : { id: "PUBLIC_USER" }
   );
-  const addNameForProduct = (id, quantity) => {
-    const data = JSON.parse(localStorage.getItem("products"));
-    const changedProduct = data.filter((product) => product.id == id)[0];
+  const [products, setProducts] = useState();
+  const [loading, setLoading] = useState(true);
 
-    return {
-      productId: id,
-      quantity: quantity,
-      name: changedProduct.name,
-      price: parseInt(changedProduct.price.split("đ")[0].replace(".", "")),
-    };
-  };
-  const data = JSON.parse(localStorage.getItem("orders"))
-    .filter((order) => {
-      return order.userId == user.id;
-    })
-    .map((order) => {
-      const lmeo = order.products.map((product) => {
-        return addNameForProduct(product.productId, product.quantity);
-      });
 
-      return { ...order, products: lmeo };
-    });
+
   useEffect(() => {
-    setOrders(data);
+    Promise.all([
+      fetch("http://localhost:9999/api/products").then((res) => res.json()),
+      fetch("http://localhost:9999/api/orders").then((res) => res.json()),
+    ])
+      .then(([productsData, ordersData]) => {
+        const addNameForProduct = (id, quantity) => {
+          const changedProduct = productsData.filter((product) => product.id == id)[0];
+      
+          return {
+            productId: id,
+            quantity: quantity,
+            name: changedProduct.name,
+            price: parseInt(changedProduct.price.split("đ")[0].replace(".", "")),
+          };
+        };
+        setProducts(productsData);
+        setOrders(ordersData
+          .filter((order) => {
+            return order.userId == user.id;
+          })
+          .map((order) => {
+            const orderProducts = order.products.map((product) => {
+              return addNameForProduct(product.productId, product.quantity);
+            });
+            return { ...order, products: orderProducts };
+          }));
+        setLoading(false); 
+      })
+      .catch((err) => {
+        console.log(err.message);
+        setLoading(false); 
+      });
   }, []);
   const convertToCurrencyFormat = (number) => {
     const numberString = number.toString();
@@ -50,6 +65,10 @@ const ViewOrder = () => {
     return formattedString;
   };
   return (
+    <>
+    {loading ? (
+      <Loader />
+    ) : (
     <DefaultLayout>
       <Container style={{ border: "none", paddingBottom: "250px" }}>
         <BreadcrumbComponent />
@@ -83,7 +102,9 @@ const ViewOrder = () => {
         </Table>
       </Container>
     </DefaultLayout>
-  );
+  )}
+  </>
+  )
 };
 
 export default ViewOrder;

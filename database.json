@@ -35,7 +35,7 @@
     {
       "id": 1,
       "catId": 1,
-      "name": "Áo sơ mi dài tay ALS22502",
+      "name": "Áo sơ mi dài tay ALS22",
       "price": "850.000đ",
       "description": "FORM DÁNG: Slim fit THIẾT KẾ: \n- Áo sơ mi dài tay phom Slim Fit ôm nhẹ vừa vặn mà vẫn thoải mái vận động. \n- Áo thiết kế đơn giản, tà lượn không túi, gam màu trắng đơn giản nhưng tinh tế, ấn tượng khi in họa tiết chữ cái tự hào thương hiệu, mang đến phong cách thời thượng và lịch lãm cho các quý ông. CHẤT LIỆU: \n- 50% Bamboo, 50% Polyester",
       "size": [
@@ -936,7 +936,7 @@
     {
       "id": "2",
       "username": "Leadstoyou",
-      "password": "ec9934a361449a36e86268a65a9ab1cf",
+      "password": "2bc678fedf57f998ba761b611b5ab2b6",
       "email": "trinhtiendat2510@gmail.com",
       "address": "Hung Yen",
       "phone": "0333394099",
@@ -951,24 +951,79 @@
       "address": "Hung Yen",
       "phone": "0333394099",
       "isAdmin": false,
-      "isActive": false
+      "isActive": true
+    },
+    {
+      "id": 4,
+      "username": "Dương văn tuân",
+      "password": "2bc678fedf57f998ba761b611b5ab2b6",
+      "email": "duongvantuan372@gmail.com",
+      "address": "ha noi",
+      "phone": "0947257841",
+      "isAdmin": false,
+      "isActive": true
+    },
+    {
+      "id": 5,
+      "username": "lmeolemo",
+      "password": "2bc678fedf57f998ba761b611b5ab2b6",
+      "email": "duongvantuan37233@gmail.com",
+      "address": "lmeolemo",
+      "phone": "0947257842",
+      "isAdmin": false,
+      "isActive": true
+    },
+    {
+      "id": 6,
+      "username": "trinh minh duc",
+      "password": "2bc678fedf57f998ba761b611b5ab2b6",
+      "email": "duongvantuan372333@gmail.com",
+      "address": "hung yen",
+      "phone": "0947257842",
+      "isAdmin": false,
+      "isActive": true
     }
   ],
   "carts": [
     {
+      "id": 3,
       "userId": "1",
       "products": [
         {
-          "productId": 1,
-          "quantity": 2,
-          "size": "M",
-          "color": "Trắng in chữ"
+          "productId": 22,
+          "color": "Xám",
+          "size": "29",
+          "quantity": 1
         },
         {
-          "productId": 5,
-          "quantity": 3,
-          "size": "M",
-          "color": "Cam"
+          "productId": 34,
+          "color": "Đen",
+          "size": "40",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "userId": "PUBLIC_USER",
+      "products": [
+        {
+          "productId": 3,
+          "quantity": 1,
+          "size": "XL",
+          "color": "Trắng 6"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "userId": "2",
+      "products": [
+        {
+          "productId": 44,
+          "color": "Xanh Tím Than",
+          "size": "0",
+          "quantity": 1
         }
       ]
     }
@@ -979,17 +1034,76 @@
       "userId": "1",
       "products": [
         {
-          "productId": "1",
-          "quantity": 2
-        },
-        {
-          "productId": "2",
+          "productId": 22,
           "quantity": 1
         }
       ],
-      "total": 870000,
+      "total": 570000,
       "status": "completed",
-      "timestamp": "2023-06-20 10:30:00"
+      "timestamp": "7/12/2023 3:13:02 PM"
+    },
+    {
+      "id": "2",
+      "userId": "PUBLIC_USER",
+      "products": [
+        {
+          "productId": 2,
+          "quantity": 1
+        }
+      ],
+      "total": 950000,
+      "status": "completed",
+      "timestamp": "7/12/2023 3:14:14 PM"
+    },
+    {
+      "id": "2",
+      "userId": "1",
+      "products": [
+        {
+          "productId": 2,
+          "quantity": 1
+        }
+      ],
+      "total": 950000,
+      "status": "completed",
+      "timestamp": "7/12/2023 3:15:04 PM"
+    },
+    {
+      "id": "2",
+      "userId": "1",
+      "products": [
+        {
+          "productId": 1,
+          "quantity": 2
+        },
+        {
+          "productId": 1,
+          "quantity": 1
+        }
+      ],
+      "total": 2550000,
+      "status": "completed",
+      "timestamp": "7/12/2023 3:20:03 PM"
+    },
+    {
+      "id": "2",
+      "userId": "1",
+      "products": [
+        {
+          "productId": 22,
+          "quantity": 1
+        }
+      ],
+      "total": 570000,
+      "status": "completed",
+      "timestamp": "7/12/2023 3:29:39 PM"
+    }
+  ],
+  "forgot_password": [
+    {
+      "forgotPasswordLink": "http://localhost:3000/reset-password?AT=1c2be501-c71e-44ee-920e-e881be9bbb45",
+      "email": "trinhtiendat2510@gmail.com",
+      "expireTime": "2023-07-12T07:45:48.150Z"
     }
   ]
 }

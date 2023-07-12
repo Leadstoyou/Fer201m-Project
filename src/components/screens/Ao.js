@@ -2,27 +2,35 @@ import DefaultLayout from "../layouts/DefaultLayout";
 import Card from "react-bootstrap/Card";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import Loader from "../layouts/Loader";
 const Ao = () => {
   const [originalProduct, setOriginalProduct] = useState([]);
   const [filteredProduct, setFilteredProduct] = useState([]);
   const [listShirtCategories, setListShirtCategories] = useState([]);
-
-  let listShirt = JSON.parse(localStorage.getItem("products")).filter(
-    (shirt) => shirt.catId === 1
-  );
-  let shirtCategories = JSON.parse(localStorage.getItem("categories"));
-  
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
-    setOriginalProduct(listShirt);
-    setFilteredProduct(listShirt);
-    setListShirtCategories(shirtCategories[0].detail);
+    Promise.all([
+      fetch("http://localhost:9999/api/products").then((res) => res.json()),
+      fetch("http://localhost:9999/api/categories").then((res) => res.json()),
+    ])
+      .then(([productData, categoryData]) => {
+        const listShirt = productData.filter((shirt) => shirt.catId === 1);
+        setOriginalProduct(listShirt);
+        setFilteredProduct(listShirt);
+        setListShirtCategories(categoryData[0].detail);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.log(err.message);
+        setLoading(false);
+      });
   }, []);
 
   const handleClick = (nameString) => {
     const filtered = originalProduct.filter(({ name }) =>
-    name.toLowerCase().includes(nameString.toLowerCase())
-  );
-  setFilteredProduct(filtered);
+      name.toLowerCase().includes(nameString.toLowerCase())
+    );
+    setFilteredProduct(filtered);
   };
 
   const handleMouseEnter = (event, product) => {
@@ -34,48 +42,56 @@ const Ao = () => {
   };
 
   return (
-    <DefaultLayout className="container border-0">
-      <div className="Product-content" >
-        <h2>ÁO</h2>
-        {listShirtCategories.map((category, index) => (
-          <button key={index} onClick={() => handleClick(category)}>
-            {category}
-          </button>
-        ))}
-      </div>
-      <br />
-      <div className="row">
-        {filteredProduct
-          .filter((product) =>
-            product.name.toLowerCase().includes("Áo".toLowerCase())
-          )
-          .map((product) => (
-            <div
-              key={product.id}
-              className="col-md-3"
-              onMouseEnter={(event) => handleMouseEnter(event, product)}
-              onMouseLeave={(event) => handleMouseLeave(event, product)}
-            >
-              <Card className="card-content" style={{height:'400px'}}>
-                <div className="blurry-image">
-                  <Link to={`/product/detail/${product.id}`}>
-                    <Card.Img src={product.img}/>
-                  </Link>
+    <>
+      {loading ? (
+        <Loader />
+      ) : (
+        <DefaultLayout className="container border-0">
+          <div className="Product-content">
+            <h2>ÁO</h2>
+            {listShirtCategories.map((category, index) => (
+              <button key={index} onClick={() => handleClick(category)}>
+                {category}
+              </button>
+            ))}
+          </div>
+          <br />
+          <div className="row">
+            {filteredProduct
+              .filter((product) =>
+                product.name.toLowerCase().includes("Áo".toLowerCase())
+              )
+              .map((product) => (
+                <div
+                  key={product.id}
+                  className="col-md-3"
+                  onMouseEnter={(event) => handleMouseEnter(event, product)}
+                  onMouseLeave={(event) => handleMouseLeave(event, product)}
+                >
+                  <Card className="card-content" style={{ height: "400px" }}>
+                    <div className="blurry-image">
+                      <Link to={`/product/detail/${product.id}`}>
+                        <Card.Img src={product.img} />
+                      </Link>
+                    </div>
+                    <Card.Body>
+                      <Link to={`/product/detail/${product.id}`}>
+                        <Card.Text style={{ fontWeight: "500" }}>
+                          {product.name}
+                        </Card.Text>
+                      </Link>
+                      <Card.Title>{product.price}</Card.Title>
+                    </Card.Body>
+                  </Card>
                 </div>
-                <Card.Body>
-                  <Link to={`/product/detail/${product.id}`}>
-                    <Card.Text style={{ fontWeight: "500" }}>
-                      {product.name}
-                    </Card.Text>
-                  </Link>
-                  <Card.Title>{product.price}</Card.Title>
-                </Card.Body>
-              </Card>
-            </div>
-          ))}
-      </div>
-    </DefaultLayout>
-  );
+              ))}
+          </div>
+        </DefaultLayout>
+      )}
+    </>
+  )
+  
 };
+
 
 export default Ao;

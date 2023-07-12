@@ -5,13 +5,11 @@ import "./AuthStyle.css";
 import { Link } from "react-router-dom";
 import Top from "../layouts/Top";
 import ToastComponent from "../Custom/Toast";
-import ipaddr from 'ipaddr.js';
 const ForgotPassword =  () => {
-  const listUsers = JSON.parse(localStorage.getItem("users"));
-  const [users, setUsers] = useState(listUsers);
+  const [users, setUsers] = useState();
   const [email, setEmail] = useState("");
   const [forgotPasswordLink, setForgotPasswordLink] = useState("");
-
+  const [forgot_password,setForgot_password] = useState([]);
   const [showToast, setShowToast] = useState(false);
 
   const handleToggleToast = () => {
@@ -19,6 +17,17 @@ const ForgotPassword =  () => {
   };
   
   useEffect(() => {
+    Promise.all([
+      fetch("http://localhost:9999/api/users").then((res) => res.json()),
+      fetch("http://localhost:9999/api/forgot_password").then((res) => res.json()),
+    ])
+      .then(([usersData, forgotPasswordData]) => {
+        setForgot_password(forgotPasswordData)
+        setUsers(usersData);
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
     const currentPort = window.location.origin;
     const apiToken = uuidv4();
     let AT = `${currentPort}/reset-password?AT=${apiToken}`;
@@ -29,21 +38,31 @@ const ForgotPassword =  () => {
   const submitForgotPasswordHandler = async (e) => {
     e.preventDefault();
     let flag = true;
-    await JSON.parse(localStorage.getItem("users")).map((user) => {
+    users.map((user) => {
       if (user.email == email) {
 
         //take time
         const currentTime = new Date();
         const futureTime = new Date(currentTime.getTime() + 5 * 60000);
-
         //get fotgotpassword DB
-        const forgotpassDb = JSON.parse(
-          localStorage.getItem("forgot_password")
-        );
+        const forgotpassDb = [...forgot_password];
         if (!forgotpassDb) {
           const array = [];
           array.push({ forgotPasswordLink, email, expireTime: futureTime });
-          localStorage.setItem("forgot_password", JSON.stringify(array));
+          fetch('http://localhost:9999/api/forgot_password', {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(array)
+          })
+            .then(response => response.json())
+            .then(data => {
+              console.log(data);
+            })
+            .catch(error => {
+              console.error(error);
+            });
         } else {
           let flag = true;
           forgotpassDb.map((item) => {
@@ -60,7 +79,20 @@ const ForgotPassword =  () => {
               expireTime: futureTime,
             });
           }
-          localStorage.setItem("forgot_password", JSON.stringify(forgotpassDb));
+          fetch('http://localhost:9999/api/forgot_password', {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(forgotpassDb)
+          })
+            .then(response => response.json())
+            .then(data => {
+              console.log(data);
+            })
+            .catch(error => {
+              console.error(error);
+            });
         }
         flag = false;
         document.getElementById("messageError").innerText = `PROCESSING`;

@@ -1,9 +1,22 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
 
 function EditProfile({ userParams, changeAuthMode, handleToggleToast }) {
   const [user, setUser] = useState(userParams);
   const [errorMessage, setErrorMessage] = useState("");
+  const [users,setUsers] = useState();
+
+  useEffect(()=>{
+    fetch("http://localhost:9999/api/users")
+    .then((res) => res.json())
+    .then((data) => {
+      setUsers(data);
+    })
+    .catch((err) => {
+      console.log(err.message);
+    });
+  
+  },[]);
   const Validate = () => {
     const REGEX_PHONE = /^\d{10}$/;
     const REGEX_NAME = /^[\p{L} ]+$/u;
@@ -44,14 +57,26 @@ function EditProfile({ userParams, changeAuthMode, handleToggleToast }) {
     let result = window.confirm("Are you sure you want to edit this profile?");
     if (result) {
       localStorage.setItem("UserID", JSON.stringify(user));
-      const users = JSON.parse(localStorage.getItem("users"));
       const updatedUsers = users.map((item) => {
         if (item.id === user.id) {
           return user;
         }
         return item;
       });
-      localStorage.setItem("users", JSON.stringify(updatedUsers));
+      fetch('http://localhost:9999/api/users', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(updatedUsers)
+      })
+        .then(response => response.json())
+        .then(data => {
+          console.log(data);
+        })
+        .catch(error => {
+          console.error(error);
+        });
       changeAuthMode();
       handleToggleToast();
     }

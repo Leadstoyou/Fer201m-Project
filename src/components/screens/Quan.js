@@ -2,20 +2,30 @@ import DefaultLayout from "../layouts/DefaultLayout";
 import Card from "react-bootstrap/Card";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import Loader from "../layouts/Loader";
 
 const Ao = () => {
   const [originalProduct, setOriginalProduct] = useState([]);
   const [filteredProduct, setFilteredProduct] = useState([]);
   const [listShirtCategories, setListShirtCategories] = useState([]);
-
-  let listShirt = JSON.parse(localStorage.getItem("products")).filter(
-    (shirt) => shirt.catId === 2
-  );
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    setOriginalProduct(listShirt);
-    setFilteredProduct(listShirt);
-    setListShirtCategories(JSON.parse(localStorage.getItem("categories"))[1].detail);
+    Promise.all([
+      fetch("http://localhost:9999/api/products").then((res) => res.json()),
+      fetch("http://localhost:9999/api/categories").then((res) => res.json())
+    ])
+      .then(([productData, categoryData]) => {
+        const listShirt = productData.filter((shirt) => shirt.catId === 2);
+        setOriginalProduct(listShirt);
+        setFilteredProduct(listShirt);
+        setListShirtCategories(categoryData[1].detail);
+        setLoading(false);  
+      })
+      .catch((err) => {
+        console.log(err.message);
+        setLoading(false);  
+      });
   }, []);
 
   const filterByName = (nameString) => {
@@ -38,6 +48,10 @@ const Ao = () => {
   };
 
   return (
+    <>
+    {loading ? (
+      <Loader />
+    ) : (
     <DefaultLayout className="container  border-0">
       <div className="Product-content">
         <h2>QUẦN</h2>
@@ -80,7 +94,9 @@ const Ao = () => {
           ))}
       </div>
     </DefaultLayout>
-  );
+  )}
+  </>
+  )
 };
 
 export default Ao;
