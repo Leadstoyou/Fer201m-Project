@@ -38,9 +38,12 @@ const Login = () => {
           u.email == email && u.password == CryptoJS.MD5(password).toString()
       );
       if (user) {
-        console.log(user);
         if(user.isActive == true){
           localStorage.setItem("UserID", JSON.stringify(user));
+          // if(user.isAdmin == true){
+          //   navigation('/dashboard');
+          //   return;
+          // }
           navigation("/home");
           return;
         }

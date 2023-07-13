@@ -18,6 +18,9 @@ import "../node_modules/swiper/swiper-bundle.min.css";
 import ForgotPassword from "./components/Auth/ForgotPassword";
 import UserManager from "./components/Admin/UserManager";
 import './components/styles/DefaultLayoutStyle.css'
+import Search from "./components/screens/Search";
+import Test from "./components/screens/Test";
+import Dashboard from "./components/Admin/Dashboard";
 function App() {
   return (
     <Routes>
@@ -31,12 +34,15 @@ function App() {
       <Route path="/ao" element={<Ao />} />
       <Route path="/quan" element={<Quan />} />
       <Route path="/phukien" element={<PhuKien />} />
+      <Route path="/search" element={<Search />} />
       <Route path="/product/detail/:id" element={<ProductDetail />} />
       <Route path="/order" element={<Order />} />
       <Route path="/view-order" element={<ViewOrder />} />
       <Route path="/product-manage" element={<ProductManager />} />
       <Route path="/user-manage" element={<UserManager />} />
+      <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
+      <Route path="/test" element={<Test />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   );

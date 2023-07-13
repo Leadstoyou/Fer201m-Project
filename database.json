@@ -920,6 +920,60 @@
       "img": "/assets/phu_kien/ATI08502.jpg",
       "blurImg": "/assets/blurImg/ATI08502.jpg",
       "amount": 1000
+    },
+    {
+      "id": 45,
+      "name": "23",
+      "price": "32",
+      "catId": 1,
+      "description": "23",
+      "size": [
+        "S",
+        "ML",
+        "XL",
+        "XXL"
+      ],
+      "color": [
+        "23"
+      ],
+      "amount": "23"
+    },
+    {
+      "id": 46,
+      "name": "312",
+      "price": "32",
+      "catId": 1,
+      "description": "123",
+      "size": [
+        "S",
+        "ML",
+        "XL",
+        "XXL"
+      ],
+      "color": [
+        "312"
+      ],
+      "amount": "132"
+    },
+    {
+      "id": 47,
+      "name": "e2",
+      "price": "323",
+      "catId": 1,
+      "description": "32",
+      "size": [
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33
+      ],
+      "color": [
+        "32"
+      ],
+      "amount": "32"
     }
   ],
   "users": [
@@ -986,20 +1040,14 @@
   ],
   "carts": [
     {
-      "id": 3,
+      "id": 4,
       "userId": "1",
       "products": [
         {
           "productId": 22,
-          "color": "Xám",
+          "quantity": 2,
           "size": "29",
-          "quantity": 1
-        },
-        {
-          "productId": 34,
-          "color": "Đen",
-          "size": "40",
-          "quantity": 1
+          "color": "Xám"
         }
       ]
     },
@@ -1016,13 +1064,19 @@
       ]
     },
     {
-      "id": 3,
+      "id": 4,
       "userId": "2",
       "products": [
         {
           "productId": 44,
           "color": "Xanh Tím Than",
           "size": "0",
+          "quantity": 1
+        },
+        {
+          "productId": 1,
+          "color": "Trắng in chữ",
+          "size": "M",
           "quantity": 1
         }
       ]
@@ -1097,6 +1151,27 @@
       "total": 570000,
       "status": "completed",
       "timestamp": "7/12/2023 3:29:39 PM"
+    },
+    {
+      "id": "2",
+      "userId": "1",
+      "products": [
+        {
+          "productId": 22,
+          "quantity": 1
+        },
+        {
+          "productId": 34,
+          "quantity": 1
+        },
+        {
+          "productId": 2,
+          "quantity": 1
+        }
+      ],
+      "total": 6770000,
+      "status": "completed",
+      "timestamp": "7/13/2023 10:58:06 AM"
     }
   ],
   "forgot_password": [

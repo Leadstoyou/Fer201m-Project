@@ -28,7 +28,7 @@ const UserManager = () => {
     const rowClass = isActive ? "active-row" : "deactive-row";
     console.log(user);
     return (
-      <tr id={`activeStatus${id}`} key={index} className={rowClass}>
+      <tr id={`activeStatus${id}`} key={index} className={rowClass} style={{cursor:'pointer'}}>
         <td>{id}</td>
         <td>{username}</td>
         <td>{email}</td>
@@ -90,7 +90,7 @@ const UserManager = () => {
             </Col>
           </Row>
         </div>
-        <div class="scrollable-area" style={{ overflow: "auto",paddingTop:'11px' }}>
+        <div className="scrollable-area" style={{ overflow: "auto",paddingTop:'11px' }}>
           <Table bordered hover>
             <thead>
               <tr>
@@ -105,7 +105,7 @@ const UserManager = () => {
             </thead>
             <tbody>
               {users
-                .filter((user) => user.isAdmin == false)
+                .filter((user) => user.id != JSON.parse(localStorage.getItem("UserID")).id)
                 .map((user, index) => (
                   <UserInfoRow key={index} user={user} index={index} />
                 ))}
@@ -113,7 +113,7 @@ const UserManager = () => {
           </Table>
         </div>
       </div>
-    </div>
+    </div> 
   ) : (
     <NotFound />
   )}

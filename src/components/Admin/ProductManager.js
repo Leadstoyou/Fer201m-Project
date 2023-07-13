@@ -16,6 +16,7 @@ import { useEffect, useState } from "react";
 import { ArchiveFill, PencilSquare } from "react-bootstrap-icons";
 import NotFound from "../layouts/NotFound";
 import Loader from "../layouts/Loader";
+import axios from "axios";
 
 const ProductManager = () => {
   const [products, setProducts] = useState([]);
@@ -34,6 +35,8 @@ const ProductManager = () => {
   const [currentSortOrder, setCurrentSortOrder] = useState({});
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [errorMessage, setErrorMessage] = useState("");
+  const [img, setImg] = useState("");
+  const [blurImg, setBlurImg] = useState("");
   const SIZE_KEY = {
     shirts: ["S", "ML", "XL", "XXL"],
     pants: [27, 28, 29, 30, 31, 32, 33],
@@ -59,6 +62,19 @@ const ProductManager = () => {
         setLoading(false);
       });
   }, []);
+  const uploadImage = async (formData) => {
+    try {
+      const response = await axios.post(
+        "https://api.cloudinary.com/v1_1/dw6kh8vlg/image/upload",
+        formData
+      );
+
+      const imageUrl = response.data.secure_url;
+      return imageUrl;
+    } catch (error) {
+      throw error;
+    }
+  };
 
   const handleCloseModal = () => {
     if (isEditing) {
@@ -124,27 +140,99 @@ const ProductManager = () => {
     setShowModal(false);
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     if (!isEditing) {
-      const updatedProducts = [...products, newProductAdded];
-      setProducts(updatedProducts);
-      fetch("http://localhost:9999/api/products", {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(updatedProducts),
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          console.log(data);
+      const type = {
+        ao: "ao",
+        quan: "quan",
+        phukien: "phu_kien",
+        blurImg: "blurImg",
+      };
+
+      if (parseInt(newProductAdded.catId) === 1) {
+        const formData = new FormData();
+        formData.append("file", img);
+        formData.append("upload_preset", `assets_${type.ao}`);
+        uploadImage(formData)
+          .then((imageUrl) => {
+            console.log(imageUrl);
+            setNewProductAdd((prevProduct) => ({
+              ...prevProduct,
+              img: "imageUrl",
+            }));
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      } else if (parseInt(newProductAdded.catId) === 2) {
+        const formData = new FormData();
+        formData.append("file", img);
+        formData.append("upload_preset", `assets_${type.quan}`);
+
+        uploadImage(formData)
+          .then((imageUrl) => {
+            console.log(imageUrl);
+            setNewProductAdd((prevProduct) => ({
+              ...prevProduct,
+              img: "imageUrl",
+            }));
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      } else if (parseInt(newProductAdded.catId) === 3) {
+        const formData = new FormData();
+        formData.append("file", img);
+        formData.append("upload_preset", `assets_${type.phukien}`);
+
+        uploadImage(formData)
+          .then((imageUrl) => {
+            console.log(imageUrl);
+            setNewProductAdd((prevProduct) => ({
+              ...prevProduct,
+              img: "imageUrl",
+            }));
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
+      const formData = new FormData();
+      formData.append("file", blurImg);
+      formData.append("upload_preset", `assets_${type.blurImg}`);
+      uploadImage(formData)
+        .then((imageUrl) => {
+          console.log(imageUrl);
+          setNewProductAdd((prevProduct) => ({
+            ...prevProduct,
+            blurImg: "imageUrl",
+          }));
+          console.log(newProductAdded);
+          const updatedProducts = [...products, newProductAdded];
+          setProducts(updatedProducts);
+          fetch("http://localhost:9999/api/products", {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(updatedProducts),
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              console.log(newProductAdded);
+              console.log(data);
+            })
+            .catch((error) => {
+              alert("error");
+              console.error(error);
+            });
+          setShowModal(false);
+          setNewProductAdd({});
         })
         .catch((error) => {
-          console.error(error);
+          console.log(error);
         });
-      setShowModal(false);
-      setNewProductAdd({});
     }
   };
   const handleKeyDown = (event) => {
@@ -233,18 +321,17 @@ const ProductManager = () => {
       }
       return products;
     }
-    const temp = filterProductsByName(searchName);
-    if (temp.length === 0) {
+    const searchResult = filterProductsByName(searchName);
+    if (searchResult.length === 0) {
       setErrorMessage("Not Found");
     } else {
       setErrorMessage("");
     }
-    setFilteredProducts(temp.length !== 0 ? temp : []);
+    setFilteredProducts(searchResult.length !== 0 ? searchResult : []);
   }, [searchName]);
 
   return (
     <>
-      {" "}
       {loading ? (
         <Loader />
       ) : isAdmin ? (
@@ -598,39 +685,39 @@ const ProductManager = () => {
                 <InputGroup className="mb-3">
                   <InputGroup.Text>Image</InputGroup.Text>
                   <Form.Control
-                    placeholder="Image Link"
-                    aria-label="product_image"
-                    aria-describedby="basic-addon3"
+                    type="file"
+                    accept="image/*"
                     onChange={(e) => {
-                      isEditing
-                        ? setUpdateProduct((prevProduct) => ({
-                            ...prevProduct,
-                            img: e.target.value,
-                          }))
-                        : setNewProductAdd((prevProduct) => ({
-                            ...prevProduct,
-                            img: e.target.value,
-                          }));
+                      const file = e.target.files[0];
+                      const reader = new FileReader();
+
+                      reader.onloadend = () => {
+                        const imageDataUrl = reader.result;
+                        setImg(imageDataUrl);
+                      };
+
+                      if (file) {
+                        reader.readAsDataURL(file);
+                      }
                     }}
-                    defaultValue={isEditing ? updateProduct.img : ""}
                     required
                   />
                   <Form.Control
-                    placeholder="BlurImage Link"
-                    aria-label="product_blur_image"
-                    aria-describedby="basic-addon3"
+                    type="file"
+                    accept="image/*"
                     onChange={(e) => {
-                      isEditing
-                        ? setUpdateProduct((prevProduct) => ({
-                            ...prevProduct,
-                            blurImg: e.target.value,
-                          }))
-                        : setNewProductAdd((prevProduct) => ({
-                            ...prevProduct,
-                            blurImg: e.target.value,
-                          }));
+                      const file = e.target.files[0];
+                      const reader = new FileReader();
+
+                      reader.onloadend = () => {
+                        const imageDataUrl = reader.result;
+                        setBlurImg(imageDataUrl);
+                      };
+
+                      if (file) {
+                        reader.readAsDataURL(file);
+                      }
                     }}
-                    defaultValue={isEditing ? updateProduct.blurImg : ""}
                     required
                   />
                 </InputGroup>
