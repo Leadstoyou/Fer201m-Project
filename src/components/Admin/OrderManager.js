@@ -28,7 +28,7 @@ const OrderManager = () => {
       fetch("http://localhost:9999/api/products").then((res) => res.json()),
     ])
       .then(([cartsData, productsData]) => {
-        setOrders(cartsData);
+        fetchData();
         setProducts(productsData);
         setTotalPages(Math.ceil(cartsData.length / 10));
         setLoading(false);
@@ -89,6 +89,7 @@ const OrderManager = () => {
   };
   useEffect(() => {
     if (clickedOrder) {
+      console.log(clickedOrder,clickedOrder.products)
       setResultString(
         clickedOrder.products
           ? clickedOrder.products

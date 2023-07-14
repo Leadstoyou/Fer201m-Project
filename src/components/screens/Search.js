@@ -6,18 +6,30 @@ import { Card } from "react-bootstrap";
 
 const Search = () => {
   const { state } = useLocation();
-  const { searchResult, searchParams } = state;
-  const [originalProduct, setOriginalProduct] = useState();
-  const [params, setParams] = useState();
+  const {
+    searchResult: initialSearchResult,
+    searchParams: initialSearchParams,
+  } = state;
+  const [originalProduct, setOriginalProduct] = useState([]);
+  const [params, setParams] = useState("");
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    setOriginalProduct(searchResult);
-    setParams(searchParams);
+    setOriginalProduct(initialSearchResult);
+    setParams(initialSearchParams);
     setLoading(false);
   }, []);
 
-  console.log(originalProduct);
+  useEffect(() => {
+    handleLmeo(initialSearchResult,initialSearchParams);
+
+  }, [initialSearchResult, initialSearchParams]);
+  const handleLmeo = (initialSearchResult,initialSearchParams) =>{
+    setOriginalProduct(initialSearchResult);
+    setParams(initialSearchParams);
+    const a = initialSearchParams;
+  }
+
   const handleMouseEnter = (event, product) => {
     event.currentTarget.getElementsByTagName("img")[0].src = product.blurImg;
   };

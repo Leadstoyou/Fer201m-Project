@@ -50,20 +50,33 @@ export default function Top() {
     redirect("/home");
   };
   const handleSearch = () => {
-
-    
+    function filterProductsByName(searchName) {
+      if (searchName) {
+        return products.filter((product) =>
+          product.name
+            .toLowerCase()
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .includes(
+              searchName
+                .toLowerCase()
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, "")
+            )
+        );
+      }
+      return products;
+    }
     if (!searchParams) {
       handleToggleToast();
       return;
     }
-    fetch(`http://localhost:9999/api/products?name_like=${searchParams}`)
-    .then((response) => {response.json()})
-    .then((data) => {
-      navigate("/search", { state: { data, searchParams } });
-    })
-    .catch((err) => console.error(err));
-
+    const searchResult = filterProductsByName(searchParams);
+    
+    navigate("/search", { state: { searchResult, searchParams } });
   };
+
+
   return (
     <div>
       <ToastComponent
