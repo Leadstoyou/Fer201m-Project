@@ -3,6 +3,7 @@ import Card from "react-bootstrap/Card";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Loader from "../layouts/Loader";
+import { convertToCurrencyFormat } from "../Custom/CustomFunction";
 
 const Ao = () => {
   const [originalProduct, setOriginalProduct] = useState([]);
@@ -87,7 +88,7 @@ const Ao = () => {
                       {product.name}
                     </Card.Text>
                   </Link>
-                  <Card.Title>{product.price}</Card.Title>
+                  <Card.Title>{convertToCurrencyFormat(product.price)}</Card.Title>
                 </Card.Body>
               </Card>
             </div>

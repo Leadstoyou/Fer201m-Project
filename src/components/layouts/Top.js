@@ -3,8 +3,11 @@ import Nav from "react-bootstrap/Nav";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
+  faBagShopping,
+  faBarsProgress,
   faFilePen,
   faHome,
+  faLineChart,
   faListSquares,
   faPeopleRoof,
   faSearch,
@@ -47,29 +50,19 @@ export default function Top() {
     redirect("/home");
   };
   const handleSearch = () => {
-    function filterProductsByName(searchName) {
-      if (searchName) {
-        return products.filter((product) =>
-          product.name
-            .toLowerCase()
-            .normalize("NFD")
-            .replace(/[\u0300-\u036f]/g, "")
-            .includes(
-              searchName
-                .toLowerCase()
-                .normalize("NFD")
-                .replace(/[\u0300-\u036f]/g, "")
-            )
-        );
-      }
-      return products;
-    }
+
+    
     if (!searchParams) {
       handleToggleToast();
       return;
     }
-    const searchResult = filterProductsByName(searchParams);
-    navigate("/search", { state: { searchResult, searchParams } });
+    fetch(`http://localhost:9999/api/products?name_like=${searchParams}`)
+    .then((response) => {response.json()})
+    .then((data) => {
+      navigate("/search", { state: { data, searchParams } });
+    })
+    .catch((err) => console.error(err));
+
   };
   return (
     <div>
@@ -105,12 +98,12 @@ export default function Top() {
           <Link to="/phukien" style={{ color: "black" }}>
             <span className="nav-link-text product-list-header">PHỤ KIỆN</span>
           </Link>
-          <div class="searchTop">
-            <div class="input-width-button" style={{ display: "flex" }}>
+          <div className="searchTop">
+            <div className="input-width-button" style={{ display: "flex" }}>
               <input
                 type="text"
                 id="keyword"
-                class="form-control toggle-search"
+                className="form-control toggle-search"
                 placeholder="Tìm kiếm"
                 style={{ height: "32px" }}
                 onChange={(e) => {
@@ -165,9 +158,21 @@ export default function Top() {
                     }}
                   >
                     <li>
+                      <FontAwesomeIcon icon={faLineChart} />
+                      <Link to="/dashboard" style={{ color: "black" }}>
+                        Dashboard
+                      </Link>
+                    </li>
+                    <li>
                       <FontAwesomeIcon icon={faFilePen} />
                       <Link to="/product-manage" style={{ color: "black" }}>
                         Quản lí sản phẩm
+                      </Link>
+                    </li>
+                    <li>
+                      <FontAwesomeIcon icon={faBarsProgress} />
+                      <Link to="/order-manage" style={{ color: "black" }}>
+                        Quản lí đơn hàng
                       </Link>
                     </li>
                     <li>

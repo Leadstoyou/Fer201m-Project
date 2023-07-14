@@ -40,10 +40,10 @@ const Login = () => {
       if (user) {
         if(user.isActive == true){
           localStorage.setItem("UserID", JSON.stringify(user));
-          // if(user.isAdmin == true){
-          //   navigation('/dashboard');
-          //   return;
-          // }
+          if(user.isAdmin == true){
+            navigation('/dashboard');
+            return;
+          }
           navigation("/home");
           return;
         }

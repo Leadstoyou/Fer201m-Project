@@ -19,8 +19,8 @@ import ForgotPassword from "./components/Auth/ForgotPassword";
 import UserManager from "./components/Admin/UserManager";
 import './components/styles/DefaultLayoutStyle.css'
 import Search from "./components/screens/Search";
-import Test from "./components/screens/Test";
 import Dashboard from "./components/Admin/Dashboard";
+import OrderManager from "./components/Admin/OrderManager";
 function App() {
   return (
     <Routes>
@@ -42,7 +42,7 @@ function App() {
       <Route path="/user-manage" element={<UserManager />} />
       <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
-      <Route path="/test" element={<Test />} />
+      <Route path="/order-manage" element={<OrderManager />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   );

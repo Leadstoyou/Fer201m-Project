@@ -20,6 +20,7 @@ import OffCanvas from "react-bootstrap/Offcanvas";
 import NotFound from "../layouts/NotFound";
 import ToastComponent from "../Custom/Toast";
 import Loader from "../layouts/Loader";
+import { convertToCurrencyFormat } from "../Custom/CustomFunction";
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -245,6 +246,7 @@ const ProductDetail = () => {
         console.error(error);
       });
   };
+  
   return (
     <>
       {loading ? (
@@ -418,10 +420,9 @@ const ProductDetail = () => {
                 </Carousel>
               </div>
 
-              {/* Thông tin sản phẩm -> add to cart */}
               <div className="col-4" style={{ marginTop: "25px" }}>
                 <h1 className="name_production">{product.name}</h1>
-                <p className="price_production">{product.price}</p>
+                <p className="price_production">{convertToCurrencyFormat(product.price)}</p>
                 <p
                   style={{ marginTop: "10px", marginBottom: "0px" }}
                   className="color_production"

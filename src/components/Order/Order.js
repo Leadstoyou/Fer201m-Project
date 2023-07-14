@@ -14,6 +14,7 @@ import { useNavigate } from "react-router-dom";
 import emailjs from "@emailjs/browser";
 import ToastComponent from "../Custom/Toast";
 import Loader from "../layouts/Loader";
+import { convertToCurrencyFormat } from "../Custom/CustomFunction";
 const Order = () => {
   const [products, setProducts] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
@@ -105,19 +106,6 @@ const Order = () => {
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
-  const convertToCurrencyFormat = (number) => {
-    const numberString = number.toString();
-    let formattedString = "";
-
-    for (let i = numberString.length - 1, count = 0; i >= 0; i--, count++) {
-      if (count !== 0 && count % 3 === 0) {
-        formattedString = "." + formattedString;
-      }
-      formattedString = numberString[i] + formattedString;
-    }
-
-    return formattedString;
-  };
   const handleSubmit = (e) => {
     if (products.length === 0) {
       console.log(products);
@@ -169,7 +157,7 @@ const Order = () => {
                   console.error(error);
                 });
               setProducts([]);
-              const lastId = orders[orders.length - 1] ?  parseInt(orders[orders.length - 1].id) : 1;
+              const lastId = orders[orders.length - 1] ?  parseInt(orders[orders.length - 1].id) + 1 : 1;
               const newProductsOrder = products.map((product) => {
                 return {
                   productId: product.productId,
@@ -180,6 +168,9 @@ const Order = () => {
               const newOrder = {
                 id: lastId.toString(),
                 userId: user.id,
+                email: user.email,
+                address: user.address,
+                phone: user.phone,
                 products: newProductsOrder,
                 total: totalPrice,
                 status: "completed",
@@ -260,7 +251,7 @@ const Order = () => {
               console.error(error);
             });
           setProducts([]);
-          const lastId = parseInt(orders[orders.length - 1].id) + 1;
+          const lastId = orders[orders.length - 1] ?  parseInt(orders[orders.length - 1].id) + 1 : 1;
           const newProductsOrder = products.map((product) => {
             return { productId: product.productId, quantity: product.quantity };
           });
@@ -268,6 +259,9 @@ const Order = () => {
           const newOrder = {
             id: lastId.toString(),
             userId: user.id,
+            email: order_email.current.value,
+            address: order_address.current.value,
+            phone: order_telephone.current.value,
             products: newProductsOrder,
             total: totalPrice,
             status: "completed",
@@ -381,7 +375,7 @@ const Order = () => {
                               </td>
                               <td className="product-total">
                                 <span className="woocommerce-Price-amount amount">
-                                  <bdi>{product.price}</bdi>
+                                  <bdi>{convertToCurrencyFormat(product.price)}</bdi>
                                 </span>
                               </td>
                             </tr>
@@ -393,7 +387,7 @@ const Order = () => {
                             <td>
                               <span className="woocommerce-Price-amount amount">
                                 <bdi>
-                                  {convertToCurrencyFormat(totalPrice)} ₫
+                                  {convertToCurrencyFormat(totalPrice)}
                                 </bdi>
                               </span>
                             </td>
@@ -435,7 +429,7 @@ const Order = () => {
                               <strong>
                                 <span className="woocommerce-Price-amount amount">
                                   <bdi>
-                                    {convertToCurrencyFormat(totalPrice)} ₫
+                                    {convertToCurrencyFormat(totalPrice)} 
                                   </bdi>
                                 </span>
                               </strong>
@@ -495,7 +489,7 @@ const Order = () => {
 
                   <Card.Body>
                     <Card.Title>
-                      <Card.Text class="mb-0" style={{ color: "#35558a" }}>
+                      <Card.Text className="mb-0" style={{ color: "#35558a" }}>
                         Tóm tắt thanh toán
                       </Card.Text>
                     </Card.Title>
@@ -533,7 +527,7 @@ const Order = () => {
                     >
                       <Col className="fw-bold">Total</Col>
                       <Col className="fw-bold" style={{ color: "#35558a" }}>
-                        {`${convertToCurrencyFormat(totalPrice)}đ`}
+                        ${convertToCurrencyFormat(totalPrice)}
                       </Col>
                     </Row>
                     <br />

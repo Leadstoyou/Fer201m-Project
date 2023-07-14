@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Dash, Plus } from "react-bootstrap-icons";
 import Loader from "../layouts/Loader";
+import { convertToCurrencyFormat } from "../Custom/CustomFunction";
 
 const Cart = () => {
   const [mergeProducts, setMergeProducts] = useState([]);
@@ -59,20 +60,6 @@ const Cart = () => {
   }, []);
 
 
-
-  const convertToCurrencyFormat = (number) => {
-    const numberString = number.toString();
-    let formattedString = "";
-
-    for (let i = numberString.length - 1, count = 0; i >= 0; i--, count++) {
-      if (count !== 0 && count % 3 === 0) {
-        formattedString = "." + formattedString;
-      }
-      formattedString = numberString[i] + formattedString;
-    }
-
-    return formattedString;
-  };
   const handleUpdateCart = (operator, productId, quantity) => {
     var updatedCart;
     if (operator === "+") {
@@ -292,7 +279,7 @@ const Cart = () => {
                     </div>
                   </td>
                   <td width="150px" style={{ verticalAlign: "top" }}>
-                    <div className="product-price">{mergedCart.price}</div>
+                    <div className="product-price">{convertToCurrencyFormat(mergedCart.price)}</div>
                   </td>
                   <td style={{ verticalAlign: "top" }}>
                     <span className="btn-favorite " data-id="4063">
@@ -317,7 +304,7 @@ const Cart = () => {
                 >
                   <span className="tille">Tạm tính:</span>
                   <span className="price black">
-                    {convertToCurrencyFormat(totalPrice)} đ
+                    {convertToCurrencyFormat(totalPrice)}
                   </span>
                 </li>
               </ul>

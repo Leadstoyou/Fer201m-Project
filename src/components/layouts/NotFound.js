@@ -3,7 +3,7 @@ import { ExclamationCircleFill } from "react-bootstrap-icons";
 import { Link } from "react-router-dom";
 const NotFound = () => {
   return (
-    <div class="container border-0" style={{ height: "90vh" }}>
+    <div className="container border-0" style={{ height: "90vh" }}>
       <Row className="justify-content-center align-items-center" style={{ height: "100%" }}>
         <Col
          xs="auto">

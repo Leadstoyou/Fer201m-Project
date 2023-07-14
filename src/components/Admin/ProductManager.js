@@ -1,5 +1,6 @@
 import {
   Button,
+  Card,
   Col,
   Container,
   Dropdown,
@@ -17,6 +18,10 @@ import { ArchiveFill, PencilSquare } from "react-bootstrap-icons";
 import NotFound from "../layouts/NotFound";
 import Loader from "../layouts/Loader";
 import axios from "axios";
+import Pagination from "../Custom/Pagination";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {  faSortDown, faSortUp } from "@fortawesome/free-solid-svg-icons";
+import { convertToCurrencyFormat } from "../Custom/CustomFunction";
 
 const ProductManager = () => {
   const [products, setProducts] = useState([]);
@@ -35,14 +40,13 @@ const ProductManager = () => {
   const [currentSortOrder, setCurrentSortOrder] = useState({});
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [errorMessage, setErrorMessage] = useState("");
-  const [img, setImg] = useState("");
-  const [blurImg, setBlurImg] = useState("");
   const SIZE_KEY = {
     shirts: ["S", "ML", "XL", "XXL"],
     pants: [27, 28, 29, 30, 31, 32, 33],
     shoes: [39, 40, 41, 42, 43],
   };
-
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
   useEffect(() => {
     Promise.all([
       fetch("http://localhost:9999/api/products").then((res) => res.json()),
@@ -55,6 +59,7 @@ const ProductManager = () => {
           ...prevProduct,
           id: productsData[productsData.length - 1].id + 1,
         }));
+        setTotalPages(Math.ceil(productsData.length / 10));
         setLoading(false);
       })
       .catch((err) => {
@@ -62,6 +67,39 @@ const ProductManager = () => {
         setLoading(false);
       });
   }, []);
+
+  useEffect(() => {
+    fetchData();
+    scrollToTop();
+  }, [currentPage]);
+
+  const fetchData = () => {
+    fetch(`http://localhost:9999/api/products?_page=${currentPage}&_limit=10`)
+      .then((response) => {
+        const totalCount = parseInt(response.headers.get("X-Total-Count"));
+        setTotalPages(Math.ceil(totalCount / 10));
+        return response.json();
+      })
+      .then((json) => {
+        setProducts(json);
+        setFilteredProducts([]);
+        console.log(json);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const handlePageChange = (page) => {
+    fetchData();
+    setCurrentPage(page);
+  };
+  function scrollToTop() {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  }
   const uploadImage = async (formData) => {
     try {
       const response = await axios.post(
@@ -94,43 +132,39 @@ const ProductManager = () => {
     setIsEditing(true);
     setShowModal(true);
   };
+  //done
   const handleDeleteProduct = (id) => {
     const confirm = window.confirm(
       "Are you sure you want to delete this product"
     );
     if (confirm) {
-      const updatedProducts = products.filter((p) => p.id !== parseInt(id));
-      setProducts(updatedProducts);
-      fetch("http://localhost:9999/api/products", {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(updatedProducts),
+      fetch(`http://localhost:9999/api/products/${id}`, {
+        method: "DELETE",
       })
-        .then((response) => response.json())
-        .then((data) => {
-          console.log(data);
+        .then((response) => {
+          if (response.ok) {
+            handlePageChange(currentPage);
+          } else {
+            throw new Error("Something went wrong");
+          }
         })
         .catch((error) => {
           console.error(error);
         });
     }
   };
+  //done
   const handleClickSaveEdit = (id) => {
-    const updatedProducts = products.map((product) =>
-      product.id === parseInt(id) ? updateProduct : product
-    );
-    setProducts(updatedProducts);
-    fetch("http://localhost:9999/api/products", {
-      method: "PUT",
+    fetch(`http://localhost:9999/api/products/${id}`, {
+      method: "PATCH",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(updatedProducts),
+      body: JSON.stringify(updateProduct),
     })
       .then((response) => response.json())
       .then((data) => {
+        handlePageChange(currentPage);
         console.log(data);
       })
       .catch((error) => {
@@ -139,100 +173,27 @@ const ProductManager = () => {
     setIsEditing(false);
     setShowModal(false);
   };
-
+  //done
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (!isEditing) {
-      const type = {
-        ao: "ao",
-        quan: "quan",
-        phukien: "phu_kien",
-        blurImg: "blurImg",
-      };
-
-      if (parseInt(newProductAdded.catId) === 1) {
-        const formData = new FormData();
-        formData.append("file", img);
-        formData.append("upload_preset", `assets_${type.ao}`);
-        uploadImage(formData)
-          .then((imageUrl) => {
-            console.log(imageUrl);
-            setNewProductAdd((prevProduct) => ({
-              ...prevProduct,
-              img: "imageUrl",
-            }));
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-      } else if (parseInt(newProductAdded.catId) === 2) {
-        const formData = new FormData();
-        formData.append("file", img);
-        formData.append("upload_preset", `assets_${type.quan}`);
-
-        uploadImage(formData)
-          .then((imageUrl) => {
-            console.log(imageUrl);
-            setNewProductAdd((prevProduct) => ({
-              ...prevProduct,
-              img: "imageUrl",
-            }));
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-      } else if (parseInt(newProductAdded.catId) === 3) {
-        const formData = new FormData();
-        formData.append("file", img);
-        formData.append("upload_preset", `assets_${type.phukien}`);
-
-        uploadImage(formData)
-          .then((imageUrl) => {
-            console.log(imageUrl);
-            setNewProductAdd((prevProduct) => ({
-              ...prevProduct,
-              img: "imageUrl",
-            }));
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-      }
-      const formData = new FormData();
-      formData.append("file", blurImg);
-      formData.append("upload_preset", `assets_${type.blurImg}`);
-      uploadImage(formData)
-        .then((imageUrl) => {
-          console.log(imageUrl);
-          setNewProductAdd((prevProduct) => ({
-            ...prevProduct,
-            blurImg: "imageUrl",
-          }));
-          console.log(newProductAdded);
-          const updatedProducts = [...products, newProductAdded];
-          setProducts(updatedProducts);
-          fetch("http://localhost:9999/api/products", {
-            method: "PUT",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(updatedProducts),
-          })
-            .then((response) => response.json())
-            .then((data) => {
-              console.log(newProductAdded);
-              console.log(data);
-            })
-            .catch((error) => {
-              alert("error");
-              console.error(error);
-            });
-          setShowModal(false);
-          setNewProductAdd({});
+      fetch("http://localhost:9999/api/products", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newProductAdded),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          handlePageChange(currentPage);
         })
         .catch((error) => {
-          console.log(error);
+          alert("error");
+          console.error(error);
         });
+      setShowModal(false);
+      setNewProductAdd({});
     }
   };
   const handleKeyDown = (event) => {
@@ -244,6 +205,7 @@ const ProductManager = () => {
     const filteredString = string.replace(/[.,đ]/g, "");
     return parseInt(filteredString);
   };
+
   const handleSortBy = (type) => {
     switch (type) {
       case "id":
@@ -288,14 +250,14 @@ const ProductManager = () => {
 
         break;
       case "quantity":
-        const sortProductsByQuantity = [...products].sort((a, b) =>
-          currentSortOrder.quantity === "asc"
-            ? a.quantity - b.quantity
-            : b.quantity - a.quantity
-        );
+        const sortProductsByQuantity = [...products].sort((a, b) => {
+          return currentSortOrder.amount === "asc"
+            ? a.amount - b.amount
+            : b.amount - a.amount;
+        });
         const newSortOrderQuantity =
-          currentSortOrder.quantity === "asc" ? "desc" : "asc";
-        setCurrentSortOrder({ quantity: newSortOrderQuantity });
+          currentSortOrder.amount === "asc" ? "desc" : "asc";
+        setCurrentSortOrder({ amount: newSortOrderQuantity });
         setProducts(sortProductsByQuantity);
 
         break;
@@ -322,22 +284,22 @@ const ProductManager = () => {
       return products;
     }
     const searchResult = filterProductsByName(searchName);
-    if (searchResult.length === 0) {
+
+    if (searchResult.length === 0 && searchName) {
       setErrorMessage("Not Found");
     } else {
       setErrorMessage("");
     }
     setFilteredProducts(searchResult.length !== 0 ? searchResult : []);
   }, [searchName]);
-
   return (
     <>
       {loading ? (
         <Loader />
       ) : isAdmin ? (
-        <div className="container border-0" style={{ marginTop: "5px" }}>
-          <div className="table-wrapper" style={{ paddingTop: "12px" }}>
-            <div className="table-title">
+        <div className="container border-0" style={{ marginTop: "17px" }}>
+          <Card>
+            <Card.Header>
               <Row>
                 <Col sm={6}>
                   <h2>Manager Product </h2>
@@ -381,87 +343,95 @@ const ProductManager = () => {
                   </div>
                 </Col>
               </Row>
-            </div>
-            <div className="scrollable-area" style={{ overflow: "auto" }}>
-              <Table bordered hover>
-                <thead>
-                  <tr>
-                    <th
-                      style={{ cursor: "pointer" }}
-                      onClick={() => handleSortBy("id")}
-                    >
-                      ID
-                    </th>
-                    <th>Image</th>
-                    <th
-                      style={{ cursor: "pointer" }}
-                      onClick={() => handleSortBy("name")}
-                    >
-                      Name
-                    </th>
-                    <th>Color</th>
-                    <th>Size</th>
-                    <th
-                      style={{ cursor: "pointer" }}
-                      onClick={() => handleSortBy("price")}
-                    >
-                      Price
-                    </th>
-                    <th
-                      style={{ cursor: "pointer" }}
-                      onClick={() => handleSortBy("quantity")}
-                    >
-                      Quantity
-                    </th>
-                    <th>Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {(filteredProducts.length === 0
-                    ? products
-                    : filteredProducts
-                  ).map((product, index) => (
-                    <tr key={index}>
-                      <td>{product.id}</td>
-                      <td>
-                        <Figure.Image
-                          src={product.img}
-                          alt={product.name}
-                          style={{ maxWidth: 100, maxHeight: 100 }}
-                          rounded
-                        />
-                      </td>
-
-                      <td>{product.name}</td>
-                      <td>{product.color.join(", ")}</td>
-                      <td>{product.size.join(", ")}</td>
-                      <td>{product.price}</td>
-                      <td>{product.amount}</td>
-                      <td>
-                        <PencilSquare
-                          style={{
-                            color: "white",
-                            backgroundColor: "yellow",
-                            cursor: "pointer",
-                          }}
-                          onClick={() => {
-                            handleEditProduct(product.id);
-                          }}
-                          required
-                        />
-                        <ArchiveFill
-                          style={{ cursor: "pointer" }}
-                          onClick={() => {
-                            handleDeleteProduct(product.id);
-                          }}
-                        />
-                      </td>
+            </Card.Header>
+            <Card.Body>
+              <div className="scrollable-area" style={{ overflow: "auto" }}>
+                <Table bordered hover>
+                  <thead>
+                    <tr>
+                      <th
+                        style={{ cursor: "pointer",display: "flex" }}
+                        onClick={() => handleSortBy("id")}
+                      >
+                        {currentSortOrder.id === 'asc' ? <FontAwesomeIcon icon={faSortUp} style={{paddingRight:'1px'}}/> : <FontAwesomeIcon icon={faSortDown} style={{paddingRight:'1px'}}/>} ID 
+                      </th>
+                      <th>Image</th>
+                      <th
+                        style={{ cursor: "pointer" }}
+                        onClick={() => handleSortBy("name")}
+                      >
+                        {currentSortOrder.name === 'asc' ? <FontAwesomeIcon icon={faSortUp} style={{paddingRight:'1px'}}/> : <FontAwesomeIcon icon={faSortDown} style={{paddingRight:'1px'}}/>} Name
+                      </th>
+                      <th>Color</th>
+                      <th>Size</th>
+                      <th
+                        style={{ cursor: "pointer" }}
+                        onClick={() => handleSortBy("price")}
+                      >
+                        {currentSortOrder.price === 'asc' ? <FontAwesomeIcon icon={faSortUp} style={{paddingRight:'1px'}}/> : <FontAwesomeIcon icon={faSortDown} style={{paddingRight:'1px'}}/>} Price
+                      </th>
+                      <th
+                        style={{ cursor: "pointer" }}
+                        onClick={() => handleSortBy("quantity")}
+                      >
+                       {currentSortOrder.amount === 'asc' ? <FontAwesomeIcon icon={faSortUp} style={{paddingRight:'1px'}}/> : <FontAwesomeIcon icon={faSortDown} style={{paddingRight:'1px'}}/>}  Quantity
+                      </th>
+                      <th>Action</th>
                     </tr>
-                  ))}
-                </tbody>
-              </Table>
-            </div>
-          </div>
+                  </thead>
+                  <tbody>
+                    {(filteredProducts.length === 0
+                      ? products
+                      : filteredProducts
+                    ).map((product, index) => (
+                      <tr key={index}>
+                        <td>{product.id}</td>
+                        <td>
+                          <Figure.Image
+                            src={product.img}
+                            alt={product.name}
+                            style={{ maxWidth: 100, maxHeight: 100 }}
+                            rounded
+                          />
+                        </td>
+
+                        <td>{product.name}</td>
+                        <td>{product.color.join(", ")}</td>
+                        <td>{product.size.join(", ")}</td>
+                        <td>{convertToCurrencyFormat(product.price)}</td>
+                        <td>{product.amount}</td>
+                        <td>
+                          <PencilSquare
+                            style={{
+                              color: "white",
+                              backgroundColor: "yellow",
+                              cursor: "pointer",
+                            }}
+                            onClick={() => {
+                              handleEditProduct(product.id);
+                            }}
+                            required
+                          />
+                          <ArchiveFill
+                            style={{ cursor: "pointer" }}
+                            onClick={() => {
+                              handleDeleteProduct(product.id);
+                            }}
+                          />
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </Table>
+              </div>
+            </Card.Body>
+            <Card.Footer className="text-muted">
+              <Pagination
+                totalPages={totalPages}
+                onPageChange={handlePageChange}
+              />
+            </Card.Footer>
+          </Card>
 
           <Modal show={showModal} onHide={handleCloseModal}>
             <Form onSubmit={handleSubmit} onKeyDown={handleKeyDown}>
@@ -691,9 +661,28 @@ const ProductManager = () => {
                       const file = e.target.files[0];
                       const reader = new FileReader();
 
-                      reader.onloadend = () => {
+                      reader.onloadend = async () => {
                         const imageDataUrl = reader.result;
-                        setImg(imageDataUrl);
+
+                        const formData = new FormData();
+                        formData.append("file", imageDataUrl);
+                        formData.append("upload_preset", `assets_ao`);
+
+                        await uploadImage(formData)
+                          .then((imageUrl) => {
+                            isEditing
+                              ? setUpdateProduct((prevProduct) => ({
+                                  ...prevProduct,
+                                  img: imageUrl,
+                                }))
+                              : setNewProductAdd((prevProduct) => ({
+                                  ...prevProduct,
+                                  img: imageUrl,
+                                }));
+                          })
+                          .catch((error) => {
+                            console.log(error);
+                          });
                       };
 
                       if (file) {
@@ -709,9 +698,28 @@ const ProductManager = () => {
                       const file = e.target.files[0];
                       const reader = new FileReader();
 
-                      reader.onloadend = () => {
+                      reader.onloadend = async () => {
                         const imageDataUrl = reader.result;
-                        setBlurImg(imageDataUrl);
+
+                        const formData = new FormData();
+                        formData.append("file", imageDataUrl);
+                        formData.append("upload_preset", `assets_ao`);
+
+                        await uploadImage(formData)
+                          .then((imageUrl) => {
+                            isEditing
+                              ? setUpdateProduct((prevProduct) => ({
+                                  ...prevProduct,
+                                  blurImg: imageUrl,
+                                }))
+                              : setNewProductAdd((prevProduct) => ({
+                                  ...prevProduct,
+                                  blurImg: imageUrl,
+                                }));
+                          })
+                          .catch((error) => {
+                            console.log(error);
+                          });
                       };
 
                       if (file) {

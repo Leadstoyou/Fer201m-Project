@@ -12,7 +12,20 @@ GET  http://localhost:9999/api/carts
 GET http://localhost:9999/api/products?_sort=id&_order=desc
 
 ###
-GET http://localhost:9999/api/products?name_like=áo
+GET http://localhost:9999/api/products?name_like=SS
 
 ###
-GET http://localhost:9999/api/products
+PATCH http://localhost:9999/api/users/1
+Content-Type: application/json
+
+{
+  "phone": "0912312312"
+}
+
+
+###
+
+get http://localhost:9999/api/users
+
+###
+DELETE http://localhost:9999/api/products/47 
