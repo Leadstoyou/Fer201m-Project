@@ -21,14 +21,13 @@ const Search = () => {
   }, []);
 
   useEffect(() => {
-    handleLmeo(initialSearchResult,initialSearchParams);
-
+    handleLmeo(initialSearchResult, initialSearchParams);
   }, [initialSearchResult, initialSearchParams]);
-  const handleLmeo = (initialSearchResult,initialSearchParams) =>{
+
+  const handleLmeo = (initialSearchResult, initialSearchParams) => {
     setOriginalProduct(initialSearchResult);
     setParams(initialSearchParams);
-    const a = initialSearchParams;
-  }
+  };
 
   const handleMouseEnter = (event, product) => {
     event.currentTarget.getElementsByTagName("img")[0].src = product.blurImg;

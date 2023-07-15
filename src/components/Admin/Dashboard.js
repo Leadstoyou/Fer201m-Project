@@ -219,7 +219,7 @@ const Dashboard = () => {
               <Card.Body>
                 <Card.Title>{topUser} </Card.Title>
                 <Card.Title>
-                  Spend : {convertToCurrencyFormat(topUserPrice)}{" "}
+                  Spend : {convertToCurrencyFormat(topUserPrice)}
                 </Card.Title>
               </Card.Body>
             </Card>

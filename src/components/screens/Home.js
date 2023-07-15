@@ -13,19 +13,66 @@ import Loader from "../layouts/Loader";
 const Home = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [highOrderProduct, setHighOrderProduct] = useState([]);
   useEffect(() => {
-    fetch("http://localhost:9999/api/products")
-      .then((res) => res.json())
-      .then((data) => {
-        setProducts(data);
+    Promise.all([
+      fetch("http://localhost:9999/api/orders").then((res) => res.json()),
+      fetch("http://localhost:9999/api/products").then((res) => res.json()),
+    ])
+      .then(([ordersData, productsData]) => {
+        setProducts(productsData);
+        const productQuantities = {};
+
+        ordersData.forEach((entry) => {
+          const { products } = entry;
+          products.forEach((product) => {
+            const { productId, quantity } = product;
+            if (productQuantities[productId]) {
+              productQuantities[productId] += quantity;
+            } else {
+              productQuantities[productId] = quantity;
+            }
+          });
+        });
+        const entries = Object.entries(productQuantities);
+
+        entries.sort((a, b) => b[1] - a[1]);
+        // Sắp xếp mảng theo giá trị
+        const mergedData = productsData
+          .map((item) => {
+            const entry = entries.find(([key]) => key === item.id.toString());
+            if (entry && entry.length === 2) {
+              const [id, count] = entry;
+              return {
+                ...item,
+                count: count || 0,
+              };
+            } else {
+              return {
+                ...item,
+                count: 0,
+              };
+            }
+          })
+          .sort((a, b) => b.count - a.count)
+          .slice(0, 10);
+
+        setHighOrderProduct(mergedData);
         setLoading(false);
       })
       .catch((err) => {
-        console.log(err.message);
+        console.log(err);
         setLoading(false);
       });
   }, []);
 
+  console.log(
+    [...products]
+      .sort((a, b) => {
+        return a.id - b.id;
+      })
+      .slice(0, 10)
+  );
   return (
     <>
       {loading ? (
@@ -51,11 +98,7 @@ const Home = () => {
                     loop={true}
                     style={{ height: "360px", width: "auto" }}
                   >
-                    {[...products]
-                      .sort((a, b) => {
-                        return a.id - b.id;
-                      })
-                      .slice(0, 10)
+                    {[...highOrderProduct]
                       .map((product, index) => (
                         <SwiperSlide key={index}>
                           <Link to={`/product/detail/${product.id}`}>
@@ -98,8 +141,9 @@ const Home = () => {
                   >
                     {[...products]
                       .sort((a, b) => {
-                        return a.id - b.id;
+                        return b.id - a.id;
                       })
+                      .slice(0, 10)
                       .map((product, index) => (
                         <SwiperSlide key={index}>
                           <Link to={`/product/detail/${product.id}`}>

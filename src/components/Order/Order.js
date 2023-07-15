@@ -64,7 +64,6 @@ const Order = () => {
               })
               .filter((item) => item !== null)
           : [];
-        console.log(mergedCart);
         setProducts(mergedCart);
         setTotalPrice(
           mergedCart.reduce((total, current) => {
@@ -72,11 +71,11 @@ const Order = () => {
             return total + price * current.quantity;
           }, 0)
         );
-        setLoading(false);    
+        setLoading(false);
       })
       .catch((err) => {
         console.log(err.message);
-        setLoading(false); 
+        setLoading(false);
       });
   }, []);
 
@@ -118,6 +117,10 @@ const Order = () => {
         handleShow();
         return;
       }
+      const cartsToString = products
+        .map((item) => `${item.name} có số lượng là ${item.quantity}`)
+        .join(", ");
+      const orderDetails = `Các sản phẩm của bạn là ${cartsToString}`;
       const confirm = window.confirm("Bạn có muốn đặt hàng không");
       if (confirm) {
         emailjs
@@ -129,6 +132,7 @@ const Order = () => {
               order_address: user.address,
               order_telephone: user.phone,
               order_email: user.email,
+              // order_details: orderDetails,
             },
             "dlvwrhueyphVOHUf6"
           )
@@ -157,7 +161,9 @@ const Order = () => {
                   console.error(error);
                 });
               setProducts([]);
-              const lastId = orders[orders.length - 1] ?  parseInt(orders[orders.length - 1].id) + 1 : 1;
+              const lastId = orders[orders.length - 1]
+                ? parseInt(orders[orders.length - 1].id) + 1
+                : 1;
               const newProductsOrder = products.map((product) => {
                 return {
                   productId: product.productId,
@@ -209,10 +215,13 @@ const Order = () => {
   const handleSubmitPublicUser = (e) => {
     e.preventDefault();
     const validator = Validate();
-    console.log(validator);
     if (!validator) {
       return;
     }
+    const cartsToString = products
+      .map((item) => `${item.name} có số lượng là ${item.quantity}`)
+      .join(", ");
+    const orderDetails = `Các sản phẩm của bạn là ${cartsToString}`;
     emailjs
       .send(
         "service_6hf9oen",
@@ -222,6 +231,7 @@ const Order = () => {
           order_address: order_address.current.value,
           order_telephone: order_telephone.current.value,
           order_email: order_email.current.value,
+          // order_details: orderDetails,
         },
         "dlvwrhueyphVOHUf6"
       )
@@ -251,7 +261,9 @@ const Order = () => {
               console.error(error);
             });
           setProducts([]);
-          const lastId = orders[orders.length - 1] ?  parseInt(orders[orders.length - 1].id) + 1 : 1;
+          const lastId = orders[orders.length - 1]
+            ? parseInt(orders[orders.length - 1].id) + 1
+            : 1;
           const newProductsOrder = products.map((product) => {
             return { productId: product.productId, quantity: product.quantity };
           });
@@ -306,7 +318,7 @@ const Order = () => {
             showToast={showToast}
             handleCloseToast={handleToggleToast}
           />
-          <Card>
+          <Card style={{ marginTop: "1%" }}>
             <Card.Header
               style={{
                 fontFamily: "emoji",
@@ -375,7 +387,9 @@ const Order = () => {
                               </td>
                               <td className="product-total">
                                 <span className="woocommerce-Price-amount amount">
-                                  <bdi>{convertToCurrencyFormat(product.price)}</bdi>
+                                  <bdi>
+                                    {convertToCurrencyFormat(product.price)}
+                                  </bdi>
                                 </span>
                               </td>
                             </tr>
@@ -386,9 +400,7 @@ const Order = () => {
                             <th>Tạm tính</th>
                             <td>
                               <span className="woocommerce-Price-amount amount">
-                                <bdi>
-                                  {convertToCurrencyFormat(totalPrice)}
-                                </bdi>
+                                <bdi>{convertToCurrencyFormat(totalPrice)}</bdi>
                               </span>
                             </td>
                           </tr>
@@ -429,7 +441,7 @@ const Order = () => {
                               <strong>
                                 <span className="woocommerce-Price-amount amount">
                                   <bdi>
-                                    {convertToCurrencyFormat(totalPrice)} 
+                                    {convertToCurrencyFormat(totalPrice)}
                                   </bdi>
                                 </span>
                               </strong>
