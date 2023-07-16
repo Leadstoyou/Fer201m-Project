@@ -27,6 +27,7 @@ server.put("/api/carts", (req, res) => {
   router.db.set("carts", updatedCarts).write();
   res.json(updatedCarts);
 });
+
 server.put("/api/products", (req, res) => {
   const updatedCarts = req.body;
   router.db.set("products", updatedCarts).write();

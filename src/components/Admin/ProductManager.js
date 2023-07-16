@@ -103,7 +103,7 @@ const ProductManager = () => {
   const uploadImage = async (formData) => {
     try {
       const response = await axios.post(
-        "https://api.cloudinary.com/v1_1/dw6kh8vlg/image/upload",
+        "https://api.cloudinary.com/v1_1/dyxlwy5wf/image/upload",
         formData
       );
 
@@ -666,7 +666,7 @@ const ProductManager = () => {
 
                         const formData = new FormData();
                         formData.append("file", imageDataUrl);
-                        formData.append("upload_preset", `assets_ao`);
+                        formData.append("upload_preset", `shop_assets`);
 
                         await uploadImage(formData)
                           .then((imageUrl) => {
@@ -700,10 +700,10 @@ const ProductManager = () => {
 
                       reader.onloadend = async () => {
                         const imageDataUrl = reader.result;
-
+                        //them anh vao cloudiary
                         const formData = new FormData();
                         formData.append("file", imageDataUrl);
-                        formData.append("upload_preset", `assets_ao`);
+                        formData.append("upload_preset", `shop_assets`);
 
                         await uploadImage(formData)
                           .then((imageUrl) => {

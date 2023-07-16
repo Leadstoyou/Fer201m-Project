@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {  useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import NotFound from "../layouts/NotFound";
 import "./AuthStyle.css";
 import Loader from "../layouts/Loader";
@@ -23,6 +23,7 @@ const ResetPassword = () => {
     ])
       .then(([usersData, forgotPasswordData]) => {
         setUsers(usersData);
+        //tim xem dia chi href cua ng dung hien tai co turng voi href forgot password luwu trong db khong
         forgotPasswordData.map((item) => {
           if (item.forgotPasswordLink == window.location.href) {
             setUser(item);
@@ -82,7 +83,7 @@ const ResetPassword = () => {
   return (
     <>
       {loading ? (
-        <Loader/>
+        <Loader />
       ) : user ? (
         <div className="Auth-form-container">
           <form className="Auth-form" onSubmit={submitHandler}>

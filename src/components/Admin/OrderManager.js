@@ -119,7 +119,7 @@ const OrderManager = () => {
               <Card.Header>
                 <Row>
                   <Col sm={6}>
-                    <h2>Manager Users </h2>
+                    <h2>Manager Orders </h2>
                   </Col>
                   <Col sm={6}>
                     <Button

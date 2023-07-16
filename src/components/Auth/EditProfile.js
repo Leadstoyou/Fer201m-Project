@@ -4,25 +4,24 @@ import { Button } from "react-bootstrap";
 function EditProfile({ userParams, changeAuthMode, handleToggleToast }) {
   const [user, setUser] = useState(userParams);
   const [errorMessage, setErrorMessage] = useState("");
-  const [users,setUsers] = useState();
+  const [users, setUsers] = useState();
 
-  useEffect(()=>{
+  useEffect(() => {
     fetch("http://localhost:9999/api/users")
-    .then((res) => res.json())
-    .then((data) => {
-      setUsers(data);
-    })
-    .catch((err) => {
-      console.log(err.message);
-    });
-  
-  },[]);
+      .then((res) => res.json())
+      .then((data) => {
+        setUsers(data);
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
+  }, []);
   const Validate = () => {
     const REGEX_PHONE = /^\d{10}$/;
     const REGEX_NAME = /^[\p{L} ]+$/u;
     const REGEX_ADDRESS = /^[\p{L}\d\s,.#-]{5,}$/u;
     const REGEX_EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    
+
     if (!REGEX_EMAIL.test(user.email)) {
       setErrorMessage("Invalid email format.");
       return false;
@@ -63,18 +62,18 @@ function EditProfile({ userParams, changeAuthMode, handleToggleToast }) {
         }
         return item;
       });
-      fetch('http://localhost:9999/api/users', {
-        method: 'PUT',
+      fetch("http://localhost:9999/api/users", {
+        method: "PUT",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify(updatedUsers)
+        body: JSON.stringify(updatedUsers),
       })
-        .then(response => response.json())
-        .then(data => {
+        .then((response) => response.json())
+        .then((data) => {
           console.log(data);
         })
-        .catch(error => {
+        .catch((error) => {
           console.error(error);
         });
       changeAuthMode();
@@ -188,7 +187,7 @@ function EditProfile({ userParams, changeAuthMode, handleToggleToast }) {
         </div>
       </div>
       {errorMessage && (
-        <div className="error-message" style={{ color: "red" }}>
+        <div className="error-message bg-red-200 text-red-800 py-2 px-4 rounded-md mt-4">
           {errorMessage}
         </div>
       )}

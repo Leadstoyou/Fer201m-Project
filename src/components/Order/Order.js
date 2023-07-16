@@ -132,7 +132,7 @@ const Order = () => {
               order_address: user.address,
               order_telephone: user.phone,
               order_email: user.email,
-              // order_details: orderDetails,
+              order_details: orderDetails,
             },
             "dlvwrhueyphVOHUf6"
           )
@@ -231,7 +231,7 @@ const Order = () => {
           order_address: order_address.current.value,
           order_telephone: order_telephone.current.value,
           order_email: order_email.current.value,
-          // order_details: orderDetails,
+          order_details: orderDetails,
         },
         "dlvwrhueyphVOHUf6"
       )

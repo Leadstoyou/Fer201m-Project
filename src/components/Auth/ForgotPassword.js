@@ -28,6 +28,8 @@ const ForgotPassword =  () => {
       .catch((err) => {
         console.log(err.message);
       });
+
+      //Tạo API Token
     const currentPort = window.location.origin;
     const apiToken = uuidv4();
     let AT = `${currentPort}/reset-password?AT=${apiToken}`;
@@ -39,8 +41,8 @@ const ForgotPassword =  () => {
     e.preventDefault();
     let flag = true;
     users.map((user) => {
+      //kiem tra email co ton tai khong
       if (user.email == email) {
-
         //take time
         const currentTime = new Date();
         const futureTime = new Date(currentTime.getTime() + 5 * 60000);
@@ -65,6 +67,7 @@ const ForgotPassword =  () => {
             });
         } else {
           let flag = true;
+          //neu da co email trong he thong
           forgotpassDb.map((item) => {
             if (item.email == email) {
               item.forgotPasswordLink = forgotPasswordLink;
@@ -72,6 +75,8 @@ const ForgotPassword =  () => {
               flag = false;
             }
           });
+
+          //neu chua co email trong he thong forgot password link
           if (flag) {
             forgotpassDb.push({
               forgotPasswordLink,
@@ -79,6 +84,7 @@ const ForgotPassword =  () => {
               expireTime: futureTime,
             });
           }
+
           fetch('http://localhost:9999/api/forgot_password', {
             method: 'PUT',
             headers: {
@@ -131,7 +137,7 @@ const ForgotPassword =  () => {
 
   return (
     <div>
-      <Top />{" "}
+      <Top />
       <ToastComponent
         message="Successfully,please check your email address"
         showToast={showToast}

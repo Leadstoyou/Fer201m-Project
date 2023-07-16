@@ -78,6 +78,7 @@ const Register = () => {
       return;
     } else {
       users.push(newUser);
+      //POST
       fetch('http://localhost:9999/api/users', {
         method: 'PUT',
         headers: {
@@ -158,7 +159,7 @@ const Register = () => {
               />
             </div>
             {errorMessage && (
-              <div className="error-message" style={{ color: "red" }}>
+              <div className="error-message bg-red-200 text-red-800 py-2 px-4 rounded-md mt-4">
                 {errorMessage}
               </div>
             )}
