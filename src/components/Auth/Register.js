@@ -159,7 +159,7 @@ const Register = () => {
               />
             </div>
             {errorMessage && (
-              <div className="error-message bg-red-200 text-red-800 py-2 px-4 rounded-md mt-4">
+              <div className="error-message" style={{color:'red'}}>
                 {errorMessage}
               </div>
             )}
@@ -169,7 +169,7 @@ const Register = () => {
               </button>
             </div>
             <p className="text-center mt-2">
-              <Link to="/forgot-password">
+              <Link to="/forgot-password"> 
                 <span>Forgot password?</span>
               </Link>
             </p>

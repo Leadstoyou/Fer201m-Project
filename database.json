@@ -1105,6 +1105,55 @@
       "blurImg": "https://res.cloudinary.com/dyxlwy5wf/image/upload/v1689523458/dimousdhcq0ewuu5mhip.png",
       "createdAt": 1689523465625,
       "updatedAt": 1689523465625
+    },
+    {
+      "id": 54,
+      "name": "lmeo",
+      "price": "123",
+      "catId": 2,
+      "description": "dá",
+      "size": [
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33
+      ],
+      "color": [
+        "vang",
+        "do",
+        "trang"
+      ],
+      "amount": "1234",
+      "img": "https://res.cloudinary.com/dyxlwy5wf/image/upload/v1689564319/irgbpk8pak9t4s343cqu.jpg",
+      "blurImg": "https://res.cloudinary.com/dyxlwy5wf/image/upload/v1689564320/ifdftzhyftamtqgdroqg.png",
+      "createdAt": 1689564319246,
+      "updatedAt": 1689564319246
+    },
+    {
+      "id": 55,
+      "catId": 3,
+      "name": "vcl",
+      "price": "32",
+      "description": "3123",
+      "size": [
+        39,
+        40,
+        41,
+        42,
+        43
+      ],
+      "color": [
+        "do",
+        "vang"
+      ],
+      "amount": "312",
+      "img": "https://res.cloudinary.com/dyxlwy5wf/image/upload/v1689564465/s0locsztzy0srjext7yq.png",
+      "blurImg": "https://res.cloudinary.com/dyxlwy5wf/image/upload/v1689564320/ifdftzhyftamtqgdroqg.png",
+      "createdAt": 1689564465050,
+      "updatedAt": 1689564465050
     }
   ],
   "users": [
@@ -1164,14 +1213,7 @@
     {
       "id": 5,
       "userId": "1",
-      "products": [
-        {
-          "productId": 22,
-          "color": "Xám",
-          "size": "29",
-          "quantity": 1
-        }
-      ]
+      "products": []
     },
     {
       "id": 5,
@@ -3505,6 +3547,22 @@
       "total": 570000,
       "status": "completed",
       "timestamp": "7/16/2023 10:32:30 PM"
+    },
+    {
+      "id": "129",
+      "userId": "1",
+      "email": "hongbahe161650@fpt.edu.vn",
+      "address": "Hung Yen",
+      "phone": "0912312312",
+      "products": [
+        {
+          "productId": 22,
+          "quantity": 1
+        }
+      ],
+      "total": 570000,
+      "status": "completed",
+      "timestamp": "7/17/2023 10:26:29 AM"
     }
   ],
   "forgot_password": [
